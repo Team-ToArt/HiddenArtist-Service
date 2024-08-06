@@ -11,6 +11,8 @@ services:
       - '3306:3306'
     volumes:
       - mysql_volume:/var/lib/mysql
+    networks:
+      - pop-network
 
   redis:
     container_name: pop_redis
@@ -19,7 +21,13 @@ services:
       - '6379:6379'
     volumes:
       - redis_volume:/data
+    networks:
+      - pop-network
 
 volumes:
   mysql_volume:
   redis_volume:
+
+networks:
+  pop-network:
+    external: true
