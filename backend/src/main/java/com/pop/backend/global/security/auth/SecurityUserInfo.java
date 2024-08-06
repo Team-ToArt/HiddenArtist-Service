@@ -11,7 +11,7 @@ public record SecurityUserInfo(
 ) {
 
   public static SecurityUserInfo convert(User user) {
-    return new SecurityUserInfo(user.getEmail(), user.getPassword(), user.getNickname(), user.getProviderType());
+    return new SecurityUserInfo(user.getEmail(), user.getNickname(), user.getPassword(), user.getProviderType());
   }
 
 }
