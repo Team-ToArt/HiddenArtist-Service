@@ -15,7 +15,7 @@ COPY src ./src
 # dos 텍스트파일을 unix 형식으로 변환
 RUN dos2unix ./gradlew
 RUN chmod +x ./gradlew
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean build
 
 # Stage 2: Create the final Image
 FROM eclipse-temurin:17-jdk-alpine
