@@ -1,5 +1,7 @@
 package com.pop.backend.global.utils;
 
+import com.pop.backend.global.jwt.GenerateToken;
+import com.pop.backend.global.type.CookieNames;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +20,7 @@ public class CookieManager {
   private static final String SAME_SITE = "Strict";
   private static final String COOKIE_PATH = "/";
 
-  public static void saveCookie(String key, String value, HttpServletResponse response) {
+  public static void addCookie(String key, String value, HttpServletResponse response) {
     ResponseCookie cookie = ResponseCookie.from(key, value)
                                           .maxAge(Duration.ofMinutes(30))
                                           .httpOnly(HTTP_ONLY)
@@ -49,6 +51,13 @@ public class CookieManager {
                  .map(Cookie::getValue)
                  .findFirst()
                  .orElse(null);
+  }
+
+  public static void storeTokenInCookie(GenerateToken generateToken, HttpServletResponse response) {
+    String accessToken = generateToken.accessToken();
+    String refreshToken = generateToken.refreshToken().getRefreshToken();
+    addCookie(CookieNames.ACCESS_TOKEN.getName(), accessToken, response);
+    addCookie(CookieNames.REFRESH_TOKEN.getName(), refreshToken, response);
   }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -17,6 +18,7 @@ public class SecurityConfig {
 
   private final CustomOAuth2UserService oAuth2UserService;
   private final SecurityHandlerConfig handlerConfig;
+  private final SecurityFilterConfig filterConfig;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,12 +31,19 @@ public class SecurityConfig {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .anyRequest().permitAll());
+        .anyRequest().authenticated());
 
     http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
             .userService(oAuth2UserService))
         .successHandler(handlerConfig.getOAuth2LoginSuccessHandler()));
+
+    http.logout(logoutConfigurer -> logoutConfigurer
+        .logoutUrl("/api/accounts/signout")
+        .addLogoutHandler(handlerConfig.getOAuth2LogoutHandler())
+        .logoutSuccessHandler(handlerConfig.getOAuth2LogoutSuccessHandler()));
+
+    http.addFilterBefore(filterConfig.getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
