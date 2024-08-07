@@ -45,7 +45,8 @@ public class TokenService {
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
-  public void removeRefreshToken(String email) {
+  public void removeRefreshToken(String refreshToken) {
+    String email = jwtProvider.getEmail(refreshToken);
     refreshTokenService.removeRefreshToken(email);
   }
 
