@@ -1,4 +1,4 @@
-package com.pop.backend.global.exception;
+package com.pop.backend.global.exception.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

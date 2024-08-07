@@ -1,5 +1,6 @@
-package com.pop.backend.global.exception;
+package com.pop.backend.global.exception.type;
 
+import com.pop.backend.global.exception.response.ServiceErrorDetail;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

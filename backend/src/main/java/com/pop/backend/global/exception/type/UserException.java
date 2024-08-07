@@ -1,4 +1,4 @@
-package com.pop.backend.global.exception;
+package com.pop.backend.global.exception.type;
 
 public class UserException extends ServiceException {
 

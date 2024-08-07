@@ -1,5 +1,6 @@
-package com.pop.backend.global.exception;
+package com.pop.backend.global.aop;
 
+import com.pop.backend.global.exception.type.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
