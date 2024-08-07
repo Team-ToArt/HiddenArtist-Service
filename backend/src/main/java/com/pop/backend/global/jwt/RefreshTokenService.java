@@ -16,4 +16,13 @@ public class RefreshTokenService {
   public void save(RefreshToken refreshToken) {
     redisClient.save(refreshToken);
   }
+
+  public RefreshToken findRefreshTokenBy(String email) {
+    return redisClient.findBy(email);
+  }
+
+  public void removeRefreshToken(String email) {
+    redisClient.deleteBy(email);
+  }
+
 }

@@ -1,6 +1,5 @@
 package com.pop.backend.global.jwt;
 
-import com.pop.backend.global.security.auth.PrincipalDetails;
 import com.pop.backend.global.type.JWTValidationResult;
 import com.pop.backend.global.utils.DateUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,12 +9,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +21,6 @@ public class JWTProvider {
   private static final long ACCESS_TOKEN_EXPIRE_TIME = 30L; // 30 Minutes
   private static final long REFRESH_TOKEN_EXPIRE_TIME = 60L * 24 * 7; // 7 Days
   private static final String AUTHORITIES_KEY = "ROLE";
-
 
   @Value("${secret.jwt}")
   private String key;
@@ -38,14 +33,7 @@ public class JWTProvider {
     this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
   }
 
-  public GenerateToken generateTokens(Authentication authentication) {
-    PrincipalDetails user = (PrincipalDetails) authentication.getPrincipal();
-    String email = user.getUsername();
-    String authorities = user.getAuthorities()
-                             .stream()
-                             .map(GrantedAuthority::getAuthority)
-                             .collect(Collectors.joining(","));
-
+  public GenerateToken generateToken(String email, String authorities) {
     String accessToken = createToken(email, authorities, ACCESS_TOKEN_EXPIRE_TIME);
     String refreshToken = createToken(email, authorities, REFRESH_TOKEN_EXPIRE_TIME);
 
@@ -71,7 +59,7 @@ public class JWTProvider {
     }
   }
 
-  public String getRole(String token) {
+  public String getAuthorities(String token) {
     return jwtParser.parseSignedClaims(token).getPayload().get(AUTHORITIES_KEY, String.class);
   }
 
@@ -87,4 +75,5 @@ public class JWTProvider {
                .signWith(secretKey)
                .compact();
   }
+
 }
