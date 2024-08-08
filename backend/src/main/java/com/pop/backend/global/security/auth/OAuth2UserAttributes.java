@@ -1,6 +1,8 @@
 package com.pop.backend.global.security.auth;
 
 import com.pop.backend.domain.user.entity.User;
+import com.pop.backend.global.exception.type.SecurityException;
+import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 import com.pop.backend.global.type.ProviderType;
 import java.util.Map;
@@ -24,7 +26,7 @@ public record OAuth2UserAttributes(
       case GOOGLE -> {
         return fromGoogle(providerType, attributes);
       }
-      default -> throw new IllegalArgumentException("Unsupported provider type: " + providerType);
+      default -> throw new SecurityException(ServiceErrorCode.PROVIDER_NOT_FOUND);
     }
   }
 
