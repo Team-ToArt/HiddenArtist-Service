@@ -1,5 +1,7 @@
 package com.pop.backend.global.security.filter;
 
+import com.pop.backend.global.exception.type.SecurityException;
+import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.jwt.GenerateToken;
 import com.pop.backend.global.jwt.TokenService;
 import com.pop.backend.global.type.CookieNames;
@@ -52,7 +54,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         refreshToken(refreshToken, response);
         filterChain.doFilter(request, response);
       }
-      case INVALID -> throw new RuntimeException("변조된 JWT 입니다."); // 예외처리 구성 시 수정 예정.
+      case INVALID -> throw new SecurityException(ServiceErrorCode.INVALID_ACCESS_TOKEN);
     }
   }
 
@@ -66,11 +68,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     return pathMatcher.match(endPoint.pattern(), requestUri) && endPoint.method().matches(httpMethod);
   }
 
-  // refreshToken 이 존재하지 않거나 검증시 ExpiredJwtException 발생하면 던져지는 예외를 추가해야함.
-  private void refreshToken(String token, HttpServletResponse response) throws RuntimeException {
+  private void refreshToken(String token, HttpServletResponse response) throws SecurityException {
     JWTValidationResult validationResult = tokenService.validateToken(token);
     if (validationResult.isNotValid()) {
-      throw new RuntimeException("다시 로그인을 진행해주세요.");
+      throw new SecurityException(ServiceErrorCode.INVALID_REFRESH_TOKEN);
     }
     GenerateToken generateToken = tokenService.refreshJWT(token);
     CookieManager.storeTokenInCookie(generateToken, response);

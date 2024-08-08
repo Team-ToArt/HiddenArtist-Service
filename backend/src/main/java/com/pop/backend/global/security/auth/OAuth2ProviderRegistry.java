@@ -1,5 +1,7 @@
 package com.pop.backend.global.security.auth;
 
+import com.pop.backend.global.exception.type.SecurityException;
+import com.pop.backend.global.exception.type.ServiceErrorCode;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -17,8 +19,8 @@ public abstract class OAuth2ProviderRegistry {
       );
 
   public static OAuth2ProviderType getType(String registrationId) {
-    // 추후 Exception 설계 시 RuntimeException 수정 예정
-    return Optional.ofNullable(CACHED_PROVIDER_TYPES.get(registrationId)).orElseThrow(RuntimeException::new);
+    return Optional.ofNullable(CACHED_PROVIDER_TYPES.get(registrationId))
+                   .orElseThrow(() -> new SecurityException(ServiceErrorCode.PROVIDER_NOT_FOUND));
   }
 
   @RequiredArgsConstructor

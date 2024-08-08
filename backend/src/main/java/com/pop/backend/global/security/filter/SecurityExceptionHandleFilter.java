@@ -29,7 +29,7 @@ public class SecurityExceptionHandleFilter extends OncePerRequestFilter {
     try {
       filterChain.doFilter(request, response);
     } catch (ServiceException e) {
-      log.error("{} \n {}", e.getErrorDetail().getMessage(), e.getStackTrace()[0]);
+      log.error("{}: {} \n {}", e.getClass().getSimpleName(), e.getErrorDetail().getMessage(), e.getStackTrace()[0]);
       HttpStatus status = e.getStatus();
       ErrorResponse errorResponse = new ServiceErrorResponse(e);
       response.setStatus(status.value());

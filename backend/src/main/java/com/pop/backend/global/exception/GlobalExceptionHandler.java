@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(value = {ServiceException.class})
   public ResponseEntity<ErrorResponse> handleServiceException(ServiceException ex) {
-    log.error("{} \n {}", ex.getErrorDetail().getMessage(), ex.getStackTrace()[0]);
+    log.error("{}: {} \n {}", ex.getClass().getSimpleName(), ex.getErrorDetail().getMessage(), ex.getStackTrace()[0]);
     ErrorResponse errorResponse = new ServiceErrorResponse(ex);
     return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
   }
