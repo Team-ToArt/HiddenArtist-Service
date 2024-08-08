@@ -1,5 +1,6 @@
 package com.pop.backend.global.security.config;
 
+import com.pop.backend.global.security.filter.JWTAuthenticationFilter;
 import com.pop.backend.global.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +44,8 @@ public class SecurityConfig {
         .addLogoutHandler(handlerConfig.getOAuth2LogoutHandler())
         .logoutSuccessHandler(handlerConfig.getOAuth2LogoutSuccessHandler()));
 
-    http.addFilterBefore(filterConfig.getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(filterConfig.getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(filterConfig.getExceptionHandleFilter(), JWTAuthenticationFilter.class);
 
     return http.build();
   }

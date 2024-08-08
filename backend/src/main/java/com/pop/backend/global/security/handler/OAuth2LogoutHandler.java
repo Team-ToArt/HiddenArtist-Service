@@ -18,11 +18,11 @@ public class OAuth2LogoutHandler implements LogoutHandler {
 
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    String refreshToken = CookieManager.getCookie(CookieNames.REFRESH_TOKEN.getName(), request);
+    tokenService.removeRefreshToken(refreshToken);
+
     CookieManager.removeCookie(CookieNames.ACCESS_TOKEN.getName(), response);
     CookieManager.removeCookie(CookieNames.REFRESH_TOKEN.getName(), response);
-
-    String email = (String) authentication.getPrincipal();
-    tokenService.removeRefreshToken(email);
   }
 
 }

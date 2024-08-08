@@ -1,8 +1,11 @@
 package com.pop.backend.global.jwt;
 
+import com.pop.backend.global.exception.type.SecurityException;
+import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.type.JWTValidationResult;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,13 +30,16 @@ public class TokenService {
     String email = jwtProvider.getEmail(token);
     RefreshToken refreshToken = refreshTokenService.findRefreshTokenBy(email);
     if (!token.equals(refreshToken.getRefreshToken())) {
-      throw new RuntimeException("리프레시 토큰이 동일하지 않습니다. 다시 로그인해주세요.");
+      throw new SecurityException(ServiceErrorCode.INVALID_REFRESH_TOKEN);
     }
     String authorities = jwtProvider.getAuthorities(token);
     return createJWT(email, authorities);
   }
 
   public JWTValidationResult validateToken(String token) {
+    if (Objects.isNull(token)) {
+      throw new SecurityException(ServiceErrorCode.TOKEN_NOT_FOUND);
+    }
     return jwtProvider.verifyToken(token);
   }
 
@@ -45,7 +51,8 @@ public class TokenService {
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
-  public void removeRefreshToken(String email) {
+  public void removeRefreshToken(String refreshToken) {
+    String email = jwtProvider.getEmail(refreshToken);
     refreshTokenService.removeRefreshToken(email);
   }
 
