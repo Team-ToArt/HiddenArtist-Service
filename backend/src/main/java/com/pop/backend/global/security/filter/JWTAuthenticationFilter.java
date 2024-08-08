@@ -29,7 +29,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   private final List<EndPoint> tokenFreeEndPoints = List.of(
       // 임시로 작성한 EndPoint 입니다.
       new EndPoint("/api/accounts/signup", HttpMethod.POST),
-      new EndPoint("/api/accounts/signin", HttpMethod.POST)
+      new EndPoint("/api/accounts/signin", HttpMethod.POST),
+      new EndPoint("/admin/**", HttpMethod.POST),
+      new EndPoint("/admin/**", HttpMethod.GET)
   );
 
   @Override

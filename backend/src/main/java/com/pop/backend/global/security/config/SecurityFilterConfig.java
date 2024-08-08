@@ -1,5 +1,6 @@
 package com.pop.backend.global.security.config;
 
+import com.pop.backend.global.security.filter.JSONUsernamePasswordAuthenticationFilter;
 import com.pop.backend.global.security.filter.JWTAuthenticationFilter;
 import com.pop.backend.global.security.filter.SecurityExceptionHandleFilter;
 import lombok.Getter;
@@ -14,5 +15,7 @@ public class SecurityFilterConfig {
   private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
   private final SecurityExceptionHandleFilter exceptionHandleFilter;
+
+  private final JSONUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
 
 }

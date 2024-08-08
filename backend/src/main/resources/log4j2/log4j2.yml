@@ -45,6 +45,13 @@ Configutation:
       AppenderRef:
         - ref: console-appender
 
+    Logger:
+      - name: org.springframework.security
+        additivity: "false"
+        level: TRACE
+        AppenderRef:
+          - ref: console-appender
+
     AsyncLogger:
       - name: com.pop
         additivity: "false"
