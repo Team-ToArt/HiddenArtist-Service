@@ -75,6 +75,18 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+/*QueryDSL Config*/
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+    main.java.srcDirs += [querydslDir]
+}
+
+clean.doLast {
+    file(querydslDir).deleteDir()
+}
+/*QueryDSL Config*/
+
 tasks.named('test') {
     useJUnitPlatform()
 }
