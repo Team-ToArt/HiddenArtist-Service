@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+		      name="viewport">
+		<meta content="ie=edge" http-equiv="X-UA-Compatible">
+		<title>관리자 콘솔 로그인</title>
+	</head>
+	<body>
+		<main class="form-signin" th:fragment="content">
+			<form id="form">
+				<img alt="" class="mb-4" height="57" src="/images/to-art-logo.jpg" width="72">
+				<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+				<div class="form-floating">
+					<input class="form-control" id="email" placeholder="name@example.com" type="email">
+					<label for="email">Email</label>
+				</div>
+				<div class="form-floating">
+					<input class="form-control" id="password" placeholder="Password" type="password">
+					<label for="password">Password</label>
+				</div>
+
+				<div class="checkbox mb-3">
+					<label>
+						<input type="checkbox" value="remember-me"> Remember me
+					</label>
+				</div>
+				<button class="w-100 btn btn-lg btn-primary" id="login-button" type="button">Sign
+					in
+				</button>
+			</form>
+			<script src="/js/login.js"></script>
+		</main>
+	</body>
+</html>
