@@ -27,14 +27,20 @@ public class SecurityConfig {
   @Bean
   @Order(1)
   public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.securityMatcher("/admin/**");
+    http.securityMatcher("/admin", "/admin/**");
 
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable);
 
+    http.exceptionHandling(exceptionHandling -> exceptionHandling
+        .accessDeniedHandler(handlerConfig.getAdminAccessDeniedHandler())
+        .authenticationEntryPoint(handlerConfig.getAdminAuthenticationEntryPoint()));
+
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .requestMatchers(HttpMethod.POST, "/admin/add")
+        .requestMatchers(HttpMethod.GET, "/admin/signin")
+        .permitAll() // 추후 hasRole("ADMIN")으로 수정 예정
+        .requestMatchers(HttpMethod.POST, "/admin/accounts/signup")
         .permitAll()
         .anyRequest()
         .hasRole("ADMIN"));
