@@ -20,8 +20,6 @@ public class TestController {
 
   @PostMapping("/add")
   public User addUser(@RequestBody AddUser addUser) {
-    // 이 API는 JWTAuthenticationFilter를 거치면 안되는데, 계속 걸리는 문제가 있음.
-    // 내일 해결해야함.
     User user = User.builder()
                     .email(addUser.email)
                     .password(bCryptPasswordEncoder.encode(addUser.password))

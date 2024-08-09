@@ -25,6 +25,27 @@ public class SecurityConfig {
   private final SecurityFilterConfig filterConfig;
 
   @Bean
+  @Order(1)
+  public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.securityMatcher("/admin/**");
+
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable);
+
+    http.authorizeHttpRequests(requestRegistry -> requestRegistry
+        .requestMatchers(HttpMethod.POST, "/admin/add")
+        .permitAll()
+        .anyRequest()
+        .hasRole("ADMIN"));
+
+    http.addFilterBefore(filterConfig.getUsernamePasswordAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(filterConfig.getExceptionHandleFilter(), JSONUsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
+
+  @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
     http.securityMatcher("/api/**");
@@ -52,27 +73,6 @@ public class SecurityConfig {
     http.addFilterBefore(filterConfig.getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(filterConfig.getExceptionHandleFilter(), JWTAuthenticationFilter.class);
 
-    return http.build();
-  }
-
-  @Bean
-  @Order(1)
-  public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.securityMatcher("/admin/**");
-
-    http.csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable);
-
-    http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .requestMatchers(HttpMethod.POST, "/admin/add")
-        .permitAll()
-        .anyRequest()
-        .hasRole("ADMIN"));
-
-    http.addFilterBefore(filterConfig.getUsernamePasswordAuthenticationFilter(),
-            UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(filterConfig.getExceptionHandleFilter(), JSONUsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 
