@@ -3,8 +3,8 @@ package com.pop.backend.global.security.service;
 import com.pop.backend.domain.user.entity.User;
 import com.pop.backend.domain.user.repository.UserRepository;
 import com.pop.backend.global.security.auth.OAuth2UserAttributes;
+import com.pop.backend.global.utils.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthorizationService {
 
   private final UserRepository userRepository;
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   public User validateUser(OAuth2UserAttributes oAuth2UserAttributes) {
@@ -21,8 +21,8 @@ public class AuthorizationService {
   }
 
   private User save(OAuth2UserAttributes oAuth2UserAttributes) {
-    String encodedPassword = bCryptPasswordEncoder.encode(
-        oAuth2UserAttributes.providerType() + "_" + oAuth2UserAttributes.email());
+    String encodedPassword = passwordEncoder.encodedOAuth2Password(
+        oAuth2UserAttributes.providerType(), oAuth2UserAttributes.email());
     User user = oAuth2UserAttributes.toUser(encodedPassword);
     return userRepository.save(user);
   }
