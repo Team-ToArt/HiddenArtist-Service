@@ -54,7 +54,6 @@ public class SecurityConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.securityMatcher("/api/**");
 
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
@@ -64,7 +63,7 @@ public class SecurityConfig {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .anyRequest().authenticated());
+        .anyRequest().permitAll()); // API 설계시 수정 예정
 
     http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
