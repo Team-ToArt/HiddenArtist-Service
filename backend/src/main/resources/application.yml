@@ -31,3 +31,7 @@ secret:
 
 logging:
   config: classpath:log4j2/log4j2.yml
+
+redirect-url:
+  login-success: http://localhost/login-success
+  logout: http://localhost/

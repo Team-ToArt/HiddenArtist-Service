@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.RedirectStrategy;
@@ -20,9 +21,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-  private final String REDIRECT_URL = "http://localhost/login-success";
   private final RedirectStrategy redirectStrategy;
   private final TokenService tokenService;
+
+  @Value("${redirect-url.login-success}")
+  private String REDIRECT_URL;
 
   /**
    * OAuth2 로그인 성공시 Authentication에 담긴 사용자 데이터를 기반으로 <br> AccessToken, RefreshToken 을 생성합니다. 두 데이터 모두 HttpOnly Cookie로

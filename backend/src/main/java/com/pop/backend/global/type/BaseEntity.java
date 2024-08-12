@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,4 +30,9 @@ public abstract class BaseEntity {
   @LastModifiedDate
   @Column(nullable = false, columnDefinition = "datetime default now()")
   private LocalDateTime update_date;
+
+  @Setter(AccessLevel.PROTECTED)
+  @Column(columnDefinition = "datetime")
+  private LocalDateTime delete_date;
+
 }
