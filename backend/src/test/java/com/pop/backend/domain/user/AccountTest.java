@@ -3,14 +3,14 @@ package com.pop.backend.domain.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.pop.backend.domain.user.entity.User;
-import com.pop.backend.global.type.ProviderType;
-import com.pop.backend.global.type.Role;
+import com.pop.backend.domain.account.persistence.Account;
+import com.pop.backend.domain.account.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.type.Role;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class UserTest {
+class AccountTest {
 
   @Test
   @DisplayName("User Builder Test")
@@ -29,22 +29,22 @@ class UserTest {
     Role adminRole = Role.ADMIN;
 
     //when
-    User user = User.builder()
-                    .email(userEmail)
-                    .password(userPassword)
-                    .nickname(userNickname)
-                    .build();
-    User admin = User.builder()
-                     .email(adminEmail)
-                     .password(adminPassword)
-                     .nickname(adminNickname)
-                     .providerType(adminType)
-                     .role(adminRole)
-                     .build();
-    List<User> userList = List.of(user, admin);
+    Account account = Account.builder()
+                             .email(userEmail)
+                             .password(userPassword)
+                             .nickname(userNickname)
+                             .build();
+    Account admin = Account.builder()
+                           .email(adminEmail)
+                           .password(adminPassword)
+                           .nickname(adminNickname)
+                           .providerType(adminType)
+                           .role(adminRole)
+                           .build();
+    List<Account> accountList = List.of(account, admin);
 
     //then
-    assertThat(userList)
+    assertThat(accountList)
         .extracting("providerType", "role")
         .containsExactly(
             tuple(defaultType, defaultRole),

@@ -1,4 +1,4 @@
-package com.pop.backend.global.type;
+package com.pop.backend.domain.account.persistence.type;
 
 import java.util.Arrays;
 import java.util.Collections;

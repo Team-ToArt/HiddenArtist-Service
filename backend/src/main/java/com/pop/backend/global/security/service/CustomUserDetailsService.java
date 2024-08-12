@@ -1,7 +1,7 @@
 package com.pop.backend.global.security.service;
 
-import com.pop.backend.domain.user.entity.User;
-import com.pop.backend.domain.user.repository.UserRepository;
+import com.pop.backend.domain.account.persistence.Account;
+import com.pop.backend.domain.account.persistence.repository.AccountRepository;
 import com.pop.backend.global.exception.type.EntityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.security.auth.PrincipalDetails;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final UserRepository userRepository;
+  private final AccountRepository memberRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(username)
-                              .orElseThrow(() -> new EntityException(ServiceErrorCode.USER_NOT_FOUND));
-    return PrincipalDetails.create(user);
+    Account account = memberRepository.findByEmail(username)
+                                      .orElseThrow(() -> new EntityException(ServiceErrorCode.USER_NOT_FOUND));
+    return PrincipalDetails.create(account);
   }
 
 }

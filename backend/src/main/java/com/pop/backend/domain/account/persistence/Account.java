@@ -1,8 +1,8 @@
-package com.pop.backend.domain.user.entity;
+package com.pop.backend.domain.account.persistence;
 
+import com.pop.backend.domain.account.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.type.Role;
 import com.pop.backend.global.type.BaseEntity;
-import com.pop.backend.global.type.ProviderType;
-import com.pop.backend.global.type.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Account extends BaseEntity {
 
   private String email;
 
@@ -30,17 +30,20 @@ public class User extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   private ProviderType providerType = ProviderType.LOCAL;
 
+  private String providerId;
+
   @Default
   @Enumerated(value = EnumType.STRING)
   private Role role = Role.USER;
 
-  private User(String email, String password, String nickname, String profileImage, ProviderType providerType,
-      Role role) {
+  private Account(String email, String password, String nickname, String profileImage, ProviderType providerType,
+      String providerId, Role role) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
     this.profileImage = profileImage;
     this.providerType = providerType;
+    this.providerId = providerId;
     this.role = role;
   }
 
