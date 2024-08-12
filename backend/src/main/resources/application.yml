@@ -28,6 +28,7 @@ spring:
 
 secret:
   jwt: ${JWT_SECRET}
+  kakao-admin: ${KAKAO_ADMIN}
 
 logging:
   config: classpath:log4j2/log4j2.yml

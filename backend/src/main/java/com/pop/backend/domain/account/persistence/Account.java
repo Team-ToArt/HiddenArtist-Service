@@ -6,6 +6,7 @@ import com.pop.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -30,14 +31,14 @@ public class Account extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   private ProviderType providerType = ProviderType.LOCAL;
 
-  private String providerId;
+  private Long providerId;
 
   @Default
   @Enumerated(value = EnumType.STRING)
   private Role role = Role.USER;
 
   private Account(String email, String password, String nickname, String profileImage, ProviderType providerType,
-      String providerId, Role role) {
+      Long providerId, Role role) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
@@ -49,6 +50,10 @@ public class Account extends BaseEntity {
 
   public String getRoleKey() {
     return role.getKey();
+  }
+
+  public void updateDeleteDate() {
+    this.setDelete_date(LocalDateTime.now());
   }
 
 }

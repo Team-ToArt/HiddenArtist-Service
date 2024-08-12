@@ -23,7 +23,7 @@ public class AuthorizationService {
   private Account save(OAuth2UserAttributes oAuth2UserAttributes) {
     String encodedPassword = passwordEncoder.encodedOAuth2Password(
         oAuth2UserAttributes.providerType(), oAuth2UserAttributes.email());
-    Account account = oAuth2UserAttributes.toMember(encodedPassword);
+    Account account = oAuth2UserAttributes.toAccount(encodedPassword);
     return memberRepository.save(account);
   }
 }

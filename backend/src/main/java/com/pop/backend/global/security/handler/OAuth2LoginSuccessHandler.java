@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-  private final RedirectStrategy redirectStrategy;
   private final TokenService tokenService;
 
   @Value("${redirect-url.login-success}")
@@ -36,7 +34,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
       Authentication authentication) throws IOException, ServletException {
     GenerateToken tokens = generateToken(authentication);
     CookieManager.storeTokenInCookie(tokens, response);
-    redirectStrategy.sendRedirect(request, response, REDIRECT_URL);
+    response.sendRedirect(REDIRECT_URL);
   }
 
   private GenerateToken generateToken(Authentication authentication) {
