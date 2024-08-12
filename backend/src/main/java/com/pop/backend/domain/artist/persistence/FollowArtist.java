@@ -1,6 +1,6 @@
 package com.pop.backend.domain.artist.persistence;
 
-import com.pop.backend.domain.member.persistence.Member;
+import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 public class FollowArtist extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Member member;
+  private Account account;
   @ManyToOne(fetch = FetchType.LAZY)
   private Artist artist;
 
-  private FollowArtist(Member member, Artist artist) {
-    this.member = member;
+  private FollowArtist(Account account, Artist artist) {
+    this.account = account;
     this.artist = artist;
   }
 

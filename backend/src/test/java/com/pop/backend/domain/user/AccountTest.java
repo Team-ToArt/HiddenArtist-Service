@@ -3,14 +3,14 @@ package com.pop.backend.domain.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.pop.backend.domain.member.persistence.Member;
-import com.pop.backend.domain.member.persistence.type.ProviderType;
-import com.pop.backend.domain.member.persistence.type.Role;
+import com.pop.backend.domain.account.persistence.Account;
+import com.pop.backend.domain.account.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.type.Role;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class MemberTest {
+class AccountTest {
 
   @Test
   @DisplayName("User Builder Test")
@@ -29,22 +29,22 @@ class MemberTest {
     Role adminRole = Role.ADMIN;
 
     //when
-    Member member = Member.builder()
-                          .email(userEmail)
-                          .password(userPassword)
-                          .nickname(userNickname)
-                          .build();
-    Member admin = Member.builder()
-                         .email(adminEmail)
-                         .password(adminPassword)
-                         .nickname(adminNickname)
-                         .providerType(adminType)
-                         .role(adminRole)
-                         .build();
-    List<Member> memberList = List.of(member, admin);
+    Account account = Account.builder()
+                             .email(userEmail)
+                             .password(userPassword)
+                             .nickname(userNickname)
+                             .build();
+    Account admin = Account.builder()
+                           .email(adminEmail)
+                           .password(adminPassword)
+                           .nickname(adminNickname)
+                           .providerType(adminType)
+                           .role(adminRole)
+                           .build();
+    List<Account> accountList = List.of(account, admin);
 
     //then
-    assertThat(memberList)
+    assertThat(accountList)
         .extracting("providerType", "role")
         .containsExactly(
             tuple(defaultType, defaultRole),

@@ -1,7 +1,7 @@
 package com.pop.backend.global.security.auth;
 
-import com.pop.backend.domain.member.persistence.Member;
-import com.pop.backend.domain.member.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.Account;
+import com.pop.backend.domain.account.persistence.type.ProviderType;
 import com.pop.backend.global.exception.type.SecurityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
@@ -74,14 +74,14 @@ public record OAuth2UserAttributes(
     return (Map<String, Object>) attributes.get(ATTRIBUTES_FIELD);
   }
 
-  public Member toMember(String password) {
-    return Member.builder()
-                 .email(email)
-                 .nickname(nickname)
-                 .profileImage(image)
-                 .password(password)
-                 .providerType(providerType)
-                 .build();
+  public Account toMember(String password) {
+    return Account.builder()
+                  .email(email)
+                  .nickname(nickname)
+                  .profileImage(image)
+                  .password(password)
+                  .providerType(providerType)
+                  .build();
   }
 
 }

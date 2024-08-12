@@ -1,6 +1,6 @@
 package com.pop.backend.global.utils;
 
-import com.pop.backend.domain.member.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.type.ProviderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

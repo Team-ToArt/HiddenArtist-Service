@@ -1,6 +1,6 @@
 package com.pop.backend.domain.artwork.persistence;
 
-import com.pop.backend.domain.member.persistence.Member;
+import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 public class PickArtwork extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Member member;
+  private Account account;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Artwork artwork;
 
-  private PickArtwork(Member member, Artwork artwork) {
-    this.member = member;
+  private PickArtwork(Account account, Artwork artwork) {
+    this.account = account;
     this.artwork = artwork;
   }
 
