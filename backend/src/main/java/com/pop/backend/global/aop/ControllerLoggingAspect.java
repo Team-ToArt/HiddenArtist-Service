@@ -2,6 +2,8 @@ package com.pop.backend.global.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -92,7 +94,11 @@ public class ControllerLoggingAspect {
     Object[] args = joinPoint.getArgs();
     Map<String, Object> params = new HashMap<>();
     for (int i = 0; i < parameterNames.length; i++) {
-      params.put(parameterNames[i], args[i]);
+      Object arg = args[i];
+      if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
+        continue;
+      }
+      params.put(parameterNames[i], arg);
     }
     return params;
   }
