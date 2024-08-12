@@ -1,7 +1,7 @@
 package com.pop.backend.global.security.service;
 
-import com.pop.backend.domain.user.entity.User;
-import com.pop.backend.domain.user.repository.UserRepository;
+import com.pop.backend.domain.member.persistence.Member;
+import com.pop.backend.domain.member.persistence.repository.MemberRepository;
 import com.pop.backend.global.security.auth.OAuth2UserAttributes;
 import com.pop.backend.global.utils.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -12,18 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthorizationService {
 
-  private final UserRepository userRepository;
+  private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
-  public User validateUser(OAuth2UserAttributes oAuth2UserAttributes) {
-    return userRepository.findByEmail(oAuth2UserAttributes.email()).orElseGet(() -> save(oAuth2UserAttributes));
+  public Member validateUser(OAuth2UserAttributes oAuth2UserAttributes) {
+    return memberRepository.findByEmail(oAuth2UserAttributes.email()).orElseGet(() -> save(oAuth2UserAttributes));
   }
 
-  private User save(OAuth2UserAttributes oAuth2UserAttributes) {
+  private Member save(OAuth2UserAttributes oAuth2UserAttributes) {
     String encodedPassword = passwordEncoder.encodedOAuth2Password(
         oAuth2UserAttributes.providerType(), oAuth2UserAttributes.email());
-    User user = oAuth2UserAttributes.toUser(encodedPassword);
-    return userRepository.save(user);
+    Member member = oAuth2UserAttributes.toMember(encodedPassword);
+    return memberRepository.save(member);
   }
 }

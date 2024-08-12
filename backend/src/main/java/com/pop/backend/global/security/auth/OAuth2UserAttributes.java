@@ -1,10 +1,10 @@
 package com.pop.backend.global.security.auth;
 
-import com.pop.backend.domain.user.entity.User;
+import com.pop.backend.domain.member.persistence.Member;
+import com.pop.backend.domain.member.persistence.type.ProviderType;
 import com.pop.backend.global.exception.type.SecurityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
-import com.pop.backend.global.type.ProviderType;
 import java.util.Map;
 
 public record OAuth2UserAttributes(
@@ -74,14 +74,14 @@ public record OAuth2UserAttributes(
     return (Map<String, Object>) attributes.get(ATTRIBUTES_FIELD);
   }
 
-  public User toUser(String password) {
-    return User.builder()
-               .email(email)
-               .nickname(nickname)
-               .profileImage(image)
-               .password(password)
-               .providerType(providerType)
-               .build();
+  public Member toMember(String password) {
+    return Member.builder()
+                 .email(email)
+                 .nickname(nickname)
+                 .profileImage(image)
+                 .password(password)
+                 .providerType(providerType)
+                 .build();
   }
 
 }

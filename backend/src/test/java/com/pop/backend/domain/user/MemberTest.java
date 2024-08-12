@@ -3,14 +3,14 @@ package com.pop.backend.domain.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.pop.backend.domain.user.entity.User;
-import com.pop.backend.global.type.ProviderType;
-import com.pop.backend.global.type.Role;
+import com.pop.backend.domain.member.persistence.Member;
+import com.pop.backend.domain.member.persistence.type.ProviderType;
+import com.pop.backend.domain.member.persistence.type.Role;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class UserTest {
+class MemberTest {
 
   @Test
   @DisplayName("User Builder Test")
@@ -29,22 +29,22 @@ class UserTest {
     Role adminRole = Role.ADMIN;
 
     //when
-    User user = User.builder()
-                    .email(userEmail)
-                    .password(userPassword)
-                    .nickname(userNickname)
-                    .build();
-    User admin = User.builder()
-                     .email(adminEmail)
-                     .password(adminPassword)
-                     .nickname(adminNickname)
-                     .providerType(adminType)
-                     .role(adminRole)
-                     .build();
-    List<User> userList = List.of(user, admin);
+    Member member = Member.builder()
+                          .email(userEmail)
+                          .password(userPassword)
+                          .nickname(userNickname)
+                          .build();
+    Member admin = Member.builder()
+                         .email(adminEmail)
+                         .password(adminPassword)
+                         .nickname(adminNickname)
+                         .providerType(adminType)
+                         .role(adminRole)
+                         .build();
+    List<Member> memberList = List.of(member, admin);
 
     //then
-    assertThat(userList)
+    assertThat(memberList)
         .extracting("providerType", "role")
         .containsExactly(
             tuple(defaultType, defaultRole),

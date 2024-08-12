@@ -1,6 +1,6 @@
 package com.pop.backend.global.security.auth;
 
-import com.pop.backend.domain.user.entity.User;
+import com.pop.backend.domain.member.persistence.Member;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -25,17 +25,17 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     this.authorities = authorities;
   }
 
-  public static PrincipalDetails create(User user, Map<String, Object> attributes) {
-    String roleKey = user.getRoleKey();
+  public static PrincipalDetails create(Member member, Map<String, Object> attributes) {
+    String roleKey = member.getRoleKey();
     Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(roleKey));
-    SecurityUserInfo userInfo = SecurityUserInfo.convert(user);
+    SecurityUserInfo userInfo = SecurityUserInfo.convert(member);
     return new PrincipalDetails(userInfo, attributes, authorities);
   }
 
-  public static PrincipalDetails create(User user) {
-    String roleKey = user.getRoleKey();
+  public static PrincipalDetails create(Member member) {
+    String roleKey = member.getRoleKey();
     Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(roleKey));
-    SecurityUserInfo userInfo = SecurityUserInfo.convert(user);
+    SecurityUserInfo userInfo = SecurityUserInfo.convert(member);
     return new PrincipalDetails(userInfo, authorities);
   }
 

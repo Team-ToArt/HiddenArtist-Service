@@ -1,6 +1,6 @@
 package com.pop.backend.global.security.service;
 
-import com.pop.backend.domain.user.entity.User;
+import com.pop.backend.domain.member.persistence.Member;
 import com.pop.backend.global.security.auth.OAuth2ProviderRegistry;
 import com.pop.backend.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 import com.pop.backend.global.security.auth.OAuth2UserAttributes;
@@ -30,8 +30,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     OAuth2UserAttributes oAuth2UserAttributes = OAuth2UserAttributes.of(providerType, attributes);
 
-    User user = authorizationService.validateUser(oAuth2UserAttributes);
+    Member member = authorizationService.validateUser(oAuth2UserAttributes);
 
-    return PrincipalDetails.create(user, attributes);
+    return PrincipalDetails.create(member, attributes);
   }
 }

@@ -1,8 +1,9 @@
-package com.pop.backend.domain.user.repository;
+package com.pop.backend.domain.member.persistence.repository;
 
-import static com.pop.backend.domain.user.entity.QUser.user;
 
-import com.pop.backend.global.type.Role;
+import static com.pop.backend.domain.member.persistence.QMember.member;
+
+import com.pop.backend.domain.member.persistence.type.Role;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +11,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class QUserRepositoryImpl implements QUserRepository {
+public class QMemberRepositoryImpl implements QMemberRepository {
 
   private final JPAQueryFactory queryFactory;
 
   @Override
   public boolean existsAdminByEmailAndRole(String email, Role role) {
-    return Objects.nonNull(queryFactory.selectFrom(user)
+    return Objects.nonNull(queryFactory.selectFrom(member)
                                        .where(
-                                           user.email.eq(email).and(user.role.eq(role))
+                                           member.email.eq(email).and(member.role.eq(role))
                                        )
                                        .fetchOne());
   }
