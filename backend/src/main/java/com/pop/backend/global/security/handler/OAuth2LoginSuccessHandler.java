@@ -7,12 +7,15 @@ import com.pop.backend.global.utils.CookieManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +38,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     GenerateToken tokens = generateToken(authentication);
     CookieManager.storeTokenInCookie(tokens, response);
     response.sendRedirect(REDIRECT_URL);
+    clearSession(request);
   }
 
   private GenerateToken generateToken(Authentication authentication) {
@@ -45,6 +49,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                              .map(GrantedAuthority::getAuthority)
                              .collect(Collectors.joining(","));
     return tokenService.createJWT(email, authorities);
+  }
+
+  private void clearSession(HttpServletRequest request) {
+    SecurityContextHolder.clearContext();
+    HttpSession session = request.getSession(false);
+    if (Objects.nonNull(session)) {
+      session.invalidate();
+    }
   }
 
 }
