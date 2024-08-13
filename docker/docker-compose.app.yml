@@ -1,3 +1,4 @@
+name: project_pop
 services:
   nginx:
     container_name: pop_nginx
@@ -12,12 +13,12 @@ services:
   springboot:
     container_name: pop_backend
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile
     ports:
       - '8080:8080'
     env_file:
-      - ./env/springboot-docker.env
+      - ../env/springboot-docker.env
     networks:
       - pop-network
 
