@@ -1,4 +1,4 @@
-package com.pop.backend.domain.user;
+package com.pop.backend.domain.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
