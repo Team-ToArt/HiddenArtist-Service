@@ -13,9 +13,9 @@ public class OAuth2UnlinkManager {
 
   private final KakaoOAuth2Unlink kakaoOAuth2Unlink;
 
-  public void unlink(ProviderType providerType, String value) {
-    if (Objects.requireNonNull(providerType) == ProviderType.KAKAO) {
-      kakaoOAuth2Unlink.unlink(value);
+  public boolean unlink(ProviderType providerType, String value) {
+    if (Objects.equals(providerType, ProviderType.KAKAO)) {
+      return kakaoOAuth2Unlink.unlink(value);
     } else {
       // OAuth2 Provider 확장 시 수정
       throw new SecurityException(ServiceErrorCode.PROVIDER_NOT_FOUND);

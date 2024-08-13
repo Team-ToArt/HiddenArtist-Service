@@ -22,13 +22,18 @@ public class KakaoOAuth2Unlink implements OAuth2Unlink {
   @Value("${secret.kakao-admin}")
   private String adminKey;
 
-  @Override
-  public void unlink(String value) {
-    final String authorization = "KakaoAK " + adminKey;
-
+  private static MultiValueMap<String, String> createBody(String value) {
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
     body.add("target_id_type", "user_id");
     body.add("target_id", value);
+    return body;
+  }
+
+  @Override
+  public boolean unlink(String value) {
+    final String authorization = "KakaoAK " + adminKey;
+
+    MultiValueMap<String, String> body = createBody(value);
 
     Response response = restClient.post()
                                   .uri(UNLINK_URL)
@@ -38,9 +43,10 @@ public class KakaoOAuth2Unlink implements OAuth2Unlink {
                                   .retrieve()
                                   .body(Response.class);
 
-    if (Objects.nonNull(response) && !Objects.equals(response.id(), value)) {
-      throw new SecurityException(ServiceErrorCode.BODY_DATA_NOT_FOUND);
+    if (Objects.nonNull(response) && Objects.equals(response.id(), value)) {
+      return true;
     }
+    throw new SecurityException(ServiceErrorCode.BODY_DATA_NOT_FOUND);
   }
 
   private record Response(

@@ -16,7 +16,9 @@ public enum ServiceErrorCode {
   JSON_DESERIALIZE_ERROR(HttpStatus.CONFLICT, "JSON to Object 변환에 실패하였습니다."),
   INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 Content-Type 입니다."),
   BODY_DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "Body 데이터 형식이 올바르지 않습니다."),
-  REDIS_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND, "Key와 일치하는 데이터가 존재하지 않습니다.");
+  REDIS_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND, "Key와 일치하는 데이터가 존재하지 않습니다."),
+  UNLINK_FAIL(HttpStatus.CONFLICT, "OAuth2 연결 끊기에 실패하였습니다."),
+  ACCOUNT_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 탈퇴한 계정입니다.");
 
   private final HttpStatus status;
   private final String errorMessage;

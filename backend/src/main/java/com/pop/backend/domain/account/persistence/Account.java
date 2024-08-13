@@ -6,7 +6,6 @@ import com.pop.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -50,10 +49,6 @@ public class Account extends BaseEntity {
 
   public String getRoleKey() {
     return role.getKey();
-  }
-
-  public void updateDeleteDate() {
-    this.setDelete_date(LocalDateTime.now());
   }
 
 }

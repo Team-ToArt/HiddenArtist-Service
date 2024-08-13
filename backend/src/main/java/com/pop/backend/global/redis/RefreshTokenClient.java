@@ -8,9 +8,11 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component("RefreshTokenClient")
 @RequiredArgsConstructor
+@Transactional
 public class RefreshTokenClient implements RedisClient<RefreshToken> {
 
   private static final long TTL = 7L;
