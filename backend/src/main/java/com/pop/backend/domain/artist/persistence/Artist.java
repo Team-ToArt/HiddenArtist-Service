@@ -22,11 +22,14 @@ public class Artist extends BaseEntity {
 
   private String description;
 
-  private Artist(String name, LocalDate birth, String profileImage, String description) {
+  private String token;
+
+  public Artist(String name, LocalDate birth, String profileImage, String description, String token) {
     this.name = name;
     this.birth = birth;
     this.profileImage = profileImage;
     this.description = description;
+    this.token = token;
   }
 
 }

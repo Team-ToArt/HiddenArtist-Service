@@ -2,9 +2,13 @@ package com.pop.backend.domain.account.persistence.repository;
 
 
 import static com.pop.backend.domain.account.persistence.QAccount.account;
+import static com.pop.backend.domain.artist.persistence.QArtist.artist;
+import static com.pop.backend.domain.artist.persistence.QFollowArtist.followArtist;
 
 import com.pop.backend.domain.account.persistence.type.Role;
+import com.pop.backend.domain.artist.persistence.Artist;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,8 +24,22 @@ public class QAccountRepositoryImpl implements QAccountRepository {
     return Objects.nonNull(queryFactory.selectFrom(account)
                                        .where(
                                            account.email.eq(email).and(account.role.eq(role))
-                                       )
-                                       .fetchOne());
+                                       ).fetchOne());
+  }
+
+  @Override
+  public void removeFollowArtists(String email, List<String> tokens) {
+    List<Artist> artists = queryFactory.selectFrom(artist)
+                                       .where(artist.token.in(tokens))
+                                       .fetch();
+    if (artists.isEmpty()) {
+      return;
+    }
+    queryFactory.delete(followArtist)
+                .where(
+                    followArtist.artist.in(artists)
+                                       .and(followArtist.account.email.eq(email))
+                ).execute();
   }
 
 }

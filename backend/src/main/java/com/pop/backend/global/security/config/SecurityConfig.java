@@ -63,7 +63,9 @@ public class SecurityConfig {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .anyRequest().permitAll()); // API 설계시 수정 예정
+        .requestMatchers(HttpMethod.GET, "/api/accounts/signin/{provider}")
+        .permitAll()
+        .anyRequest().authenticated()); // API 설계시 수정 예정
 
     http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig

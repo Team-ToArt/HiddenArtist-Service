@@ -25,17 +25,17 @@ Configutation:
     RollingFile:
       name: rolling-file-appender
       fileName: ${log-path}/rolling-file.log
-      filePattern: "${log-path}/archive/rollingFile.log.%d{yyyy-MM-dd_hhmm}_%i.gz"
+      filePattern: "${log-path}/archive/$${date:yyyy-MM}/rollingFile.log.%d{MM-dd-yyyy}_%i.gz"
       immediateFlush: "false"
       PatternLayout:
         charset: ${charset-UTF-8}
         pattern: ${file-layout-pattern}
       Policies:
         SizeBasedTriggeringPolicy:
-          size: "200KB"
+          size: "20MB"
         TimeBasedTriggeringPolicy:
           interval: "1"
-      DefaultRollOverStrategy:
+      DefaultRolloverStrategy:
         max: "10"
         fileIndex: "max"
 

@@ -8,8 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,11 +18,6 @@ public class SecurityBeanConfig {
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
-  }
-
-  @Bean
-  public RedirectStrategy redirectStrategy() {
-    return new DefaultRedirectStrategy();
   }
 
   @Bean

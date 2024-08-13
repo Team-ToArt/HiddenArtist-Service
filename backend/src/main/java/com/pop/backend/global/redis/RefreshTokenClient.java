@@ -1,14 +1,18 @@
 package com.pop.backend.global.redis;
 
+import com.pop.backend.global.exception.type.EntityException;
+import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.jwt.RefreshToken;
 import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component("RefreshTokenClient")
 @RequiredArgsConstructor
+@Transactional
 public class RefreshTokenClient implements RedisClient<RefreshToken> {
 
   private static final long TTL = 7L;
@@ -22,7 +26,8 @@ public class RefreshTokenClient implements RedisClient<RefreshToken> {
 
   @Override
   public RefreshToken findBy(String key) {
-    return Optional.ofNullable(redis.opsForValue().get(REFRESH_TOKEN_PREFIX + key)).orElseThrow();
+    RefreshToken value = redis.opsForValue().get(REFRESH_TOKEN_PREFIX + key);
+    return Optional.ofNullable(value).orElseThrow(() -> new EntityException(ServiceErrorCode.REDIS_VALUE_NOT_FOUND));
   }
 
   @Override
