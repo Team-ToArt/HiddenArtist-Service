@@ -25,14 +25,17 @@ public class Artwork extends BaseEntity {
 
   private LocalDate productionYear;
 
+  private String token;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Artist artist;
 
-  public Artwork(String name, String image, String description, LocalDate productionYear, Artist artist) {
+  public Artwork(String name, String image, String description, LocalDate productionYear, String token, Artist artist) {
     this.name = name;
     this.image = image;
     this.description = description;
     this.productionYear = productionYear;
+    this.token = token;
     this.artist = artist;
   }
 

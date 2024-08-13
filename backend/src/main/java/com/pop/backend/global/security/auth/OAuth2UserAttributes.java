@@ -12,7 +12,8 @@ public record OAuth2UserAttributes(
     ProviderType providerType,
     String email,
     String nickname,
-    String image
+    String image,
+    Long providerId
 ) {
 
   public static OAuth2UserAttributes of(OAuth2ProviderType providerType, Map<String, Object> attributes) {
@@ -33,6 +34,7 @@ public record OAuth2UserAttributes(
   @SuppressWarnings("unchecked")
   private static OAuth2UserAttributes fromKakao
       (OAuth2ProviderType providerType, Map<String, Object> attributes) {
+    Long providerId = (Long) attributes.get("id");
     Map<String, Object> kakaoAttributes = extractAttributes(providerType.ATTRIBUTES_FIELD, attributes);
     String email = (String) kakaoAttributes.get(providerType.EMAIL_FIELD);
 
@@ -42,7 +44,8 @@ public record OAuth2UserAttributes(
         ProviderType.find(providerType.name()),
         email,
         (String) kakaoAttributes.get(providerType.NICKNAME_FIELD),
-        (String) kakaoAttributes.get(providerType.IMAGE_FILED)
+        (String) kakaoAttributes.get(providerType.IMAGE_FILED),
+        providerId
     );
   }
 
@@ -54,7 +57,8 @@ public record OAuth2UserAttributes(
         ProviderType.find(providerType.name()),
         (String) naverAttributes.get(providerType.EMAIL_FIELD),
         (String) naverAttributes.get(providerType.NICKNAME_FIELD),
-        (String) naverAttributes.get(providerType.IMAGE_FILED)
+        (String) naverAttributes.get(providerType.IMAGE_FILED),
+        null
     );
   }
 
@@ -65,7 +69,8 @@ public record OAuth2UserAttributes(
         ProviderType.find(providerType.name()),
         (String) attributes.get(providerType.EMAIL_FIELD),
         (String) attributes.get(providerType.NICKNAME_FIELD),
-        (String) attributes.get(providerType.IMAGE_FILED)
+        (String) attributes.get(providerType.IMAGE_FILED),
+        null
     );
   }
 
@@ -74,13 +79,14 @@ public record OAuth2UserAttributes(
     return (Map<String, Object>) attributes.get(ATTRIBUTES_FIELD);
   }
 
-  public Account toMember(String password) {
+  public Account toAccount(String password) {
     return Account.builder()
                   .email(email)
                   .nickname(nickname)
                   .profileImage(image)
                   .password(password)
                   .providerType(providerType)
+                  .providerId(providerId)
                   .build();
   }
 
