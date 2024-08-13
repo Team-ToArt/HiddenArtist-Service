@@ -23,15 +23,15 @@ public class ArtistContact extends BaseEntity {
 
   private String label;
 
-  private String value;
+  private String contactValue;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Artist artist;
 
-  private ArtistContact(ContactType type, String label, String value, Artist artist) {
+  private ArtistContact(ContactType type, String label, String contactValue, Artist artist) {
     this.type = type;
     this.label = label;
-    this.value = value;
+    this.contactValue = contactValue;
     this.artist = artist;
   }
 

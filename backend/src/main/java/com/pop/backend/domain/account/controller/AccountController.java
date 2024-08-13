@@ -1,9 +1,11 @@
 package com.pop.backend.domain.account.controller;
 
+import com.pop.backend.domain.account.controller.request.AccountDeleteFollowArtistRequest;
 import com.pop.backend.domain.account.controller.request.AccountUpdateImageRequest;
 import com.pop.backend.domain.account.controller.request.AccountUpdateNicknameRequest;
 import com.pop.backend.domain.account.controller.response.AccountGetDetailResponse;
 import com.pop.backend.domain.account.controller.response.AccountGetSimpleResponse;
+import com.pop.backend.domain.account.controller.response.FollowArtistGetListResponse;
 import com.pop.backend.domain.account.service.AccountService;
 import com.pop.backend.global.type.CookieNames;
 import com.pop.backend.global.utils.CookieManager;
@@ -63,6 +65,17 @@ public class AccountController {
   public void updateAccountImage(@RequestBody AccountUpdateImageRequest imageRequest,
       @AuthenticationPrincipal String email) {
     accountService.updateAccountImage(email, imageRequest.profileImage());
+  }
+
+  @GetMapping("/me/artists")
+  public FollowArtistGetListResponse getFollowArtists(@AuthenticationPrincipal String email) {
+    return accountService.getFollowArtists(email);
+  }
+
+  @DeleteMapping("/me/artists")
+  public void deleteFollowArtists(@RequestBody AccountDeleteFollowArtistRequest deleteFollowArtistRequest,
+      @AuthenticationPrincipal String email) {
+    accountService.deleteFollowArtists(email, deleteFollowArtistRequest.artists());
   }
 
 }

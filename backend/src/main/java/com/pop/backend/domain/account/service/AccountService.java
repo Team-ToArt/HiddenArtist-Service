@@ -1,14 +1,20 @@
 package com.pop.backend.domain.account.service;
 
+import com.pop.backend.domain.account.controller.request.AccountDeleteFollowArtistRequest.FollowArtistToken;
 import com.pop.backend.domain.account.controller.response.AccountGetDetailResponse;
 import com.pop.backend.domain.account.controller.response.AccountGetSimpleResponse;
+import com.pop.backend.domain.account.controller.response.FollowArtistGetListResponse;
 import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.account.persistence.repository.AccountRepository;
+import com.pop.backend.domain.artist.persistence.Artist;
+import com.pop.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.pop.backend.global.exception.type.EntityException;
 import com.pop.backend.global.exception.type.SecurityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.jwt.TokenService;
 import com.pop.backend.global.security.service.OAuth2UnlinkManager;
+import com.pop.backend.global.type.EntityToken;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
   private final AccountRepository accountRepository;
+  private final ArtistRepository artistRepository;
   private final TokenService tokenService;
   private final OAuth2UnlinkManager unlinkManager;
 
@@ -60,6 +67,21 @@ public class AccountService {
     accountRepository.save(account);
   }
 
+  @Transactional(readOnly = true)
+  public FollowArtistGetListResponse getFollowArtists(String email) {
+    List<Artist> artists = artistRepository.findFollowArtistListByAccountEmail(email);
+    return FollowArtistGetListResponse.convert(artists);
+  }
+
+  @Transactional
+  public void deleteFollowArtists(String email, List<FollowArtistToken> artistTokens) {
+    List<String> tokens = artistTokens.stream()
+                                      .map(FollowArtistToken::token)
+                                      .map(EntityToken.ARTIST::identifyToken)
+                                      .toList();
+    accountRepository.removeFollowArtists(email, tokens);
+  }
+
   private Account findAccountByEmail(String email) {
     return accountRepository.findByEmail(email)
                             .orElseThrow(() -> new EntityException(ServiceErrorCode.USER_NOT_FOUND));
@@ -70,7 +92,6 @@ public class AccountService {
       throw new EntityException(ServiceErrorCode.ACCOUNT_ALREADY_DELETED);
     }
   }
-
 
   private void unlinkAccount(Account account) {
     try {
