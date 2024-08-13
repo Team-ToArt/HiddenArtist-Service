@@ -1,5 +1,9 @@
 package com.pop.backend.domain.account.controller;
 
+import com.pop.backend.domain.account.controller.request.AccountUpdateImageRequest;
+import com.pop.backend.domain.account.controller.request.AccountUpdateNicknameRequest;
+import com.pop.backend.domain.account.controller.response.AccountGetDetailResponse;
+import com.pop.backend.domain.account.controller.response.AccountGetSimpleResponse;
 import com.pop.backend.domain.account.service.AccountService;
 import com.pop.backend.global.type.CookieNames;
 import com.pop.backend.global.utils.CookieManager;
@@ -10,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,12 +35,34 @@ public class AccountController {
   }
 
   @DeleteMapping("/withdraw")
-  public void withDrawAccount(@AuthenticationPrincipal String email,
+  public void removeAccountWithdraw(@AuthenticationPrincipal String email,
       HttpServletRequest request, HttpServletResponse response) {
     String refreshToken = CookieManager.getCookie(CookieNames.REFRESH_TOKEN.getName(), request);
     accountService.withDrawAccount(email, refreshToken);
     CookieManager.removeCookie(CookieNames.ACCESS_TOKEN.getName(), response);
     CookieManager.removeCookie(CookieNames.REFRESH_TOKEN.getName(), response);
+  }
+
+  @GetMapping("/me/profile")
+  public AccountGetSimpleResponse getAccountSimpleProfile(@AuthenticationPrincipal String email) {
+    return accountService.getAccountSimpleInfo(email);
+  }
+
+  @GetMapping("/me")
+  public AccountGetDetailResponse getAccountDetailProfile(@AuthenticationPrincipal String email) {
+    return accountService.getAccountDetailInfo(email);
+  }
+
+  @PatchMapping("/me/nickname")
+  public void updateAccountNickname(@RequestBody AccountUpdateNicknameRequest nicknameRequest,
+      @AuthenticationPrincipal String email) {
+    accountService.updateAccountNickname(email, nicknameRequest.nickname());
+  }
+
+  @PatchMapping("/me/image")
+  public void updateAccountImage(@RequestBody AccountUpdateImageRequest imageRequest,
+      @AuthenticationPrincipal String email) {
+    accountService.updateAccountImage(email, imageRequest.profileImage());
   }
 
 }

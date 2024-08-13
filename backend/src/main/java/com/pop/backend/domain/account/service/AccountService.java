@@ -1,5 +1,7 @@
 package com.pop.backend.domain.account.service;
 
+import com.pop.backend.domain.account.controller.response.AccountGetDetailResponse;
+import com.pop.backend.domain.account.controller.response.AccountGetSimpleResponse;
 import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.account.persistence.repository.AccountRepository;
 import com.pop.backend.global.exception.type.EntityException;
@@ -28,7 +30,36 @@ public class AccountService {
     account.updateDeleteDate();
     accountRepository.save(account);
   }
-  
+
+  @Transactional(readOnly = true)
+  public AccountGetSimpleResponse getAccountSimpleInfo(String email) {
+    Account account = findAccountByEmail(email);
+    return AccountGetSimpleResponse.of(account);
+  }
+
+  @Transactional(readOnly = true)
+  public AccountGetDetailResponse getAccountDetailInfo(String email) {
+    Account account = findAccountByEmail(email);
+    return AccountGetDetailResponse.of(account);
+  }
+
+  @Transactional
+  public void updateAccountNickname(String email, String nickname) {
+    Account account = findAccountByEmail(email);
+    account.updateNickname(nickname);
+    accountRepository.save(account);
+  }
+
+  @Transactional
+  public void updateAccountImage(String email, String profileImage) {
+    Account account = findAccountByEmail(email);
+    // s3 연동이 필요.
+    // 들어온 이미지 파일을 -> s3에 업로드
+    // s3에서 응답되는 파일을 저장
+    account.updateProfileImage(profileImage);
+    accountRepository.save(account);
+  }
+
   private Account findAccountByEmail(String email) {
     return accountRepository.findByEmail(email)
                             .orElseThrow(() -> new EntityException(ServiceErrorCode.USER_NOT_FOUND));

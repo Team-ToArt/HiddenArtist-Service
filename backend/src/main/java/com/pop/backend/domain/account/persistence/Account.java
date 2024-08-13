@@ -51,4 +51,12 @@ public class Account extends BaseEntity {
     return role.getKey();
   }
 
+  public void updateNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  public void updateProfileImage(String profileImage) {
+    this.profileImage = profileImage;
+  }
+
 }
