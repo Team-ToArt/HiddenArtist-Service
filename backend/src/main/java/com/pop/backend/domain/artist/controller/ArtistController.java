@@ -22,7 +22,7 @@ public class ArtistController {
    */
   @GetMapping
   public ArtistGetListResponse getAllArtists(
-      @PageableDefault(page = 1, size = 12, sort = "name", direction = Direction.ASC) Pageable pageable) {
+      @PageableDefault(page = 1, size = 12, sort = {"name", "birth"}, direction = Direction.ASC) Pageable pageable) {
     return artistService.getAllArtists(pageable);
   }
 

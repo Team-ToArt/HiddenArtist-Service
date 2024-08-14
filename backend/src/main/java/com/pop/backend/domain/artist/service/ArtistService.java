@@ -1,7 +1,7 @@
 package com.pop.backend.domain.artist.service;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
-import com.pop.backend.domain.artist.persistence.Artist;
+import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +19,8 @@ public class ArtistService {
   @Transactional(readOnly = true)
   public ArtistGetListResponse getAllArtists(Pageable pageable) {
     Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-    Page<Artist> artists = artistRepository.findAllArtists(pageRequest);
-    return ArtistGetListResponse.create(artists);
+    Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
+    return new ArtistGetListResponse(artists);
   }
 
 }

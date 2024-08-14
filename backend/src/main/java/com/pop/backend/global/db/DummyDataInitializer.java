@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class DummyDataInitializer {
     int month = (count % 12) + 1;
     int days = (count % 30) + 1;
     return Artist.builder()
-                 .name("artist" + count)
+                 .name(RandomNameGenerator.getRandomName())
                  .birth(LocalDate.of(year, month, days))
                  .token(EntityToken.ARTIST.randomCharacterWithPrefix())
                  .description("test description " + count)
@@ -65,6 +66,26 @@ public class DummyDataInitializer {
     ps.setString(5, artist.getToken());
     ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
     ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+  }
+
+  private static class RandomNameGenerator {
+
+    private static final List<String> lastNames = Arrays.asList(
+        "김", "이", "박", "최", "한", "윤", "홍", "백", "조", "장", "추", "정",
+        "허", "장", "권", "양", "한", "남궁", "제갈", "표", "고", "오", "배",
+        "송", "문", "심", "안", "황보", "구", "류", "허");
+
+    private static final List<String> firstNames = Arrays.asList(
+        "원주", "민지", "재현", "동원", "창호", "정윤", "승은", "재영", "영진", "승윤", "현주", "지우", "민하", "기홍", "철", "웅", "훈", "건", "린",
+        "예린", "민지", "재범", "동훈", "국", "지혜", "수지", "민기", "성준", "성주", "혜주", "지효", "지원", "형민", "용준", "병철", "규성", "나영", "유리",
+        "윤아", "서윤", "서린", "수린", "무영", "동건", "동석", "승헌", "요한", "요셉", "택"
+    );
+
+    private static String getRandomName() {
+      Collections.shuffle(lastNames);
+      Collections.shuffle(firstNames);
+      return lastNames.get(0) + firstNames.get(0);
+    }
   }
 
 }
