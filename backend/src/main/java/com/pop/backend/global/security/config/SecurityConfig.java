@@ -65,6 +65,8 @@ public class SecurityConfig {
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
         .requestMatchers(HttpMethod.GET, "/api/accounts/signin/{provider}")
         .permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/artists")
+        .permitAll()
         .anyRequest().authenticated()); // API 설계시 수정 예정
 
     http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
