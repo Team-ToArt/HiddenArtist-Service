@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface QArtistRepository {
+public interface CustomArtistRepository {
 
   List<Artist> findFollowArtistListByAccountEmail(String email);
 

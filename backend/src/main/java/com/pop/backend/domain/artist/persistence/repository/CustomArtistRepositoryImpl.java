@@ -8,10 +8,10 @@ import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class QArtistRepositoryImpl implements QArtistRepository {
+public class CustomArtistRepositoryImpl implements CustomArtistRepository {
 
   private final JPAQueryFactory queryFactory;
 
@@ -49,15 +49,10 @@ public class QArtistRepositoryImpl implements QArtistRepository {
   }
 
   private OrderSpecifier<?>[] createOrderSpecifier(Sort sort) {
-    List<OrderSpecifier<?>> orders = new ArrayList<>();
-    sort.forEach(order -> {
-          PathBuilder<Artist> entityPath = new PathBuilder<>(Artist.class, "artist");
-          Order direction = order.isAscending() ? Order.ASC : Order.DESC; // 정렬 방향
-          String prop = order.getProperty(); // 정렬 변수
-          OrderSpecifier<?> tOrderSpecifier = new OrderSpecifier(direction, entityPath.get(prop));
-          orders.add(tOrderSpecifier);
-        }
-    );
-    return orders.toArray(OrderSpecifier[]::new);
+    return sort.stream().map(order -> {
+      Order direction = order.isAscending() ? Order.ASC : Order.DESC; // 정렬 방향
+      SimplePath<Artist> path = Expressions.path(Artist.class, artist, order.getProperty());
+      return new OrderSpecifier(direction, path);
+    }).toArray(OrderSpecifier[]::new);
   }
 }
