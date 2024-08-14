@@ -41,7 +41,9 @@ public class ArtistTest {
   @BeforeEach
   void init() {
     List<Artist> artists = new ArrayList<>();
-    IntStream.rangeClosed(1, 120).mapToObj(this::createArtist).forEach(artists::add);
+    IntStream.rangeClosed(1, 120)
+             .mapToObj(this::createArtist)
+             .forEach(artists::add);
     String sql = "insert into artist (name,token,birth,create_date,update_date) values (?,?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artists, 100, this::addRow);
   }
