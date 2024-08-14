@@ -2,10 +2,11 @@ package com.pop.backend.domain.account.persistence;
 
 import com.pop.backend.domain.account.persistence.type.ProviderType;
 import com.pop.backend.domain.account.persistence.type.Role;
+import com.pop.backend.global.converter.ProviderTypeConverter;
+import com.pop.backend.global.converter.RoleConverter;
 import com.pop.backend.global.type.BaseEntity;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -27,13 +28,13 @@ public class Account extends BaseEntity {
   private String profileImage;
 
   @Default
-  @Enumerated(value = EnumType.STRING)
+  @Convert(converter = ProviderTypeConverter.class)
   private ProviderType providerType = ProviderType.LOCAL;
 
   private Long providerId;
 
   @Default
-  @Enumerated(value = EnumType.STRING)
+  @Convert(converter = RoleConverter.class)
   private Role role = Role.USER;
 
   private Account(String email, String password, String nickname, String profileImage, ProviderType providerType,
