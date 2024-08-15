@@ -26,8 +26,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Redis
-        uses: supercharge/redis-github-action@1.8.0
+#      - name: Setup Redis
+#        uses: supercharge/redis-github-action@1.8.0
 
       - name: Grant execute permission to Gradlew
         run: chmod +x ./gradlew
