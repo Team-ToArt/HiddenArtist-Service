@@ -8,7 +8,7 @@ on:
 
 jobs:
   backend-build:
-    uses: kihong1602/POP/./github/workflows/backend-build.yml@chore/back/github-actions-ci
+    uses: kihong1602/POP/.github/workflows/backend-build.yml@chore/back/github-actions-ci
     secrets: inherit
     permissions:
       contents: read
