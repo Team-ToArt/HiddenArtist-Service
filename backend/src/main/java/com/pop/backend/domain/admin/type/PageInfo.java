@@ -17,13 +17,6 @@ public enum PageInfo {
   private final String viewName;
   private final String title;
 
-  public static Map<String, String> getAttributes(PageInfo pageInfo) {
-    Map<String, String> attributes = new HashMap<>();
-    attributes.put(VIEW_NAME, pageInfo.viewName);
-    attributes.put(TITLE, pageInfo.title);
-    return attributes;
-  }
-
   public Map<String, String> getAttributes() {
     return new HashMap<>() {{
       put(VIEW_NAME, viewName);
