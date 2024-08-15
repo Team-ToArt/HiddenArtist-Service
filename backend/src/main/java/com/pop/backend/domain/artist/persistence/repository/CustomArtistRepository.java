@@ -15,4 +15,6 @@ public interface CustomArtistRepository {
 
   ArtistGetDetailResponse findArtistDetailByToken(String token);
 
+  List<Artist> findPopularArtists();
+
 }

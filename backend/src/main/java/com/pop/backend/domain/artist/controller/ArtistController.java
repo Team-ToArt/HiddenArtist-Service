@@ -2,6 +2,7 @@ package com.pop.backend.domain.artist.controller;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
+import com.pop.backend.domain.artist.controller.response.ArtistGetThreeResponse;
 import com.pop.backend.domain.artist.service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,11 @@ public class ArtistController {
   @GetMapping("/{token}")
   public ArtistGetDetailResponse getArtistDetail(@PathVariable("token") String token) {
     return artistService.getArtistDetail(token);
+  }
+
+  @GetMapping("/popular")
+  public ArtistGetThreeResponse getPopularArtists() {
+    return artistService.getPopularArtists();
   }
 
 }

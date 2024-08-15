@@ -47,7 +47,17 @@ public class FollowArtistTest {
                              .role(Role.USER)
                              .providerType(ProviderType.KAKAO)
                              .build();
-    accountRepository.saveAndFlush(account);
+    Account account2 = Account.builder()
+                              .email("test2@test.com")
+                              .role(Role.USER)
+                              .providerType(ProviderType.KAKAO)
+                              .build();
+    Account account3 = Account.builder()
+                              .email("test3@test.com")
+                              .role(Role.USER)
+                              .providerType(ProviderType.KAKAO)
+                              .build();
+    accountRepository.saveAllAndFlush(List.of(account, account2, account3));
 
     Artist artist1 = Artist.builder()
                            .name("artist1")
@@ -64,12 +74,22 @@ public class FollowArtistTest {
                            .description("test description3")
                            .token("token3")
                            .build();
-    artistRepository.saveAllAndFlush(List.of(artist1, artist2, artist3));
+    Artist artist4 = Artist.builder()
+                           .name("artist4")
+                           .description("test description4")
+                           .token("token4")
+                           .build();
+    artistRepository.saveAllAndFlush(List.of(artist1, artist2, artist3, artist4));
 
     FollowArtist followArtist1 = FollowArtist.builder().account(account).artist(artist1).build();
     FollowArtist followArtist2 = FollowArtist.builder().account(account).artist(artist2).build();
     FollowArtist followArtist3 = FollowArtist.builder().account(account).artist(artist3).build();
-    followArtistRepository.saveAllAndFlush(List.of(followArtist1, followArtist2, followArtist3));
+    FollowArtist followArtist4 = FollowArtist.builder().account(account2).artist(artist3).build();
+    FollowArtist followArtist5 = FollowArtist.builder().account(account3).artist(artist2).build();
+    FollowArtist followArtist6 = FollowArtist.builder().account(account3).artist(artist3).build();
+    followArtistRepository.saveAllAndFlush(
+        List.of(followArtist1, followArtist2, followArtist3, followArtist4, followArtist5,
+            followArtist6));
     logger.info("======================== Test Init end ========================");
   }
 
@@ -100,5 +120,20 @@ public class FollowArtistTest {
                        .containsExactly(
                            tuple("artist2", "test description2")
                        );
+  }
+
+  @Test
+  @DisplayName("Popular Artist 조회 테스트")
+  void getPopularArtists() {
+    //given
+    //when
+    List<Artist> popularArtists = artistRepository.findPopularArtists();
+    //then
+    assertThat(popularArtists)
+        .hasSize(3)
+        .extracting("name")
+        .containsExactly(
+            "artist3", "artist2", "artist1"
+        );
   }
 }

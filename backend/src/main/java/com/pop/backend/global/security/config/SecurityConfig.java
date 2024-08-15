@@ -31,7 +31,8 @@ public class SecurityConfig {
   private final List<EndPoint> apiPermitAllEndPoints = List.of(
       EndPoint.create("/api/accounts/signin/{provider}", HttpMethod.GET),
       EndPoint.create("/api/artists", HttpMethod.GET),
-      EndPoint.create("/api/artists/{token}", HttpMethod.GET)
+      EndPoint.create("/api/artists/{token}", HttpMethod.GET),
+      EndPoint.create("/api/artists/popular", HttpMethod.GET)
   );
 
   private final CustomOAuth2UserService oAuth2UserService;

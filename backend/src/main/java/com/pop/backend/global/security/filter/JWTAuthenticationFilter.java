@@ -28,7 +28,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   private final List<EndPoint> tokenFreeEndPoints = List.of(
       EndPoint.create("/api/accounts/signin/**", HttpMethod.GET),
       EndPoint.create("/api/artists", HttpMethod.GET),
-      EndPoint.create("/api/artists/**", HttpMethod.GET)
+      EndPoint.create("/api/artists/**", HttpMethod.GET),
+      EndPoint.create("/api/artists/popular", HttpMethod.GET)
   );
 
   @Override

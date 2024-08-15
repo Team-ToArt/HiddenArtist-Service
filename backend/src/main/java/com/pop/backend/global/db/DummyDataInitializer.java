@@ -2,21 +2,24 @@ package com.pop.backend.global.db;
 
 import static com.pop.backend.domain.artist.persistence.type.ContactType.EMAIL;
 
+import com.pop.backend.domain.account.persistence.Account;
+import com.pop.backend.domain.account.persistence.type.ProviderType;
+import com.pop.backend.domain.account.persistence.type.Role;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.pop.backend.domain.artist.persistence.ArtistContact;
 import com.pop.backend.domain.artist.persistence.type.ContactType;
 import com.pop.backend.domain.genre.persistence.Genre;
 import com.pop.backend.global.type.EntityToken;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -43,67 +46,98 @@ public class DummyDataInitializer {
   }
 
   private void insertDummyData() {
+    saveDummyAccounts();
     Long artistId = saveDummyArtists();
     saveDummyArtistContacts(artistId);
     List<Long> genreIds = saveDummyGenres();
     saveDummyArtistGenre(artistId, genreIds);
+    saveDummyFollowArtist();
+  }
+
+  private void saveDummyAccounts() {
+    List<Account> accounts = IntStream.rangeClosed(1, 20).mapToObj(count -> {
+      String email = "test" + count + "@test.com";
+      String nickname = "test account " + count;
+      return Account.builder().providerType(ProviderType.KAKAO).role(Role.USER).email(email).nickname(nickname).build();
+    }).toList();
+    String sql = "insert into account (email,nickname,role,provider_type) values (?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, accounts, accounts.size(), (ps, account) -> {
+      ps.setString(1, account.getEmail());
+      ps.setString(2, account.getNickname());
+      ps.setString(3, account.getRole().name());
+      ps.setString(4, account.getProviderType().name());
+    });
   }
 
   private Long saveDummyArtists() {
-    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(this::create).toList();
-    String sql = "insert into artist (name,token,birth,summary,description,profile_image,create_date,update_date) values (?,?,?,?,?,?,?,?)";
-    jdbcTemplate.batchUpdate(sql, artists, artists.size(), this::fillColumns);
+    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(count -> {
+      int year = 1990 + (count % 20);
+      int month = (count % 12) + 1;
+      int days = (count % 30) + 1;
+      return Artist.builder()
+                   .name(RandomNameGenerator.getRandomName())
+                   .profileImage("test profile image " + count)
+                   .birth(LocalDate.of(year, month, days))
+                   .summary("test summary " + count)
+                   .description("test description " + count)
+                   .token(EntityToken.ARTIST.randomCharacterWithPrefix())
+                   .build();
+    }).toList();
+    String sql = "insert into artist (name,token,birth,summary,description,profile_image) values (?,?,?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, artists, artists.size(), (ps, artist) -> {
+      ps.setString(1, artist.getName());
+      ps.setString(2, artist.getToken());
+      ps.setDate(3, Date.valueOf(artist.getBirth()));
+      ps.setString(4, artist.getSummary());
+      ps.setString(5, artist.getDescription());
+      ps.setString(6, artist.getProfileImage());
+    });
     return jdbcTemplate.queryForObject("select a.id from artist as a where id = 1", Long.class);
   }
 
   private void saveDummyArtistContacts(Long artistId) {
     List<ArtistContact> artistContacts = createArtistContacts();
-    String sql = "insert into artist_contact (type,label,contact_value,artist_id,create_date,update_date) values (?,?,?,?,?,?)";
+    String sql = "insert into artist_contact (type,label,contact_value,artist_id) values (?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artistContacts, artistContacts.size(), (ps, contact) -> {
-      LocalDateTime now = LocalDateTime.now();
       ps.setString(1, contact.getType().name());
       ps.setString(2, contact.getLabel());
       ps.setString(3, contact.getContactValue());
       ps.setLong(4, artistId);
-      ps.setTimestamp(5, Timestamp.valueOf(now));
-      ps.setTimestamp(6, Timestamp.valueOf(now));
     });
   }
 
   private List<Long> saveDummyGenres() {
     List<Genre> genres = List.of(new Genre("현대미술"), new Genre("조소"), new Genre("추상화"));
-    jdbcTemplate.batchUpdate("insert into genre (name,create_date,update_date) values (?,?,?)", genres, genres.size(),
-        (ps, genre) -> {
-          ps.setString(1, genre.getName());
-          ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-          ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-        });
+    String sql = "insert into genre (name) values (?)";
+    jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> {
+      ps.setString(1, genre.getName());
+    });
     return jdbcTemplate.queryForList("select g.id from genre as g", Long.class);
   }
 
   private void saveDummyArtistGenre(Long artistId, List<Long> genreIds) {
-    String sql = "insert into artist_genre (artist_id,genre_id,create_date,update_date) values (?,?,?,?)";
+    String sql = "insert into artist_genre (artist_id,genre_id) values (?,?)";
     jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, genreId) -> {
-      LocalDateTime now = LocalDateTime.now();
       ps.setLong(1, artistId);
       ps.setLong(2, genreId);
-      ps.setTimestamp(3, Timestamp.valueOf(now));
-      ps.setTimestamp(4, Timestamp.valueOf(now));
     });
   }
 
-  private Artist create(int count) {
-    int year = 1990 + (count % 20);
-    int month = (count % 12) + 1;
-    int days = (count % 30) + 1;
-    return Artist.builder()
-                 .name(RandomNameGenerator.getRandomName())
-                 .profileImage("test profile image " + count)
-                 .birth(LocalDate.of(year, month, days))
-                 .summary("test summary " + count)
-                 .description("test description " + count)
-                 .token(EntityToken.ARTIST.randomCharacterWithPrefix())
-                 .build();
+  private void saveDummyFollowArtist() {
+    List<Long> accountIds = LongStream.rangeClosed(1, 20).boxed().toList();
+    String sql = "insert into follow_artist (account_id,artist_id) values (?,?)";
+    Random random = new Random();
+    jdbcTemplate.batchUpdate(sql, accountIds, accountIds.size(), (ps, accountId) -> {
+      Set<Long> artistIds = random.longs(1, 501)
+                                  .distinct()
+                                  .limit(50)
+                                  .boxed().collect(Collectors.toSet());
+      for (Long artistId : artistIds) {
+        ps.setLong(1, accountId);
+        ps.setLong(2, artistId);
+        ps.addBatch();
+      }
+    });
   }
 
   private List<ArtistContact> createArtistContacts() {
@@ -133,18 +167,6 @@ public class DummyDataInitializer {
                                           .contactValue("010-1234-5678")
                                           .build();
     return List.of(contact1, contact2, contact3, contact4, contact5);
-  }
-
-  private void fillColumns(PreparedStatement ps, Artist artist) throws SQLException {
-    LocalDateTime now = LocalDateTime.now();
-    ps.setString(1, artist.getName());
-    ps.setString(2, artist.getToken());
-    ps.setDate(3, Date.valueOf(artist.getBirth()));
-    ps.setString(4, artist.getSummary());
-    ps.setString(5, artist.getDescription());
-    ps.setString(6, artist.getProfileImage());
-    ps.setTimestamp(7, Timestamp.valueOf(now));
-    ps.setTimestamp(8, Timestamp.valueOf(now));
   }
 
   private static class RandomNameGenerator {

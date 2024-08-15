@@ -86,6 +86,16 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
     return ArtistGetDetailResponse.create(findArtist, findArtistContacts, genres);
   }
 
+  @Override
+  public List<Artist> findPopularArtists() {
+    return queryFactory.select(followArtist.artist).from(followArtist)
+                       .groupBy(followArtist.artist)
+                       .orderBy(followArtist.artist.count().desc(),
+                           followArtist.artist.name.asc())
+                       .limit(3)
+                       .fetch();
+  }
+
   private BooleanExpression emailEq(String email) {
     return StringUtils.hasText(email) ? account.email.eq(email) : Expressions.TRUE;
   }
