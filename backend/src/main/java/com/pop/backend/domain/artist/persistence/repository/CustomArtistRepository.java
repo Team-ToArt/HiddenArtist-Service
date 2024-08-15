@@ -17,4 +17,6 @@ public interface CustomArtistRepository {
 
   List<Artist> findPopularArtists();
 
+  List<Artist> findNewArtists();
+
 }

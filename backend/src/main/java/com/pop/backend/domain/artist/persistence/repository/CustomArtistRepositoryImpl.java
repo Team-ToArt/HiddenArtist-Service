@@ -90,8 +90,15 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
   public List<Artist> findPopularArtists() {
     return queryFactory.select(followArtist.artist).from(followArtist)
                        .groupBy(followArtist.artist)
-                       .orderBy(followArtist.artist.count().desc(),
-                           followArtist.artist.name.asc())
+                       .orderBy(followArtist.artist.count().desc(), followArtist.artist.name.asc())
+                       .limit(3)
+                       .fetch();
+  }
+
+  @Override
+  public List<Artist> findNewArtists() {
+    return queryFactory.selectFrom(artist)
+                       .orderBy(artist.create_date.desc(), artist.name.asc())
                        .limit(3)
                        .fetch();
   }

@@ -40,4 +40,10 @@ public class ArtistService {
     return ArtistGetThreeResponse.create(popularArtists);
   }
 
+  @Transactional(readOnly = true)
+  public ArtistGetThreeResponse getNewArtists() {
+    List<Artist> newArtists = artistRepository.findNewArtists();
+    return ArtistGetThreeResponse.create(newArtists);
+  }
+
 }

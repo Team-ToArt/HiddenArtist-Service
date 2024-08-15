@@ -33,6 +33,10 @@ public class FollowArtistTest {
   private final Logger logger = LoggerFactory.getLogger(FollowArtistTest.class);
 
   private final String email = "test@test.com";
+  private final String artist1Name = "apple";
+  private final String artist2Name = "banana";
+  private final String artist3Name = "cherry";
+  private final String artist4Name = "dragonFruit";
   @Autowired
   private ArtistRepository artistRepository;
   @Autowired
@@ -60,22 +64,22 @@ public class FollowArtistTest {
     accountRepository.saveAllAndFlush(List.of(account, account2, account3));
 
     Artist artist1 = Artist.builder()
-                           .name("artist1")
+                           .name(artist1Name)
                            .description("test description1")
                            .token("token1")
                            .build();
     Artist artist2 = Artist.builder()
-                           .name("artist2")
+                           .name(artist2Name)
                            .description("test description2")
                            .token("token2")
                            .build();
     Artist artist3 = Artist.builder()
-                           .name("artist3")
+                           .name(artist3Name)
                            .description("test description3")
                            .token("token3")
                            .build();
     Artist artist4 = Artist.builder()
-                           .name("artist4")
+                           .name(artist4Name)
                            .description("test description4")
                            .token("token4")
                            .build();
@@ -100,9 +104,9 @@ public class FollowArtistTest {
 
     assertThat(artists).extracting("name", "description")
                        .containsExactly(
-                           tuple("artist1", "test description1"),
-                           tuple("artist2", "test description2"),
-                           tuple("artist3", "test description3")
+                           tuple(artist1Name, "test description1"),
+                           tuple(artist2Name, "test description2"),
+                           tuple(artist3Name, "test description3")
                        );
   }
 
@@ -118,13 +122,13 @@ public class FollowArtistTest {
     //then
     assertThat(artists).hasSize(1).extracting("name", "description")
                        .containsExactly(
-                           tuple("artist2", "test description2")
+                           tuple(artist2Name, "test description2")
                        );
   }
 
   @Test
   @DisplayName("Popular Artist 조회 테스트")
-  void getPopularArtists() {
+  void getPopularArtistsTest() {
     //given
     //when
     List<Artist> popularArtists = artistRepository.findPopularArtists();
@@ -133,7 +137,25 @@ public class FollowArtistTest {
         .hasSize(3)
         .extracting("name")
         .containsExactly(
-            "artist3", "artist2", "artist1"
+            artist3Name, artist2Name, artist1Name
         );
   }
+
+  @Test
+  @DisplayName("New Artist 조회 테스트")
+  void getNewArtistsTest() {
+    //given
+    //when
+    List<Artist> newArtists = artistRepository.findNewArtists();
+    //then
+    assertThat(newArtists).hasSize(3)
+                          .extracting("name", "description")
+                          .containsExactly(
+                              tuple(artist4Name, "test description4"),
+                              tuple(artist3Name, "test description3"),
+                              tuple(artist2Name, "test description2")
+                          );
+
+  }
+
 }

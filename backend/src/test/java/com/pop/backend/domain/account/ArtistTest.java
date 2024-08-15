@@ -18,9 +18,7 @@ import com.pop.backend.global.type.EntityToken;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,41 +108,32 @@ public class ArtistTest {
     IntStream.rangeClosed(1, 120)
              .mapToObj(this::createArtist)
              .forEach(artists::add);
-    String sql = "insert into artist (name,token,birth,summary,description,profile_image,create_date,update_date) values (?,?,?,?,?,?,?,?)";
+    String sql = "insert into artist (name,token,birth,summary,description,profile_image) values (?,?,?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artists, 100, this::addRow);
   }
 
   private void saveDummyArtistContacts(Long artistId) {
-    String artistContactSql = "insert into artist_contact (type,label,contact_value,artist_id,create_date,update_date) values (?,?,?,?,?,?)";
+    String artistContactSql = "insert into artist_contact (type,label,contact_value,artist_id) values (?,?,?,?)";
     List<ArtistContact> artistContacts = createArtistContacts();
     jdbcTemplate.batchUpdate(artistContactSql, artistContacts, artistContacts.size(), (ps, artistContact) -> {
       ps.setString(1, artistContact.getType().name());
       ps.setString(2, artistContact.getLabel());
       ps.setString(3, artistContact.getContactValue());
       ps.setLong(4, artistId);
-      ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-      ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
     });
   }
 
   private void saveDummyGenres() {
     List<Genre> genres = List.of(new Genre("현대미술"), new Genre("조소"), new Genre("추상화"));
-    jdbcTemplate.batchUpdate("insert into genre (name,create_date,update_date) values (?,?,?)", genres, genres.size(),
-        (ps, genre) -> {
-          ps.setString(1, genre.getName());
-          ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-          ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-        });
+    jdbcTemplate.batchUpdate("insert into genre (name) values (?)", genres, genres.size(),
+        (ps, genre) -> ps.setString(1, genre.getName()));
   }
 
   private void saveDummyArtistGenre(Long artistId, List<Long> genreIds) {
-    String sql = "insert into artist_genre (artist_id,genre_id,create_date,update_date) values (?,?,?,?)";
+    String sql = "insert into artist_genre (artist_id,genre_id) values (?,?)";
     jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, genreId) -> {
-      LocalDateTime now = LocalDateTime.now();
       ps.setLong(1, artistId);
       ps.setLong(2, genreId);
-      ps.setTimestamp(3, Timestamp.valueOf(now));
-      ps.setTimestamp(4, Timestamp.valueOf(now));
     });
   }
 
@@ -169,8 +158,6 @@ public class ArtistTest {
     ps.setString(4, artist.getSummary());
     ps.setString(5, artist.getDescription());
     ps.setString(6, artist.getProfileImage());
-    ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
-    ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
   }
 
   private List<ArtistContact> createArtistContacts() {

@@ -39,4 +39,9 @@ public class ArtistController {
     return artistService.getPopularArtists();
   }
 
+  @GetMapping("/new")
+  public ArtistGetThreeResponse getNewArtists() {
+    return artistService.getNewArtists();
+  }
+
 }
