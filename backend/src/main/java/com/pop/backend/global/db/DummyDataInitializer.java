@@ -1,6 +1,11 @@
 package com.pop.backend.global.db;
 
+import static com.pop.backend.domain.artist.persistence.type.ContactType.EMAIL;
+
 import com.pop.backend.domain.artist.persistence.Artist;
+import com.pop.backend.domain.artist.persistence.ArtistContact;
+import com.pop.backend.domain.artist.persistence.type.ContactType;
+import com.pop.backend.domain.genre.persistence.Genre;
 import com.pop.backend.global.type.EntityToken;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -33,16 +38,58 @@ public class DummyDataInitializer {
   @EventListener(ApplicationReadyEvent.class)
   protected void init() {
     log.info("DummyData Initializing Start.");
-    int result = insertDummyData();
-    log.info("DummyData Initializing End. update row: {}", result);
+    insertDummyData();
+    log.info("DummyData Initializing End.");
   }
 
-  private int insertDummyData() {
-    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(this::create).toList();
-    String sql = "insert into artist (name,summary,description,birth,token,create_date,update_date) values (?,?,?,?,?,?,?)";
-    int[][] update = jdbcTemplate.batchUpdate(sql, artists, artists.size(), this::fillColumns);
+  private void insertDummyData() {
+    Long artistId = saveDummyArtists();
+    saveDummyArtistContacts(artistId);
+    List<Long> genreIds = saveDummyGenres();
+    saveDummyArtistGenre(artistId, genreIds);
+  }
 
-    return Arrays.stream(update).flatMapToInt(Arrays::stream).sum();
+  private Long saveDummyArtists() {
+    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(this::create).toList();
+    String sql = "insert into artist (name,token,birth,summary,description,profile_image,create_date,update_date) values (?,?,?,?,?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, artists, artists.size(), this::fillColumns);
+    return jdbcTemplate.queryForObject("select a.id from artist as a where id = 1", Long.class);
+  }
+
+  private void saveDummyArtistContacts(Long artistId) {
+    List<ArtistContact> artistContacts = createArtistContacts();
+    String sql = "insert into artist_contact (type,label,contact_value,artist_id,create_date,update_date) values (?,?,?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, artistContacts, artistContacts.size(), (ps, contact) -> {
+      LocalDateTime now = LocalDateTime.now();
+      ps.setString(1, contact.getType().name());
+      ps.setString(2, contact.getLabel());
+      ps.setString(3, contact.getContactValue());
+      ps.setLong(4, artistId);
+      ps.setTimestamp(5, Timestamp.valueOf(now));
+      ps.setTimestamp(6, Timestamp.valueOf(now));
+    });
+  }
+
+  private List<Long> saveDummyGenres() {
+    List<Genre> genres = List.of(new Genre("현대미술"), new Genre("조소"), new Genre("추상화"));
+    jdbcTemplate.batchUpdate("insert into genre (name,create_date,update_date) values (?,?,?)", genres, genres.size(),
+        (ps, genre) -> {
+          ps.setString(1, genre.getName());
+          ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+          ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+        });
+    return jdbcTemplate.queryForList("select g.id from genre as g", Long.class);
+  }
+
+  private void saveDummyArtistGenre(Long artistId, List<Long> genreIds) {
+    String sql = "insert into artist_genre (artist_id,genre_id,create_date,update_date) values (?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, genreId) -> {
+      LocalDateTime now = LocalDateTime.now();
+      ps.setLong(1, artistId);
+      ps.setLong(2, genreId);
+      ps.setTimestamp(3, Timestamp.valueOf(now));
+      ps.setTimestamp(4, Timestamp.valueOf(now));
+    });
   }
 
   private Artist create(int count) {
@@ -51,21 +98,53 @@ public class DummyDataInitializer {
     int days = (count % 30) + 1;
     return Artist.builder()
                  .name(RandomNameGenerator.getRandomName())
+                 .profileImage("test profile image " + count)
                  .birth(LocalDate.of(year, month, days))
-                 .token(EntityToken.ARTIST.randomCharacterWithPrefix())
-                 .description("test description " + count)
                  .summary("test summary " + count)
+                 .description("test description " + count)
+                 .token(EntityToken.ARTIST.randomCharacterWithPrefix())
                  .build();
   }
 
+  private List<ArtistContact> createArtistContacts() {
+    ArtistContact contact1 = ArtistContact.builder()
+                                          .type(ContactType.SNS)
+                                          .label("instagram")
+                                          .contactValue("instagramUrl")
+                                          .build();
+    ArtistContact contact2 = ArtistContact.builder()
+                                          .type(ContactType.SNS)
+                                          .label("x(twitter)")
+                                          .contactValue("twitterUrl")
+                                          .build();
+    ArtistContact contact3 = ArtistContact.builder()
+                                          .type(ContactType.SNS)
+                                          .label("github")
+                                          .contactValue("githubUrl")
+                                          .build();
+    ArtistContact contact4 = ArtistContact.builder()
+                                          .type(EMAIL)
+                                          .label("email")
+                                          .contactValue("test@test.com")
+                                          .build();
+    ArtistContact contact5 = ArtistContact.builder()
+                                          .type(ContactType.TEL)
+                                          .label("tel")
+                                          .contactValue("010-1234-5678")
+                                          .build();
+    return List.of(contact1, contact2, contact3, contact4, contact5);
+  }
+
   private void fillColumns(PreparedStatement ps, Artist artist) throws SQLException {
+    LocalDateTime now = LocalDateTime.now();
     ps.setString(1, artist.getName());
-    ps.setString(2, artist.getSummary());
-    ps.setString(3, artist.getDescription());
-    ps.setDate(4, Date.valueOf(artist.getBirth()));
-    ps.setString(5, artist.getToken());
-    ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-    ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+    ps.setString(2, artist.getToken());
+    ps.setDate(3, Date.valueOf(artist.getBirth()));
+    ps.setString(4, artist.getSummary());
+    ps.setString(5, artist.getDescription());
+    ps.setString(6, artist.getProfileImage());
+    ps.setTimestamp(7, Timestamp.valueOf(now));
+    ps.setTimestamp(8, Timestamp.valueOf(now));
   }
 
   private static class RandomNameGenerator {
