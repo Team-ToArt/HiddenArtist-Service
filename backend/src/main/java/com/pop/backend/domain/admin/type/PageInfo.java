@@ -24,4 +24,11 @@ public enum PageInfo {
     return attributes;
   }
 
+  public Map<String, String> getAttributes() {
+    return new HashMap<>() {{
+      put(VIEW_NAME, viewName);
+      put(TITLE, title);
+    }};
+  }
+
 }

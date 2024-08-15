@@ -1,8 +1,11 @@
 package com.pop.backend.global.security.config;
 
+import com.pop.backend.domain.account.persistence.type.Role;
 import com.pop.backend.global.security.filter.JSONUsernamePasswordAuthenticationFilter;
 import com.pop.backend.global.security.filter.JWTAuthenticationFilter;
 import com.pop.backend.global.security.service.CustomOAuth2UserService;
+import com.pop.backend.global.type.EndPoint;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final List<EndPoint> adminPermitAllEndPoints = List.of(
+      EndPoint.create("/admin/signin", HttpMethod.GET),
+      EndPoint.create("/admin/accounts/signup", HttpMethod.POST)
+  );
+
+  private final List<EndPoint> apiPermitAllEndPoints = List.of(
+      EndPoint.create("/api/accounts/signin/{provider}", HttpMethod.GET),
+      EndPoint.create("/api/artists", HttpMethod.GET),
+      EndPoint.create("/api/artists/{token}", HttpMethod.GET)
+  );
 
   private final CustomOAuth2UserService oAuth2UserService;
   private final SecurityHandlerConfig handlerConfig;
@@ -37,13 +51,7 @@ public class SecurityConfig {
         .accessDeniedHandler(handlerConfig.getAdminAccessDeniedHandler())
         .authenticationEntryPoint(handlerConfig.getAdminAuthenticationEntryPoint()));
 
-    http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .requestMatchers(HttpMethod.GET, "/admin/signin")
-        .permitAll() // 추후 hasRole("ADMIN")으로 수정 예정
-        .requestMatchers(HttpMethod.POST, "/admin/accounts/signup")
-        .permitAll()
-        .anyRequest()
-        .hasRole("ADMIN"));
+    configureAdminEndpoints(http);
 
     http.addFilterBefore(filterConfig.getUsernamePasswordAuthenticationFilter(),
             UsernamePasswordAuthenticationFilter.class)
@@ -62,12 +70,7 @@ public class SecurityConfig {
     http.sessionManagement(sessionConfigurer -> sessionConfigurer
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-    http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .requestMatchers(HttpMethod.GET, "/api/accounts/signin/{provider}")
-        .permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/artists")
-        .permitAll()
-        .anyRequest().authenticated()); // API 설계시 수정 예정
+    configureApiEndPoints(http);
 
     http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
@@ -83,6 +86,23 @@ public class SecurityConfig {
         .addFilterBefore(filterConfig.getExceptionHandleFilter(), JWTAuthenticationFilter.class);
 
     return http.build();
+  }
+
+  private void configureAdminEndpoints(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(registry -> {
+          adminPermitAllEndPoints.forEach(
+              endpoint -> registry.requestMatchers(endpoint.method(), endpoint.pattern()).permitAll());
+          registry.anyRequest().hasRole(Role.ADMIN.name());
+        }
+    );
+  }
+
+  private void configureApiEndPoints(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(registry -> {
+      apiPermitAllEndPoints.forEach(
+          endPoint -> registry.requestMatchers(endPoint.method(), endPoint.pattern()).permitAll());
+      registry.anyRequest().authenticated();
+    });
   }
 
 }
