@@ -1,9 +1,8 @@
-package com.pop.backend.domain.account;
+package com.pop.backend.domain.account.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.account.persistence.type.ProviderType;
 import com.pop.backend.domain.account.persistence.type.Role;
 import java.util.List;

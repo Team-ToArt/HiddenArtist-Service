@@ -1,6 +1,7 @@
 package com.pop.backend.domain.artist.persistence.repository;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
+import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.Artist;
 import java.util.List;
@@ -18,5 +19,7 @@ public interface CustomArtistRepository {
   List<Artist> findPopularArtists();
 
   List<Artist> findNewArtists();
+
+  List<ArtworkResponse> findSignatureArtworkByToken(String token);
 
 }

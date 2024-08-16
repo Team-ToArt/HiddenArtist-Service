@@ -1,9 +1,12 @@
 package com.pop.backend.domain.artist.persistence.repository;
 
 import static com.pop.backend.domain.account.persistence.QAccount.account;
+import static com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import static com.pop.backend.domain.artist.persistence.QArtist.artist;
 import static com.pop.backend.domain.artist.persistence.QArtistContact.artistContact;
 import static com.pop.backend.domain.artist.persistence.QFollowArtist.followArtist;
+import static com.pop.backend.domain.artwork.persistence.QArtwork.artwork;
+import static com.pop.backend.domain.artwork.persistence.QSignatureArtwork.signatureArtwork;
 import static com.pop.backend.domain.genre.persistence.QArtistGenre.artistGenre;
 import static com.pop.backend.domain.genre.persistence.QGenre.genre;
 
@@ -101,6 +104,20 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                        .orderBy(artist.create_date.desc(), artist.name.asc())
                        .limit(3)
                        .fetch();
+  }
+
+  @Override
+  public List<ArtworkResponse> findSignatureArtworkByToken(String token) {
+    Artist findArtist = queryFactory.selectFrom(artist).where(artist.token.eq(token)).fetchOne();
+    return queryFactory.select(Projections.constructor(ArtworkResponse.class,
+                           artwork.name,
+                           artwork.image,
+                           artwork.token,
+                           signatureArtwork.displayOrder
+                       )).from(signatureArtwork)
+                       .leftJoin(signatureArtwork.artwork, artwork)
+                       .leftJoin(signatureArtwork.artwork.artist, artist)
+                       .where(signatureArtwork.artwork.artist.eq(findArtist)).fetch();
   }
 
   private BooleanExpression emailEq(String email) {

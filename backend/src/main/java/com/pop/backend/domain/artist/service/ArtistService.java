@@ -2,6 +2,8 @@ package com.pop.backend.domain.artist.service;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
+import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
+import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetThreeResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.Artist;
@@ -44,6 +46,13 @@ public class ArtistService {
   public ArtistGetThreeResponse getNewArtists() {
     List<Artist> newArtists = artistRepository.findNewArtists();
     return ArtistGetThreeResponse.create(newArtists);
+  }
+
+  @Transactional(readOnly = true)
+  public ArtistGetSignatureArtworkResponse getArtistSignatureArtworks(String tokenValue) {
+    String token = EntityToken.ARTIST.identifyToken(tokenValue);
+    List<ArtworkResponse> signatureArtworks = artistRepository.findSignatureArtworkByToken(token);
+    return new ArtistGetSignatureArtworkResponse(signatureArtworks);
   }
 
 }

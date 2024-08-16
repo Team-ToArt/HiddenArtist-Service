@@ -29,7 +29,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
       EndPoint.create("/api/accounts/signin/**", HttpMethod.GET),
       EndPoint.create("/api/artists", HttpMethod.GET),
       EndPoint.create("/api/artists/**", HttpMethod.GET),
-      EndPoint.create("/api/artists/popular", HttpMethod.GET)
+      EndPoint.create("/api/artists/popular", HttpMethod.GET),
+      EndPoint.create("/api/artists/{token}/signature-artworks", HttpMethod.GET)
   );
 
   @Override

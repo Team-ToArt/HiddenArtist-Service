@@ -8,6 +8,7 @@ import com.pop.backend.domain.account.persistence.type.Role;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.pop.backend.domain.artist.persistence.ArtistContact;
 import com.pop.backend.domain.artist.persistence.type.ContactType;
+import com.pop.backend.domain.artwork.persistence.Artwork;
 import com.pop.backend.domain.genre.persistence.Genre;
 import com.pop.backend.global.type.EntityToken;
 import java.sql.Date;
@@ -52,6 +53,8 @@ public class DummyDataInitializer {
     List<Long> genreIds = saveDummyGenres();
     saveDummyArtistGenre(artistId, genreIds);
     saveDummyFollowArtist();
+    saveDummyArtworks(artistId);
+    saveDummySignatureArtworks();
   }
 
   private void saveDummyAccounts() {
@@ -137,6 +140,36 @@ public class DummyDataInitializer {
         ps.setLong(2, artistId);
         ps.addBatch();
       }
+    });
+  }
+
+  private void saveDummyArtworks(Long artistId) {
+    List<Artwork> artworks = IntStream.rangeClosed(1, 20)
+                                      .mapToObj(count ->
+                                          Artwork.builder()
+                                                 .name("Artwork" + count)
+                                                 .image("Test Artwork Image" + count)
+                                                 .description("Test Artwork Description" + count)
+                                                 .token(EntityToken.ARTWORK.randomCharacterWithPrefix())
+                                                 .build())
+                                      .toList();
+    String sql = "insert into artwork (name,image,description,token,artist_id) values (?,?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, artworks, artworks.size(), (ps, artwork) -> {
+      ps.setString(1, artwork.getName());
+      ps.setString(2, artwork.getImage());
+      ps.setString(3, artwork.getDescription());
+      ps.setString(4, artwork.getToken());
+      ps.setLong(5, artistId);
+    });
+  }
+
+  private void saveDummySignatureArtworks() {
+    // Artwork PK 1,2,3 등록
+    List<Long> artworkIds = List.of(1L, 2L, 3L);
+    String sql = "insert into signature_artwork (artwork_id,display_order) values (?,?) ";
+    jdbcTemplate.batchUpdate(sql, artworkIds, artworkIds.size(), (ps, id) -> {
+      ps.setLong(1, id);
+      ps.setByte(2, (byte) (id - 1));
     });
   }
 

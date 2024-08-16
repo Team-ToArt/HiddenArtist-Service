@@ -2,6 +2,7 @@ package com.pop.backend.domain.artist.controller;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
+import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetThreeResponse;
 import com.pop.backend.domain.artist.service.ArtistService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,16 @@ public class ArtistController {
   @GetMapping("/new")
   public ArtistGetThreeResponse getNewArtists() {
     return artistService.getNewArtists();
+  }
+
+  @GetMapping("/{token}/signature-artworks")
+  public ArtistGetSignatureArtworkResponse getArtistFeatureArtworks(@PathVariable("token") String token) {
+    return artistService.getArtistSignatureArtworks(token);
+  }
+
+  @GetMapping("/{token}/all-artworks")
+  public void getArtistAllArtworks(@PathVariable("token") String token) {
+
   }
 
 }

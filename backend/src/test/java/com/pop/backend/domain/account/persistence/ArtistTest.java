@@ -1,4 +1,4 @@
-package com.pop.backend.domain.account;
+package com.pop.backend.domain.account.persistence;
 
 import static com.pop.backend.domain.artist.persistence.type.ContactType.EMAIL;
 import static com.pop.backend.domain.artist.persistence.type.ContactType.SNS;
@@ -13,7 +13,7 @@ import com.pop.backend.domain.artist.persistence.ArtistContact;
 import com.pop.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.pop.backend.domain.artist.persistence.type.ContactType;
 import com.pop.backend.domain.genre.persistence.Genre;
-import com.pop.backend.global.TestConfig;
+import com.pop.backend.global.CustomDataJpaTest;
 import com.pop.backend.global.type.EntityToken;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -29,21 +29,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
-@Transactional
-@ActiveProfiles("test")
-@Import(value = TestConfig.class)
+@CustomDataJpaTest
 public class ArtistTest {
 
   private static final String TOKEN = "1";
