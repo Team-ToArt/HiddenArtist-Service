@@ -37,4 +37,4 @@ spring:
 
 secret:
   jwt: testJWTSecretKeytestJWTSecretKeytestJWTSecretKeytestJWTSecretKeytestJWTSecretKey
-  kakao-admin: testKakaoAdminKey1
+  kakao-admin: testKakaoAdminKey
