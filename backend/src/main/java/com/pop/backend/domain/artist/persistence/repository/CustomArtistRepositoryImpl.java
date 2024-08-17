@@ -3,6 +3,7 @@ package com.pop.backend.domain.artist.persistence.repository;
 import static com.pop.backend.domain.account.persistence.QAccount.account;
 import static com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import static com.pop.backend.domain.artist.persistence.QArtist.artist;
+import static com.pop.backend.domain.artist.persistence.QArtistArtwork.artistArtwork;
 import static com.pop.backend.domain.artist.persistence.QArtistContact.artistContact;
 import static com.pop.backend.domain.artist.persistence.QFollowArtist.followArtist;
 import static com.pop.backend.domain.artwork.persistence.QArtwork.artwork;
@@ -112,12 +113,12 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
     return queryFactory.select(Projections.constructor(ArtworkResponse.class,
                            artwork.name,
                            artwork.image,
-                           artwork.token,
-                           signatureArtwork.displayOrder
-                       )).from(signatureArtwork)
+                           artwork.token, signatureArtwork.displayOrder))
+                       .from(signatureArtwork)
                        .leftJoin(signatureArtwork.artwork, artwork)
-                       .leftJoin(signatureArtwork.artwork.artist, artist)
-                       .where(signatureArtwork.artwork.artist.eq(findArtist)).fetch();
+                       .leftJoin(artistArtwork).on(artistArtwork.artwork.eq(artwork))
+                       .where(artistArtwork.artist.eq(findArtist))
+                       .fetch();
   }
 
   private BooleanExpression emailEq(String email) {

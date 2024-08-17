@@ -53,8 +53,9 @@ public class DummyDataInitializer {
     List<Long> genreIds = saveDummyGenres();
     saveDummyArtistGenre(artistId, genreIds);
     saveDummyFollowArtist();
-    saveDummyArtworks(artistId);
+    saveDummyArtworks();
     saveDummySignatureArtworks();
+    saveDummyArtistArtwork(artistId);
   }
 
   private void saveDummyAccounts() {
@@ -143,7 +144,7 @@ public class DummyDataInitializer {
     });
   }
 
-  private void saveDummyArtworks(Long artistId) {
+  private void saveDummyArtworks() {
     List<Artwork> artworks = IntStream.rangeClosed(1, 20)
                                       .mapToObj(count ->
                                           Artwork.builder()
@@ -153,13 +154,21 @@ public class DummyDataInitializer {
                                                  .token(EntityToken.ARTWORK.randomCharacterWithPrefix())
                                                  .build())
                                       .toList();
-    String sql = "insert into artwork (name,image,description,token,artist_id) values (?,?,?,?,?)";
+    String sql = "insert into artwork (name,image,description,token) values (?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artworks, artworks.size(), (ps, artwork) -> {
       ps.setString(1, artwork.getName());
       ps.setString(2, artwork.getImage());
       ps.setString(3, artwork.getDescription());
       ps.setString(4, artwork.getToken());
-      ps.setLong(5, artistId);
+    });
+  }
+
+  private void saveDummyArtistArtwork(Long artistId) {
+    List<Long> artworkIds = jdbcTemplate.queryForList("select id from artwork where id >= 1 and id <=10", Long.class);
+    String sql = "insert into artist_artwork (artist_id,artwork_id) values (?,?)";
+    jdbcTemplate.batchUpdate(sql, artworkIds, artworkIds.size(), (ps, artworkId) -> {
+      ps.setLong(1, artistId);
+      ps.setLong(2, artworkId);
     });
   }
 
