@@ -18,6 +18,7 @@ public class FollowArtist extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Account account;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Artist artist;
 
