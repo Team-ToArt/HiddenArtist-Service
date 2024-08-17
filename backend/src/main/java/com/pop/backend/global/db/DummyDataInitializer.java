@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -37,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DummyDataInitializer {
 
   private final JdbcTemplate jdbcTemplate;
+  private final long ARTIST_ID = 1L;
+  private final List<Long> LIST = List.of(1L, 2L, 3L);
 
   @Transactional
   @EventListener(ApplicationReadyEvent.class)
@@ -48,22 +51,18 @@ public class DummyDataInitializer {
 
   private void insertDummyData() {
     saveDummyAccounts();
-    Long artistId = saveDummyArtists();
-    saveDummyArtistContacts(artistId);
-    List<Long> genreIds = saveDummyGenres();
-    saveDummyArtistGenre(artistId, genreIds);
+    saveDummyArtists();
+    saveDummyArtistContacts();
+    saveDummyGenres();
+    saveDummyArtistGenre();
     saveDummyFollowArtist();
     saveDummyArtworks();
     saveDummySignatureArtworks();
-    saveDummyArtistArtwork(artistId);
+    saveDummyArtistArtwork();
   }
 
   private void saveDummyAccounts() {
-    List<Account> accounts = IntStream.rangeClosed(1, 20).mapToObj(count -> {
-      String email = "test" + count + "@test.com";
-      String nickname = "test account " + count;
-      return Account.builder().providerType(ProviderType.KAKAO).role(Role.USER).email(email).nickname(nickname).build();
-    }).toList();
+    List<Account> accounts = IntStream.rangeClosed(1, 20).mapToObj(this::createDummyAccount).toList();
     String sql = "insert into account (email,nickname,role,provider_type) values (?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, accounts, accounts.size(), (ps, account) -> {
       ps.setString(1, account.getEmail());
@@ -73,20 +72,8 @@ public class DummyDataInitializer {
     });
   }
 
-  private Long saveDummyArtists() {
-    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(count -> {
-      int year = 1990 + (count % 20);
-      int month = (count % 12) + 1;
-      int days = (count % 30) + 1;
-      return Artist.builder()
-                   .name(RandomNameGenerator.getRandomName())
-                   .profileImage("test profile image " + count)
-                   .birth(LocalDate.of(year, month, days))
-                   .summary("test summary " + count)
-                   .description("test description " + count)
-                   .token(EntityToken.ARTIST.randomCharacterWithPrefix())
-                   .build();
-    }).toList();
+  private void saveDummyArtists() {
+    List<Artist> artists = IntStream.rangeClosed(1, 500).mapToObj(this::createDummyArtist).toList();
     String sql = "insert into artist (name,token,birth,summary,description,profile_image) values (?,?,?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artists, artists.size(), (ps, artist) -> {
       ps.setString(1, artist.getName());
@@ -96,33 +83,31 @@ public class DummyDataInitializer {
       ps.setString(5, artist.getDescription());
       ps.setString(6, artist.getProfileImage());
     });
-    return jdbcTemplate.queryForObject("select a.id from artist as a where id = 1", Long.class);
   }
 
-  private void saveDummyArtistContacts(Long artistId) {
+  private void saveDummyArtistContacts() {
     List<ArtistContact> artistContacts = createArtistContacts();
     String sql = "insert into artist_contact (type,label,contact_value,artist_id) values (?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artistContacts, artistContacts.size(), (ps, contact) -> {
       ps.setString(1, contact.getType().name());
       ps.setString(2, contact.getLabel());
       ps.setString(3, contact.getContactValue());
-      ps.setLong(4, artistId);
+      ps.setLong(4, ARTIST_ID);
     });
   }
 
-  private List<Long> saveDummyGenres() {
-    List<Genre> genres = List.of(new Genre("현대미술"), new Genre("조소"), new Genre("추상화"));
+  private void saveDummyGenres() {
+    List<Genre> genres = Stream.of("현대미술", "조소", "추상화").map(Genre::new).toList();
     String sql = "insert into genre (name) values (?)";
     jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> {
       ps.setString(1, genre.getName());
     });
-    return jdbcTemplate.queryForList("select g.id from genre as g", Long.class);
   }
 
-  private void saveDummyArtistGenre(Long artistId, List<Long> genreIds) {
+  private void saveDummyArtistGenre() {
     String sql = "insert into artist_genre (artist_id,genre_id) values (?,?)";
-    jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, genreId) -> {
-      ps.setLong(1, artistId);
+    jdbcTemplate.batchUpdate(sql, LIST, LIST.size(), (ps, genreId) -> {
+      ps.setLong(1, ARTIST_ID);
       ps.setLong(2, genreId);
     });
   }
@@ -145,15 +130,7 @@ public class DummyDataInitializer {
   }
 
   private void saveDummyArtworks() {
-    List<Artwork> artworks = IntStream.rangeClosed(1, 20)
-                                      .mapToObj(count ->
-                                          Artwork.builder()
-                                                 .name("Artwork" + count)
-                                                 .image("Test Artwork Image" + count)
-                                                 .description("Test Artwork Description" + count)
-                                                 .token(EntityToken.ARTWORK.randomCharacterWithPrefix())
-                                                 .build())
-                                      .toList();
+    List<Artwork> artworks = IntStream.rangeClosed(1, 20).mapToObj(this::createDummyArtwork).toList();
     String sql = "insert into artwork (name,image,description,token) values (?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artworks, artworks.size(), (ps, artwork) -> {
       ps.setString(1, artwork.getName());
@@ -163,23 +140,42 @@ public class DummyDataInitializer {
     });
   }
 
-  private void saveDummyArtistArtwork(Long artistId) {
-    List<Long> artworkIds = jdbcTemplate.queryForList("select id from artwork where id >= 1 and id <=10", Long.class);
-    String sql = "insert into artist_artwork (artist_id,artwork_id) values (?,?)";
+  private void saveDummyArtistArtwork() {
+    String sql = "select id from artwork where 1 <= id and id <=10";
+    List<Long> artworkIds = jdbcTemplate.queryForList(sql, Long.class);
+    sql = "insert into artist_artwork (artist_id,artwork_id) values (?,?)";
     jdbcTemplate.batchUpdate(sql, artworkIds, artworkIds.size(), (ps, artworkId) -> {
-      ps.setLong(1, artistId);
+      ps.setLong(1, ARTIST_ID);
       ps.setLong(2, artworkId);
     });
   }
 
   private void saveDummySignatureArtworks() {
-    // Artwork PK 1,2,3 등록
-    List<Long> artworkIds = List.of(1L, 2L, 3L);
     String sql = "insert into signature_artwork (artwork_id,display_order) values (?,?) ";
-    jdbcTemplate.batchUpdate(sql, artworkIds, artworkIds.size(), (ps, id) -> {
+    jdbcTemplate.batchUpdate(sql, LIST, LIST.size(), (ps, id) -> {
       ps.setLong(1, id);
       ps.setByte(2, (byte) (id - 1));
     });
+  }
+
+  private Account createDummyAccount(int count) {
+    String email = "test" + count + "@test.com";
+    String nickname = "test account " + count;
+    return Account.builder().providerType(ProviderType.KAKAO).role(Role.USER).email(email).nickname(nickname).build();
+  }
+
+  private Artist createDummyArtist(int count) {
+    int year = 1990 + (count % 20);
+    int month = (count % 12) + 1;
+    int days = (count % 30) + 1;
+    return Artist.builder()
+                 .name(RandomNameGenerator.getRandomName())
+                 .profileImage("test profile image " + count)
+                 .birth(LocalDate.of(year, month, days))
+                 .summary("test summary " + count)
+                 .description("test description " + count)
+                 .token(EntityToken.ARTIST.randomCharacterWithPrefix())
+                 .build();
   }
 
   private List<ArtistContact> createArtistContacts() {
@@ -209,6 +205,15 @@ public class DummyDataInitializer {
                                           .contactValue("010-1234-5678")
                                           .build();
     return List.of(contact1, contact2, contact3, contact4, contact5);
+  }
+
+  private Artwork createDummyArtwork(int count) {
+    return Artwork.builder()
+                  .name("Artwork" + count)
+                  .image("Test Artwork Image" + count)
+                  .description("Test Artwork Description" + count)
+                  .token(EntityToken.ARTWORK.randomCharacterWithPrefix())
+                  .build();
   }
 
   private static class RandomNameGenerator {
