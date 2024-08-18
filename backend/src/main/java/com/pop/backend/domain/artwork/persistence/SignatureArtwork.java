@@ -1,6 +1,5 @@
-package com.pop.backend.domain.artist.persistence;
+package com.pop.backend.domain.artwork.persistence;
 
-import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,17 +13,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FollowArtist extends BaseEntity {
+public class SignatureArtwork extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Account account;
+  private Artwork artwork;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Artist artist;
+  private Byte displayOrder;
 
-  private FollowArtist(Account account, Artist artist) {
-    this.account = account;
-    this.artist = artist;
+  private SignatureArtwork(Artwork artwork, Byte displayOrder) {
+    this.artwork = artwork;
+    this.displayOrder = displayOrder;
   }
 
 }

@@ -16,6 +16,7 @@ public enum ProviderType {
       );
 
   public static ProviderType find(String providerType) {
-    return Optional.ofNullable(CACHED_TYPES.get(providerType)).orElse(LOCAL);
+    return Optional.ofNullable(CACHED_TYPES.get(providerType.toUpperCase())).orElse(LOCAL);
   }
+
 }

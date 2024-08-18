@@ -1,10 +1,10 @@
 package com.pop.backend.domain.artist.persistence;
 
 import com.pop.backend.domain.artist.persistence.type.ContactType;
+import com.pop.backend.global.converter.ContactTypeConverter;
 import com.pop.backend.global.type.BaseEntity;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArtistContact extends BaseEntity {
 
-  @Enumerated(value = EnumType.STRING)
+  @Convert(converter = ContactTypeConverter.class)
   private ContactType type;
 
   private String label;
