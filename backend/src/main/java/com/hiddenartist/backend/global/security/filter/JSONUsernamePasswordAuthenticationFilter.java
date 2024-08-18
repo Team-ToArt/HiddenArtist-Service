@@ -2,6 +2,7 @@ package com.hiddenartist.backend.global.security.filter;
 
 import com.hiddenartist.backend.global.exception.type.SecurityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
+import com.hiddenartist.backend.global.security.handler.AdminLoginFailureHandler;
 import com.hiddenartist.backend.global.security.handler.AdminLoginSuccessHandler;
 import com.hiddenartist.backend.global.utils.JsonUtils;
 import jakarta.servlet.ServletException;
@@ -29,9 +30,10 @@ public class JSONUsernamePasswordAuthenticationFilter extends AbstractAuthentica
   private final JsonUtils jsonUtils;
 
   protected JSONUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager,
-      AdminLoginSuccessHandler loginSuccessHandler, JsonUtils jsonUtils) {
+      AdminLoginSuccessHandler loginSuccessHandler, AdminLoginFailureHandler failureHandler, JsonUtils jsonUtils) {
     super(LOGIN_REQUEST_MATCHER, authenticationManager);
     setAuthenticationSuccessHandler(loginSuccessHandler);
+    setAuthenticationFailureHandler(failureHandler);
     this.jsonUtils = jsonUtils;
   }
 

@@ -7,6 +7,7 @@ import com.hiddenartist.backend.global.security.service.CustomOAuth2UserService;
 import com.hiddenartist.backend.global.type.EndPoint;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -94,7 +95,10 @@ public class SecurityConfig {
     http.authorizeHttpRequests(registry -> {
           adminPermitAllEndPoints.forEach(
               endpoint -> registry.requestMatchers(endpoint.method(), endpoint.pattern()).permitAll());
-          registry.anyRequest().hasRole(Role.ADMIN.name());
+          registry.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                  .permitAll()
+                  .anyRequest()
+                  .hasRole(Role.ADMIN.name());
         }
     );
   }
