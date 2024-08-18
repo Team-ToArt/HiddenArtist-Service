@@ -1,4 +1,4 @@
-package com.hiddenartist.backend.global;
+package com.hiddenartist.backend.global.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

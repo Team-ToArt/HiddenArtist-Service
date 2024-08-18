@@ -7,7 +7,6 @@ import com.hiddenartist.backend.domain.account.controller.response.FollowArtistG
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.repository.AccountRepository;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
-import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.SecurityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
   private final AccountRepository accountRepository;
-  private final ArtistRepository artistRepository;
   private final TokenService tokenService;
   private final OAuth2UnlinkManager unlinkManager;
 
@@ -69,7 +67,7 @@ public class AccountService {
 
   @Transactional(readOnly = true)
   public FollowArtistGetListResponse getFollowArtists(String email) {
-    List<Artist> artists = artistRepository.findFollowArtistListByAccountEmail(email);
+    List<Artist> artists = accountRepository.findFollowArtistListByEmail(email);
     return FollowArtistGetListResponse.convert(artists);
   }
 

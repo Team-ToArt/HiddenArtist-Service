@@ -5,6 +5,7 @@ import static com.hiddenartist.backend.domain.account.persistence.QAccount.accou
 import static com.hiddenartist.backend.domain.artist.persistence.QArtist.artist;
 import static com.hiddenartist.backend.domain.artist.persistence.QFollowArtist.followArtist;
 
+import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.type.Role;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class QAccountRepositoryImpl implements QAccountRepository {
+public class CustomAccountRepositoryImpl implements CustomAccountRepository {
 
   private final JPAQueryFactory queryFactory;
 
@@ -40,6 +41,16 @@ public class QAccountRepositoryImpl implements QAccountRepository {
                     followArtist.artist.in(artists)
                                        .and(followArtist.account.email.eq(email))
                 ).execute();
+  }
+
+  @Override
+  public List<Artist> findFollowArtistListByEmail(String email) {
+    Account findAccount = queryFactory.selectFrom(account).where(account.email.eq(email)).fetchOne();
+    return queryFactory.select(artist)
+                       .from(followArtist)
+                       .join(followArtist.artist, artist)
+                       .where(followArtist.account.eq(findAccount))
+                       .fetch();
   }
 
 }
