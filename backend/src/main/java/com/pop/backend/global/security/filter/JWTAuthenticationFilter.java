@@ -5,6 +5,7 @@ import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.jwt.GenerateToken;
 import com.pop.backend.global.jwt.TokenService;
 import com.pop.backend.global.type.CookieNames;
+import com.pop.backend.global.type.EndPoint;
 import com.pop.backend.global.type.JWTValidationResult;
 import com.pop.backend.global.utils.CookieManager;
 import jakarta.servlet.FilterChain;
@@ -25,7 +26,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   private final TokenService tokenService;
   private final PathMatcher pathMatcher = new AntPathMatcher();
   private final List<EndPoint> tokenFreeEndPoints = List.of(
-      new EndPoint("/api/accounts/signin/**", HttpMethod.GET)
+      EndPoint.create("/api/accounts/signin/**", HttpMethod.GET),
+      EndPoint.create("/api/artists", HttpMethod.GET),
+      EndPoint.create("/api/artists/**", HttpMethod.GET),
+      EndPoint.create("/api/artists/popular", HttpMethod.GET),
+      EndPoint.create("/api/artists/{token}/signature-artworks", HttpMethod.GET)
   );
 
   @Override
@@ -73,10 +78,4 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     CookieManager.storeTokenInCookie(generateToken, response);
   }
 
-  private record EndPoint(
-      String pattern,
-      HttpMethod method
-  ) {
-
-  }
 }

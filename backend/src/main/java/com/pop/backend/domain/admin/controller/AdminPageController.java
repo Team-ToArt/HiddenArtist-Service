@@ -13,14 +13,14 @@ public class AdminPageController {
 
   @GetMapping
   public String routeDashBoardPage(Model model) {
-    Map<String, String> attributes = PageInfo.getAttributes(PageInfo.DASH_BOARD);
+    Map<String, String> attributes = PageInfo.DASH_BOARD.getAttributes();
     model.addAllAttributes(attributes);
     return "index";
   }
 
   @GetMapping("/signin")
   public String routeLoginPage(Model model) {
-    Map<String, String> attributes = PageInfo.getAttributes(PageInfo.LOGIN);
+    Map<String, String> attributes = PageInfo.LOGIN.getAttributes();
     model.addAllAttributes(attributes);
     return "index";
   }

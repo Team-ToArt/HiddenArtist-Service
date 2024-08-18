@@ -2,15 +2,6 @@ name: POP Springboot Build Workflow
 
 on:
   workflow_call:
-    secrets:
-      KAKAO_ID:
-        required: true
-      KAKAO_SECRET:
-        required: true
-      KAKAO_ADMIN:
-        required: true
-      JWT_SECRET:
-        required: true
 
 jobs:
   build:
@@ -26,8 +17,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-#      - name: Setup Redis
-#        uses: supercharge/redis-github-action@1.8.0
+      #      - name: Setup Redis
+      #        uses: supercharge/redis-github-action@1.8.0
 
       - name: Grant execute permission to Gradlew
         run: chmod +x ./gradlew
@@ -36,8 +27,3 @@ jobs:
       - name: Build With Gradle Wrapper
         run: ./gradlew clean build --info
         working-directory: ./backend
-        env:
-          KAKAO_ID: ${{secrets.KAKAO_ID}}
-          KAKAO_SECRET: ${{secrets.KAKAO_SECRET}}
-          KAKAO_ADMIN: ${{secrets.KAKAO_ADMIN}}
-          JWT_SECRET: ${{secrets.JWT_SECRET}}
