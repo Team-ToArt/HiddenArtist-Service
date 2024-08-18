@@ -1,5 +1,6 @@
 package com.pop.backend.domain.artist.controller;
 
+import com.pop.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
@@ -50,6 +51,11 @@ public class ArtistController {
   @GetMapping("/{token}/signature-artworks")
   public ArtistGetSignatureArtworkResponse getArtistFeatureArtworks(@PathVariable("token") String token) {
     return artistService.getArtistSignatureArtworks(token);
+  }
+
+  @GetMapping("/{token}/all-artworks")
+  public ArtistGetAllArtworkResponse getArtistAllArtworks(@PathVariable("token") String token) {
+    return artistService.getArtistAllArtworks(token);
   }
 
   @PostMapping("/{token}/follow")

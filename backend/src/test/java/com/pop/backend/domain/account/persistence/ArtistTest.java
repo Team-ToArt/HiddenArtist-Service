@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse.ContactInfo;
-import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.pop.backend.domain.artist.persistence.ArtistContact;
 import com.pop.backend.domain.artist.persistence.repository.ArtistRepository;
@@ -15,6 +14,7 @@ import com.pop.backend.domain.artist.persistence.type.ContactType;
 import com.pop.backend.domain.genre.persistence.Genre;
 import com.pop.backend.global.CustomDataJpaTest;
 import com.pop.backend.global.type.EntityToken;
+import com.pop.backend.global.type.SimpleArtistResponse;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -64,7 +64,7 @@ public class ArtistTest {
     //given
     Pageable pageRequest = PageRequest.of(1, 12, Sort.by(Direction.ASC, "name"));
     //when
-    Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
+    Page<SimpleArtistResponse> artists = artistRepository.findAllArtists(pageRequest);
     //then
     assertThat(artists).hasSize(12);
     assertThat(artists.getTotalPages()).isEqualTo(10);

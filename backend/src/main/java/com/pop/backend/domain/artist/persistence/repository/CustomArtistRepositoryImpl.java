@@ -13,13 +13,14 @@ import static com.pop.backend.domain.genre.persistence.QGenre.genre;
 
 import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
-import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.pop.backend.domain.artist.persistence.ArtistContact;
+import com.pop.backend.domain.artwork.persistence.Artwork;
 import com.pop.backend.domain.genre.persistence.ArtistGenre;
 import com.pop.backend.domain.genre.persistence.Genre;
 import com.pop.backend.global.exception.type.EntityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
+import com.pop.backend.global.type.SimpleArtistResponse;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -55,8 +56,8 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
   }
 
   @Override
-  public Page<ArtistSimpleResponse> findAllArtists(Pageable pageable) {
-    List<ArtistSimpleResponse> artists = queryFactory.select(Projections.constructor(ArtistSimpleResponse.class,
+  public Page<SimpleArtistResponse> findAllArtists(Pageable pageable) {
+    List<SimpleArtistResponse> artists = queryFactory.select(Projections.constructor(SimpleArtistResponse.class,
                                                          artist.name,
                                                          artist.profileImage,
                                                          artist.summary,
@@ -109,7 +110,6 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
 
   @Override
   public List<ArtworkResponse> findSignatureArtworkByToken(String token) {
-    Artist findArtist = queryFactory.selectFrom(artist).where(artist.token.eq(token)).fetchOne();
     return queryFactory.select(Projections.constructor(ArtworkResponse.class,
                            artwork.name,
                            artwork.image,
@@ -117,7 +117,15 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                        .from(signatureArtwork)
                        .leftJoin(signatureArtwork.artwork, artwork)
                        .leftJoin(artistArtwork).on(artistArtwork.artwork.eq(artwork))
-                       .where(artistArtwork.artist.eq(findArtist))
+                       .where(artistArtwork.artist.token.eq(token))
+                       .fetch();
+  }
+
+  @Override
+  public List<Artwork> findAllArtworkByToken(String token) {
+    return queryFactory.select(artistArtwork.artwork)
+                       .from(artistArtwork)
+                       .where(artistArtwork.artist.token.eq(token))
                        .fetch();
   }
 

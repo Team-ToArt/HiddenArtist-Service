@@ -1,17 +1,18 @@
 package com.pop.backend.domain.artist.controller.response;
 
 import com.pop.backend.domain.artist.persistence.Artist;
+import com.pop.backend.global.type.SimpleArtistResponse;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 public record ArtistGetListResponse(
-    Page<ArtistSimpleResponse> artists
+    Page<SimpleArtistResponse> artists
 ) {
 
   public static ArtistGetListResponse create(Page<Artist> artists) {
-    List<ArtistSimpleResponse> simpleResponses = artists.get().map(ArtistSimpleResponse::convert).toList();
-    Page<ArtistSimpleResponse> artistSimpleResponses = new PageImpl<>(simpleResponses, artists.getPageable(),
+    List<SimpleArtistResponse> simpleResponses = artists.get().map(SimpleArtistResponse::convert).toList();
+    Page<SimpleArtistResponse> artistSimpleResponses = new PageImpl<>(simpleResponses, artists.getPageable(),
         artists.getTotalPages());
     return new ArtistGetListResponse(artistSimpleResponses);
   }

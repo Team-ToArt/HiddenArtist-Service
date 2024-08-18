@@ -2,19 +2,21 @@ package com.pop.backend.domain.artist.service;
 
 import com.pop.backend.domain.account.persistence.Account;
 import com.pop.backend.domain.account.persistence.repository.AccountRepository;
+import com.pop.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.pop.backend.domain.artist.controller.response.ArtistGetThreeResponse;
-import com.pop.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.pop.backend.domain.artist.persistence.Artist;
 import com.pop.backend.domain.artist.persistence.FollowArtist;
 import com.pop.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.pop.backend.domain.artist.persistence.repository.FollowArtistRepository;
+import com.pop.backend.domain.artwork.persistence.Artwork;
 import com.pop.backend.global.exception.type.EntityException;
 import com.pop.backend.global.exception.type.ServiceErrorCode;
 import com.pop.backend.global.type.EntityToken;
+import com.pop.backend.global.type.SimpleArtistResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +36,7 @@ public class ArtistService {
   @Transactional(readOnly = true)
   public ArtistGetListResponse getAllArtists(Pageable pageable) {
     Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-    Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
+    Page<SimpleArtistResponse> artists = artistRepository.findAllArtists(pageRequest);
     return new ArtistGetListResponse(artists);
   }
 
@@ -61,6 +63,13 @@ public class ArtistService {
     String token = EntityToken.ARTIST.identifyToken(tokenValue);
     List<ArtworkResponse> signatureArtworks = artistRepository.findSignatureArtworkByToken(token);
     return new ArtistGetSignatureArtworkResponse(signatureArtworks);
+  }
+
+  @Transactional(readOnly = true)
+  public ArtistGetAllArtworkResponse getArtistAllArtworks(String tokenValue) {
+    String token = EntityToken.ARTIST.identifyToken(tokenValue);
+    List<Artwork> artworks = artistRepository.findAllArtworkByToken(token);
+    return ArtistGetAllArtworkResponse.create(artworks);
   }
 
   @Transactional
