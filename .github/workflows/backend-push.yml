@@ -2,13 +2,12 @@ name: POP Backend Push Workflow
 
 on:
   push:
-    branches: ['feature/**','chore/**','fix/**','refactor/**']
+    branches: [ 'feature/**','chore/**','fix/**','refactor/**' ]
     paths:
       - 'backend/**'
 
 jobs:
   backend-build:
     uses: ./.github/workflows/backend-build.yml
-    secrets: inherit
     permissions:
       contents: read
