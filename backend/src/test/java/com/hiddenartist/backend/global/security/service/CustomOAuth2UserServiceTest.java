@@ -2,7 +2,7 @@ package com.hiddenartist.backend.global.security.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.type.ProviderType;
@@ -41,7 +41,7 @@ class CustomOAuth2UserServiceTest {
   private CustomOAuth2UserService oAuth2UserService;
 
   @Test
-  @DisplayName("OAuth2UserService loadUser 테스트")
+  @DisplayName("OAuth2 인증이 성공하면 PrincipalDetails 반환")
   void loadUserTest() {
     //given
     OAuth2UserRequest userRequest = createMockOAuth2UserRequest();
@@ -50,8 +50,8 @@ class CustomOAuth2UserServiceTest {
                              .nickname("test nickname").profileImage("test_image_url").build();
     SecurityUserInfo userInfo = SecurityUserInfo.convert(account);
     //when
-    when(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class))).thenReturn(oAuth2User);
-    when(authorizationService.validateUser(any(OAuth2UserAttributes.class))).thenReturn(account);
+    given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class))).willReturn(oAuth2User);
+    given(authorizationService.validateUser(any(OAuth2UserAttributes.class))).willReturn(account);
     //then
     OAuth2User result = oAuth2UserService.loadUser(userRequest);
     assertThat(result).isNotNull().isInstanceOf(PrincipalDetails.class);
