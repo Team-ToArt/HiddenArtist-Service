@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomArtistRepository {
 
-  List<Artist> findFollowArtistListByAccountEmail(String email);
-
   Page<SimpleArtistResponse> findAllArtists(Pageable pageable);
 
   ArtistGetDetailResponse findArtistDetailByToken(String token);
