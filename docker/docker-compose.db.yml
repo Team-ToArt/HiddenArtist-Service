@@ -1,7 +1,7 @@
-name: project_pop
+name: Project_HiddenArtist
 services:
   mysql:
-    container_name: pop_mysql
+    container_name: ha_mysql
     image: mysql:8.0.34
     environment:
       MYSQL_ROOT_PASSWORD: 'root1234'
@@ -13,10 +13,10 @@ services:
     volumes:
       - mysql_volume:/var/lib/mysql
     networks:
-      - pop-network
+      - ha-network
 
   redis:
-    container_name: pop_redis
+    container_name: ha_redis
     image: redis:latest
     environment:
       - REDIS_PASSWORD=1234
@@ -26,12 +26,12 @@ services:
     volumes:
       - redis_volume:/data
     networks:
-      - pop-network
+      - ha-network
 
 volumes:
   mysql_volume:
   redis_volume:
 
 networks:
-  pop-network:
+  ha-network:
     external: true

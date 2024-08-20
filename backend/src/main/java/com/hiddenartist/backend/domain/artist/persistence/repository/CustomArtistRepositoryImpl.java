@@ -11,7 +11,6 @@ import static com.hiddenartist.backend.domain.artwork.persistence.QSignatureArtw
 import static com.hiddenartist.backend.domain.genre.persistence.QArtistGenre.artistGenre;
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 
-import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
@@ -44,16 +43,6 @@ import org.springframework.util.StringUtils;
 public class CustomArtistRepositoryImpl implements CustomArtistRepository {
 
   private final JPAQueryFactory queryFactory;
-
-  @Override
-  public List<Artist> findFollowArtistListByAccountEmail(String email) {
-    Account findAccount = queryFactory.selectFrom(account).where(emailEq(email)).fetchOne();
-    return queryFactory.select(artist)
-                       .from(followArtist)
-                       .join(followArtist.artist, artist)
-                       .where(followArtist.account.eq(findAccount))
-                       .fetch();
-  }
 
   @Override
   public Page<SimpleArtistResponse> findAllArtists(Pageable pageable) {

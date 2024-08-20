@@ -1,17 +1,17 @@
-name: project_pop
+name: Project_HiddenArtist
 services:
   nginx:
-    container_name: pop_nginx
+    container_name: ha_nginx
     image: nginx:alpine
     ports:
       - '80:80'
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - pop-network
+      - ha-network
 
   springboot:
-    container_name: pop_backend
+    container_name: ha_backend
     build:
       context: ../backend
       dockerfile: Dockerfile
@@ -20,8 +20,8 @@ services:
     env_file:
       - ../env/springboot-docker.env
     networks:
-      - pop-network
+      - ha-network
 
 networks:
-  pop-network:
+  ha-network:
     external: true
