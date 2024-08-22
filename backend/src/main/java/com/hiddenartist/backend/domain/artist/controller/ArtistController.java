@@ -49,7 +49,7 @@ public class ArtistController {
   }
 
   @GetMapping("/{token}/signature-artworks")
-  public ArtistGetSignatureArtworkResponse getArtistFeatureArtworks(@PathVariable("token") String token) {
+  public ArtistGetSignatureArtworkResponse getArtistSignatureArtworks(@PathVariable("token") String token) {
     return artistService.getArtistSignatureArtworks(token);
   }
 

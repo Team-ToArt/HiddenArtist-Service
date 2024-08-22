@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.hiddenartist.backend.domain.account.persistence.repository.AccountRepository;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
+import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.artwork.persistence.repository.ArtworkRepository;
 import com.hiddenartist.backend.global.config.CustomDataJpaTest;
 import com.hiddenartist.backend.global.config.TestDataInitializer;
+import com.hiddenartist.backend.global.type.EntityToken;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,22 @@ public class DataInitializerTest {
     assertThat(artistCount).isEqualTo(100);
     assertThat(artworkCount).isEqualTo(20);
     assertThat(followArtists).hasSize(20);
+  }
+
+  @Test
+  @DisplayName("Artwork 초기화 테스트")
+  void initializerTest2() {
+    //given
+    initializer.saveArtists(1);
+    initializer.saveArtworks(20);
+
+    //when
+    Artwork artwork = artworkRepository.findById(1L).get();
+    //then
+    assertThat(artwork).isNotNull()
+                       .extracting("name", "image", "token")
+                       .containsExactly("Artwork1", "Test Artwork Image1", EntityToken.ARTWORK.identifyToken("1"));
+    assertThat(artwork.getArtworkMedium()).extracting("typeName").isEqualTo("유화");
   }
 
 }
