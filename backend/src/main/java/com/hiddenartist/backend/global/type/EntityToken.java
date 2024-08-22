@@ -12,7 +12,7 @@ public enum EntityToken {
   private static final int TOKEN_LENGTH = 30;
   private final String prefix;
 
-  public String randomCharacterWithPrefix() {
+  public String createEntityToken() {
     return this.prefix + randomCharacter(TOKEN_LENGTH - this.prefix.length());
   }
 
