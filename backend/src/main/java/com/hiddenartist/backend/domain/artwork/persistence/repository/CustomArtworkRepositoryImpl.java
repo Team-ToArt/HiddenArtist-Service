@@ -13,6 +13,7 @@ import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
@@ -49,4 +50,18 @@ public class CustomArtworkRepositoryImpl implements CustomArtworkRepository {
                                      .fetch();
     return ArtworkGetDetailResponse.create(findArtwork, artists, genres);
   }
+
+  @Override
+  public List<Artwork> findArtworkRecommend() {
+    Long totalCount = queryFactory.select(artwork.count()).from(artwork).fetchOne();
+    if (totalCount < 3) {
+      return queryFactory.selectFrom(artwork).fetch();
+    }
+
+    return queryFactory.selectFrom(artwork)
+                       .orderBy(Expressions.numberTemplate(Double.class, "RAND()").asc())
+                       .limit(3)
+                       .fetch();
+  }
+
 }

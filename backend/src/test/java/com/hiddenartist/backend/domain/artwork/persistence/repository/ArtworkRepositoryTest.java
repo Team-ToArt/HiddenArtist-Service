@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetDetailResponse;
+import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.global.config.CustomDataJpaTest;
 import com.hiddenartist.backend.global.config.TestDataInitializer;
 import com.hiddenartist.backend.global.type.EntityToken;
+import java.util.HashSet;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,7 @@ class ArtworkRepositoryTest {
     initializer.saveArtworks(1);
 
     String token = EntityToken.ARTWORK.identifyToken("1");
+
     //when
     ArtworkGetDetailResponse artworkDetailByToken = artworkRepository.findArtworkDetailByToken(token);
 
@@ -42,6 +46,21 @@ class ArtworkRepositoryTest {
                                               .containsExactly(tuple
                                                   ("artist1", "1")
                                               );
+  }
+
+  @Test
+  @DisplayName("추천 작품 3개 조회")
+  void findArtworkRecommendTest() {
+    //given
+    initializer.saveArtists(1);
+    initializer.saveArtworks(50);
+
+    //when
+    List<Artwork> result = artworkRepository.findArtworkRecommend();
+    HashSet<Artwork> uniqueResult = new HashSet<>(result);
+
+    //then
+    assertThat(result).isNotNull().hasSize(uniqueResult.size());
   }
 
 }
