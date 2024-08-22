@@ -9,6 +9,7 @@ import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artist.persistence.type.ContactType;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
+import com.hiddenartist.backend.domain.artwork.persistence.ArtworkMedium;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -43,6 +44,13 @@ public class TestDataInitializer {
     saveArtist(size);
     saveArtistContact();
     saveGenre();
+    saveArtistGenre();
+  }
+
+  public void saveArtworks(int size) {
+    saveArtworkMediums();
+    saveArtwork(size);
+    saveArtworkGenre();
   }
 
   public void saveFollowArtists(int accountSize) {
@@ -57,18 +65,32 @@ public class TestDataInitializer {
     });
   }
 
-  public void saveArtworks(int size) {
+  public void saveSignatureArtworks() {
+    List<Long> artworkIdList = List.of(1L, 2L, 3L);
+    String sql = "insert into signature_artwork ( artwork_id,display_order) values(?,?)";
+    jdbcTemplate.batchUpdate(sql, artworkIdList, artworkIdList.size(), (ps, artworkId) -> {
+      ps.setLong(1, artworkId);
+      ps.setByte(2, (byte) artworkIdList.indexOf(artworkId));
+    });
+  }
+
+  private void saveArtwork(int size) {
     size = Math.max(size, 3);
     List<Artwork> artworks = IntStream.rangeClosed(1, size)
                                       .mapToObj(this::createArtwork)
                                       .toList();
-    String sql = "insert into artwork (id,name,image,description,token) values (?,?,?,?,?)";
+    String sql = "insert into artwork (id,name,image,description,token,width,height,production_year,artwork_medium_id) values (?,?,?,?,?,?,?,?,?)";
     jdbcTemplate.batchUpdate(sql, artworks, artworks.size(), (ps, artwork) -> {
-      ps.setLong(1, artworks.indexOf(artwork) + 1);
+      int artworkId = artworks.indexOf(artwork) + 1;
+      ps.setLong(1, artworkId);
       ps.setString(2, artwork.getName());
       ps.setString(3, artwork.getImage());
       ps.setString(4, artwork.getDescription());
       ps.setString(5, artwork.getToken());
+      ps.setDouble(6, artwork.getWidth());
+      ps.setDouble(7, artwork.getHeight());
+      ps.setDate(8, Date.valueOf(artwork.getProductionYear()));
+      ps.setLong(9, ((artworkId) % 5) + 1);
     });
 
     sql = "insert into artist_artwork (artist_id,artwork_id) values (?,?)";
@@ -78,12 +100,18 @@ public class TestDataInitializer {
     });
   }
 
-  public void saveSignatureArtworks() {
-    List<Long> artworkIdList = List.of(1L, 2L, 3L);
-    String sql = "insert into signature_artwork ( artwork_id,display_order) values(?,?)";
-    jdbcTemplate.batchUpdate(sql, artworkIdList, artworkIdList.size(), (ps, artworkId) -> {
-      ps.setLong(1, artworkId);
-      ps.setByte(2, (byte) artworkIdList.indexOf(artworkId));
+  private void saveArtworkMediums() {
+    ArtworkMedium artworkMedium1 = ArtworkMedium.builder().typeName("수채화").build();
+    ArtworkMedium artworkMedium2 = ArtworkMedium.builder().typeName("유화").build();
+    ArtworkMedium artworkMedium3 = ArtworkMedium.builder().typeName("디지털 아트").build();
+    ArtworkMedium artworkMedium4 = ArtworkMedium.builder().typeName("3D 아트").build();
+    ArtworkMedium artworkMedium5 = ArtworkMedium.builder().typeName("POP 아트").build();
+    List<ArtworkMedium> artworkMediums = List.of(artworkMedium1, artworkMedium2, artworkMedium3, artworkMedium4,
+        artworkMedium5);
+    String sql = "insert into artwork_medium (id,type_name) values (?,?)";
+    jdbcTemplate.batchUpdate(sql, artworkMediums, artworkMediums.size(), (ps, artworkMedium) -> {
+      ps.setLong(1, artworkMediums.indexOf(artworkMedium) + 1);
+      ps.setString(2, artworkMedium.getTypeName());
     });
   }
 
@@ -116,16 +144,29 @@ public class TestDataInitializer {
   }
 
   private void saveGenre() {
-    String sql = "insert into genre (id,name) values(?,?)";
+    String sql = "insert into genre (id,name) values (?,?)";
     List<String> genres = List.of("현대미술", "조소", "추상화");
     jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> {
       ps.setLong(1, genres.indexOf(genre) + 1);
       ps.setString(2, genre);
     });
-    sql = "insert into artist_genre (artist_id,genre_id) values(?,?)";
-    jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> {
+  }
+
+  private void saveArtistGenre() {
+    List<Long> genreIds = List.of(1L, 2L, 3L);
+    String sql = "insert into artist_genre (artist_id,genre_id) values(?,?)";
+    jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, id) -> {
       ps.setLong(1, 1L);
-      ps.setLong(2, genres.indexOf(genre) + 1);
+      ps.setLong(2, id);
+    });
+  }
+
+  private void saveArtworkGenre() {
+    List<Long> genreIds = List.of(1L, 2L, 3L);
+    String sql = "insert into artwork_genre (artwork_id,genre_id) values(?,?)";
+    jdbcTemplate.batchUpdate(sql, genreIds, genreIds.size(), (ps, id) -> {
+      ps.setLong(1, 1L);
+      ps.setLong(2, id);
     });
   }
 
@@ -157,6 +198,9 @@ public class TestDataInitializer {
                   .name("Artwork" + count)
                   .image("Test Artwork Image" + count)
                   .description("Test Artwork Description" + count)
+                  .productionYear(LocalDate.of(2000 + count, 1, 1))
+                  .width(20.1 + count)
+                  .height(30.5 + count)
                   .token(EntityToken.ARTWORK.identifyToken(String.valueOf(count)))
                   .build();
   }
