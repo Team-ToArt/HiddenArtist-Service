@@ -27,7 +27,6 @@ public class CustomArtworkRepositoryImpl implements CustomArtworkRepository {
 
   @Override
   public ArtworkGetDetailResponse findArtworkDetailByToken(String token) {
-    // 토큰을 사용해서 Artwork 조회 -> ArtworkMedium fetch join
     Artwork findArtwork = Optional.ofNullable(queryFactory.selectFrom(artwork)
                                                           .leftJoin(artwork.artworkMedium, artworkMedium)
                                                           .fetchJoin()
@@ -35,19 +34,16 @@ public class CustomArtworkRepositoryImpl implements CustomArtworkRepository {
                                                           .fetchOne())
                                   .orElseThrow(() -> new EntityException(ServiceErrorCode.ARTWORK_NOT_FOUND));
 
-    // Artwork를 통해 Artist 조회 -> 이름, 토큰 추출
     List<Artist> artists = queryFactory.select(artist)
                                        .from(artistArtwork)
                                        .join(artistArtwork.artist, artist)
-                                       .fetchJoin()
                                        .where(artistArtwork.artwork.eq(findArtwork))
                                        .orderBy(artist.name.asc())
                                        .fetch();
-    // Artwork를 통해 ArtworkGenre 조회 -> List<Genre> 추출
+
     List<Genre> genres = queryFactory.select(genre)
                                      .from(artworkGenre)
                                      .join(artworkGenre.genre, genre)
-                                     .fetchJoin()
                                      .where(artworkGenre.artwork.eq(findArtwork))
                                      .orderBy(genre.name.asc())
                                      .fetch();

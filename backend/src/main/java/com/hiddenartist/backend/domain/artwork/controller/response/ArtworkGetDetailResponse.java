@@ -3,6 +3,7 @@ package com.hiddenartist.backend.domain.artwork.controller.response;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
+import com.hiddenartist.backend.global.type.EntityToken;
 import java.util.List;
 
 public record ArtworkGetDetailResponse(
@@ -50,7 +51,7 @@ public record ArtworkGetDetailResponse(
   ) {
 
     public static ArtistInfo create(Artist artist) {
-      return new ArtistInfo(artist.getName(), artist.getToken());
+      return new ArtistInfo(artist.getName(), EntityToken.ARTIST.extractToken(artist.getToken()));
     }
   }
 
