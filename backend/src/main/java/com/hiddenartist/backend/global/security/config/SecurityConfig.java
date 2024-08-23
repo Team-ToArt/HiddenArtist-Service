@@ -44,6 +44,17 @@ public class SecurityConfig {
   private final SecurityFilterConfig filterConfig;
 
   @Bean
+  @Order(0)
+  public SecurityFilterChain staticResourcesFilterChain(HttpSecurity http) throws Exception {
+    return http.securityMatcher("/css/**", "/js/**")
+               .authorizeHttpRequests(registry ->
+                   registry.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll())
+               .sessionManagement(AbstractHttpConfigurer::disable)
+               .securityContext(AbstractHttpConfigurer::disable)
+               .build();
+  }
+
+  @Bean
   @Order(1)
   public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
     http.securityMatcher("/admin", "/admin/**");
@@ -97,10 +108,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(registry -> {
           adminPermitAllEndPoints.forEach(
               endpoint -> registry.requestMatchers(endpoint.method(), endpoint.pattern()).permitAll());
-          registry.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                  .permitAll()
-                  .anyRequest()
-                  .hasRole(Role.ADMIN.name());
+          registry.anyRequest().hasRole(Role.ADMIN.name());
         }
     );
   }
