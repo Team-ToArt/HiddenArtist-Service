@@ -46,11 +46,13 @@ public class SecurityConfig {
   @Bean
   @Order(0)
   public SecurityFilterChain staticResourcesFilterChain(HttpSecurity http) throws Exception {
-    return http.securityMatcher("/css/**", "/js/**")
-               .authorizeHttpRequests(registry ->
-                   registry.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll())
+    return http.securityMatcher("/css/**", "/js/**", "/images/**")
+               .csrf(AbstractHttpConfigurer::disable)
+               .cors(AbstractHttpConfigurer::disable)
                .sessionManagement(AbstractHttpConfigurer::disable)
                .securityContext(AbstractHttpConfigurer::disable)
+               .authorizeHttpRequests(registry ->
+                   registry.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll())
                .build();
   }
 
@@ -78,6 +80,7 @@ public class SecurityConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.securityMatcher("/api/**");
 
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)

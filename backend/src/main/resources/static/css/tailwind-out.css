@@ -812,8 +812,8 @@ select {
   height: 1.5rem;
 }
 
-.h-10 {
-  height: 2.5rem;
+.h-1\/2 {
+  height: 50%;
 }
 
 .h-16 {
