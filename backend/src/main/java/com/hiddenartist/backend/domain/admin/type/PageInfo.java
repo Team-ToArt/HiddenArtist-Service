@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PageInfo {
 
-  DASH_BOARD("/admin/dashboard", "Admin Console"),
-  LOGIN("/admin/login", "Admin Login");
+  DASH_BOARD("admin/dashboard", "Admin Console"),
+  LOGIN("admin/login", "Admin Login");
 
   private static final String VIEW_NAME = "viewName";
   private static final String TITLE = "title";

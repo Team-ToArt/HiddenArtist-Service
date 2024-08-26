@@ -6,10 +6,10 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<div th:fragment="content">
+		<section th:fragment="content">
 			<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 				<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-					<img alt="Your Company" class="mx-auto h-1/2 w-auto" src="/images/to-art-logo.jpg">
+					<img alt="Your Company" class="mx-auto h-1/2 w-auto" th:src="@{/images/to-art-logo.jpg}">
 					<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
 						관리자 콘솔 로그인
 					</h2>
@@ -50,7 +50,7 @@
 					</form>
 				</div>
 			</div>
-			<script src="/js/login.js"></script>
-		</div>
+			<script th:src="@{/js/login.js}"></script>
+		</section>
 	</body>
 </html>
