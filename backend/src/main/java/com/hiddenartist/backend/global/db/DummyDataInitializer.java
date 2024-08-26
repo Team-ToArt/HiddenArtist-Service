@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
-@Profile({"local", "dev"})
+@Profile({"local", "develop"})
 @RequiredArgsConstructor
 public class DummyDataInitializer {
 
