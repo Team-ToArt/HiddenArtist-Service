@@ -80,8 +80,6 @@ public class SecurityConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.securityMatcher("/api/**");
-
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable);

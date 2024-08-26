@@ -19,6 +19,8 @@ services:
       - '8080:8080'
     env_file:
       - ../env/springboot-docker.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=develop
     networks:
       - ha-network
 
