@@ -11,7 +11,8 @@ import static com.hiddenartist.backend.domain.artwork.persistence.QSignatureArtw
 import static com.hiddenartist.backend.domain.genre.persistence.QArtistGenre.artistGenre;
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
@@ -19,7 +20,6 @@ import com.hiddenartist.backend.domain.genre.persistence.ArtistGenre;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
-import com.hiddenartist.backend.global.type.SimpleArtistResponse;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -45,12 +45,12 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<SimpleArtistResponse> findAllArtists(Pageable pageable) {
-    List<SimpleArtistResponse> artists = queryFactory.select(Projections.constructor(SimpleArtistResponse.class,
+  public Page<ArtistSimpleResponse> findAllArtists(Pageable pageable) {
+    List<ArtistSimpleResponse> artists = queryFactory.select(Projections.constructor(ArtistSimpleResponse.class,
                                                          artist.name,
+                                                         artist.token,
                                                          artist.profileImage,
-                                                         artist.summary,
-                                                         artist.token))
+                                                         artist.summary))
                                                      .from(artist)
                                                      .offset(pageable.getOffset())
                                                      .limit(pageable.getPageSize())
@@ -62,7 +62,7 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
   }
 
   @Override
-  public ArtistGetDetailResponse findArtistDetailByToken(String token) {
+  public ArtistDetailResponse findArtistDetailByToken(String token) {
     Artist findArtist = Optional.ofNullable(queryFactory.selectFrom(artist).where(tokenEq(token)).fetchOne())
                                 .orElseThrow(() -> new EntityException(ServiceErrorCode.ARTIST_NOT_FOUND));
 
@@ -77,7 +77,7 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                  .fetch();
 
     List<Genre> genres = artistGenres.stream().map(ArtistGenre::getGenre).toList();
-    return ArtistGetDetailResponse.create(findArtist, findArtistContacts, genres);
+    return ArtistDetailResponse.create(findArtist, findArtistContacts, genres);
   }
 
   @Override

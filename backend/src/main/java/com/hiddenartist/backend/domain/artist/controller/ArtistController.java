@@ -1,7 +1,7 @@
 package com.hiddenartist.backend.domain.artist.controller;
 
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetThreeResponse;
@@ -34,7 +34,7 @@ public class ArtistController {
   }
 
   @GetMapping("/{token}")
-  public ArtistGetDetailResponse getArtistDetail(@PathVariable("token") String token) {
+  public ArtistDetailResponse getArtistDetail(@PathVariable("token") String token) {
     return artistService.getArtistDetail(token);
   }
 

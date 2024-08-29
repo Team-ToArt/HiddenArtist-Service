@@ -8,19 +8,19 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetThreeResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.type.EntityToken;
-import com.hiddenartist.backend.global.type.SimpleArtistResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -49,10 +49,10 @@ class ArtistServiceTest {
   void getAllArtists() {
     //given
     int totalPage = 42;
-    List<SimpleArtistResponse> simpleArtistResponses = IntStream.rangeClosed(1, 12)
-                                                                .mapToObj(this::createSimpleArtistResponse)
-                                                                .toList();
-    Page<SimpleArtistResponse> responses = new PageImpl<>(simpleArtistResponses, PageRequest.of(0, 12), totalPage);
+    List<ArtistSimpleResponse> artistSimpleRespons = IntStream.rangeClosed(1, 12)
+                                                              .mapToObj(this::createSimpleArtistResponse)
+                                                              .toList();
+    Page<ArtistSimpleResponse> responses = new PageImpl<>(artistSimpleRespons, PageRequest.of(0, 12), totalPage);
     given(artistRepository.findAllArtists(any(Pageable.class))).willReturn(responses);
 
     //when
@@ -91,6 +91,7 @@ class ArtistServiceTest {
                           .profileImage("artist_image1")
                           .birth(LocalDate.of(1997, 10, 24))
                           .summary("summary1")
+                          .token(EntityToken.ARTIST.identifyToken(tokenValue))
                           .description("description1")
                           .build();
     ArtistContact artistContact1 = ArtistContact.builder()
@@ -105,22 +106,22 @@ class ArtistServiceTest {
                                                 .build();
     List<ArtistContact> artistContacts = List.of(artistContact1, artistContact2);
     List<Genre> genres = List.of(new Genre("현대미술"), new Genre("인물화"));
-    ArtistGetDetailResponse expectedResponse = ArtistGetDetailResponse.create(artist, artistContacts, genres);
+    ArtistDetailResponse expectedResponse = ArtistDetailResponse.create(artist, artistContacts, genres);
 
     given(artistRepository.findArtistDetailByToken(EntityToken.ARTIST.identifyToken(tokenValue)))
         .willReturn(expectedResponse);
 
     //when
-    ArtistGetDetailResponse artistDetail = artistService.getArtistDetail(tokenValue);
+    ArtistDetailResponse artistDetail = artistService.getArtistDetail(tokenValue);
     //then
     assertThat(artistDetail).isNotNull().isEqualTo(expectedResponse);
-    assertThat(artistDetail.genres()).hasSize(2).containsExactlyInAnyOrder("현대미술", "인물화");
-    assertThat(artistDetail.contacts()).hasSize(3);
-    assertThat(artistDetail.contacts().get(TEL)).isEmpty();
-    assertThat(artistDetail.contacts().get(SNS)).extracting("label", "value")
-                                                .containsExactly(tuple("instagram", "instagram_url"));
-    assertThat(artistDetail.contacts().get(EMAIL)).extracting("label", "value")
-                                                  .containsExactly(tuple("email", "test.artist@test.com"));
+    assertThat(artistDetail.getGenres()).hasSize(2).containsExactlyInAnyOrder("현대미술", "인물화");
+    assertThat(artistDetail.getContacts()).hasSize(3);
+    assertThat(artistDetail.getContacts().get(TEL)).isEmpty();
+    assertThat(artistDetail.getContacts().get(SNS)).extracting("label", "value")
+                                                   .containsExactly(tuple("instagram", "instagram_url"));
+    assertThat(artistDetail.getContacts().get(EMAIL)).extracting("label", "value")
+                                                     .containsExactly(tuple("email", "test.artist@test.com"));
   }
 
   @Test
@@ -130,8 +131,8 @@ class ArtistServiceTest {
     List<Artist> artists = IntStream.rangeClosed(1, 3)
                                     .mapToObj(this::createArtist)
                                     .toList();
-    List<SimpleArtistResponse> simpleArtistResponses = artists.stream().map(SimpleArtistResponse::convert).toList();
-    ArtistGetThreeResponse expectedResponse = new ArtistGetThreeResponse(simpleArtistResponses);
+    List<ArtistSimpleResponse> artistSimpleRespons = artists.stream().map(ArtistSimpleResponse::convert).toList();
+    ArtistGetThreeResponse expectedResponse = new ArtistGetThreeResponse(artistSimpleRespons);
     given(artistRepository.findPopularArtists()).willReturn(artists);
 
     //when
@@ -212,12 +213,12 @@ class ArtistServiceTest {
     assertThat(artistAllArtworks.artworks()).isNotEmpty().hasSize(20);
   }
 
-  private SimpleArtistResponse createSimpleArtistResponse(int count) {
-    return new SimpleArtistResponse(
+  private ArtistSimpleResponse createSimpleArtistResponse(int count) {
+    return new ArtistSimpleResponse(
         "artist" + count,
+        EntityToken.ARTIST.identifyToken(String.valueOf(count)),
         "artist_image" + count,
-        "summary" + count,
-        EntityToken.ARTIST.identifyToken(String.valueOf(count)));
+        "summary" + count);
   }
 
   private Artist createArtist(int count) {

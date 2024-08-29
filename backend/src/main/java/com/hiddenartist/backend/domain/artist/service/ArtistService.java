@@ -2,12 +2,13 @@ package com.hiddenartist.backend.domain.artist.service;
 
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.repository.AccountRepository;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetThreeResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.FollowArtist;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
@@ -16,7 +17,6 @@ import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.type.EntityToken;
-import com.hiddenartist.backend.global.type.SimpleArtistResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,12 +36,12 @@ public class ArtistService {
   @Transactional(readOnly = true)
   public ArtistGetListResponse getAllArtists(Pageable pageable) {
     Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-    Page<SimpleArtistResponse> artists = artistRepository.findAllArtists(pageRequest);
+    Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
     return new ArtistGetListResponse(artists);
   }
 
   @Transactional(readOnly = true)
-  public ArtistGetDetailResponse getArtistDetail(String tokenValue) {
+  public ArtistDetailResponse getArtistDetail(String tokenValue) {
     String token = EntityToken.ARTIST.identifyToken(tokenValue);
     return artistRepository.findArtistDetailByToken(token);
   }
