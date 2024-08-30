@@ -12,9 +12,9 @@ import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailRe
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetThreeResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.SignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
@@ -174,13 +174,15 @@ class ArtistServiceTest {
   void getArtistSignatureArtworksTest() {
     //given
     String tokenValue = "1";
-    List<ArtworkResponse> artworkResponses = IntStream.rangeClosed(1, 3)
-                                                      .mapToObj(
-                                                          count -> new ArtworkResponse("artwork" + count,
-                                                              "artwork_image" + count,
-                                                              EntityToken.ARTWORK.identifyToken(String.valueOf(count)),
-                                                              (byte) count))
-                                                      .toList();
+    List<SignatureArtworkResponse> artworkResponses = IntStream.rangeClosed(1, 3)
+                                                               .mapToObj(
+                                                                   count -> new SignatureArtworkResponse(
+                                                                       "artwork" + count,
+                                                                       EntityToken.ARTWORK.identifyToken(
+                                                                           String.valueOf(count)),
+                                                                       "artwork_image" + count,
+                                                                       (byte) count))
+                                                               .toList();
     given(artistRepository.findSignatureArtworkByToken(EntityToken.ARTIST.identifyToken(tokenValue)))
         .willReturn(artworkResponses);
 
@@ -236,6 +238,7 @@ class ArtistServiceTest {
                   .name("artwork" + count)
                   .image("artwork_image" + count)
                   .token(EntityToken.ARTWORK.identifyToken(String.valueOf(count)))
+                  .productionYear(LocalDate.of(2021, 1, 1).plusYears(count))
                   .build();
   }
 

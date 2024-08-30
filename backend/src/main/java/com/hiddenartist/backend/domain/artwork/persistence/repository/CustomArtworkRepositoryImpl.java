@@ -8,7 +8,7 @@ import static com.hiddenartist.backend.domain.genre.persistence.QArtworkGenre.ar
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
-import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetDetailResponse;
+import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkDetailResponse;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.exception.type.EntityException;
@@ -27,7 +27,7 @@ public class CustomArtworkRepositoryImpl implements CustomArtworkRepository {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public ArtworkGetDetailResponse findArtworkDetailByToken(String token) {
+  public ArtworkDetailResponse findArtworkDetailByToken(String token) {
     Artwork findArtwork = Optional.ofNullable(queryFactory.selectFrom(artwork)
                                                           .leftJoin(artwork.artworkMedium, artworkMedium)
                                                           .fetchJoin()
@@ -48,7 +48,7 @@ public class CustomArtworkRepositoryImpl implements CustomArtworkRepository {
                                      .where(artworkGenre.artwork.eq(findArtwork))
                                      .orderBy(genre.name.asc())
                                      .fetch();
-    return ArtworkGetDetailResponse.create(findArtwork, artists, genres);
+    return ArtworkDetailResponse.create(findArtwork, artists, genres);
   }
 
   @Override

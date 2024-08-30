@@ -1,7 +1,6 @@
 package com.hiddenartist.backend.domain.artist.persistence.repository;
 
 import static com.hiddenartist.backend.domain.account.persistence.QAccount.account;
-import static com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtist.artist;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtistArtwork.artistArtwork;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtistContact.artistContact;
@@ -13,6 +12,7 @@ import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.SignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
@@ -98,11 +98,12 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
   }
 
   @Override
-  public List<ArtworkResponse> findSignatureArtworkByToken(String token) {
-    return queryFactory.select(Projections.constructor(ArtworkResponse.class,
+  public List<SignatureArtworkResponse> findSignatureArtworkByToken(String token) {
+    return queryFactory.select(Projections.constructor(SignatureArtworkResponse.class,
                            artwork.name,
+                           artwork.token,
                            artwork.image,
-                           artwork.token, signatureArtwork.displayOrder))
+                           signatureArtwork.displayOrder))
                        .from(signatureArtwork)
                        .leftJoin(signatureArtwork.artwork, artwork)
                        .leftJoin(artistArtwork).on(artistArtwork.artwork.eq(artwork))

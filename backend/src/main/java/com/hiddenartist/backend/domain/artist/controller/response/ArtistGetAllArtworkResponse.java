@@ -1,15 +1,15 @@
 package com.hiddenartist.backend.domain.artist.controller.response;
 
+import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkSimpleResponse;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
-import com.hiddenartist.backend.global.type.SimpleArtworkResponse;
 import java.util.List;
 
 public record ArtistGetAllArtworkResponse(
-    List<SimpleArtworkResponse> artworks
+    List<ArtworkSimpleResponse> artworks
 ) {
 
   public static ArtistGetAllArtworkResponse create(List<Artwork> artworks) {
-    List<SimpleArtworkResponse> simpleArtworkResponses = artworks.stream().map(SimpleArtworkResponse::convert).toList();
+    List<ArtworkSimpleResponse> simpleArtworkResponses = artworks.stream().map(ArtworkSimpleResponse::convert).toList();
     return new ArtistGetAllArtworkResponse(simpleArtworkResponses);
   }
 

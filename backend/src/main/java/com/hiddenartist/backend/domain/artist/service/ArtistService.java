@@ -6,9 +6,9 @@ import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailRe
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetAllArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetListResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse;
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetSignatureArtworkResponse.ArtworkResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetThreeResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.SignatureArtworkResponse;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.FollowArtist;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
@@ -61,7 +61,7 @@ public class ArtistService {
   @Transactional(readOnly = true)
   public ArtistGetSignatureArtworkResponse getArtistSignatureArtworks(String tokenValue) {
     String token = EntityToken.ARTIST.identifyToken(tokenValue);
-    List<ArtworkResponse> signatureArtworks = artistRepository.findSignatureArtworkByToken(token);
+    List<SignatureArtworkResponse> signatureArtworks = artistRepository.findSignatureArtworkByToken(token);
     return new ArtistGetSignatureArtworkResponse(signatureArtworks);
   }
 

@@ -2,7 +2,7 @@ package com.hiddenartist.backend.domain.artwork.service;
 
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.repository.AccountRepository;
-import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetDetailResponse;
+import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkDetailResponse;
 import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetRecommendResponse;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.artwork.persistence.PickArtwork;
@@ -25,7 +25,7 @@ public class ArtworkService {
   private final PickArtworkRepository pickArtworkRepository;
 
   @Transactional(readOnly = true)
-  public ArtworkGetDetailResponse getArtworkDetail(String tokenValue) {
+  public ArtworkDetailResponse getArtworkDetail(String tokenValue) {
     String token = EntityToken.ARTWORK.identifyToken(tokenValue);
     return artworkRepository.findArtworkDetailByToken(token);
   }
