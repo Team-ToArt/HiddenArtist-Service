@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.artist.persistence.repository;
 
+import com.hiddenartist.backend.domain.admin.controller.request.AdminArtistSimpleResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.SignatureArtworkResponse;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 public interface CustomArtistRepository {
 
   Page<ArtistSimpleResponse> findAllArtists(Pageable pageable);
+
+  Page<AdminArtistSimpleResponse> findAllArtistsForAdmin(Pageable pageable);
 
   ArtistDetailResponse findArtistDetailByToken(String token);
 
