@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Aspect
@@ -98,7 +99,12 @@ public class ControllerLoggingAspect {
       if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
         continue;
       }
-      params.put(parameterNames[i], arg);
+      if (arg instanceof MultipartFile file) {
+        String fileName = Objects.requireNonNull(file.getOriginalFilename());
+        params.put(parameterNames[i], Map.of("filename", fileName, "size", file.getSize()));
+      } else {
+        params.put(parameterNames[i], arg);
+      }
     }
     return params;
   }

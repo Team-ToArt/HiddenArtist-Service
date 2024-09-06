@@ -1,12 +1,12 @@
 package com.hiddenartist.backend.domain.artwork.persistence.repository;
 
-import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetDetailResponse;
+import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkDetailResponse;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import java.util.List;
 
 public interface CustomArtworkRepository {
 
-  ArtworkGetDetailResponse findArtworkDetailByToken(String token);
+  ArtworkDetailResponse findArtworkDetailByToken(String token);
 
   List<Artwork> findArtworkRecommend();
 

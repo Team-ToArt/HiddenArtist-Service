@@ -1,5 +1,5 @@
 # Stage 1: Build Application
-FROM eclipse-temurin:17-jdk-alpine as build
+FROM eclipse-temurin:17-jdk AS build
 
 # Set working Directory
 WORKDIR /app
@@ -12,10 +12,8 @@ COPY settings.gradle .
 COPY src ./src
 
 # Make gradlew executable and build application
-# dos 텍스트파일을 unix 형식으로 변환
-RUN dos2unix ./gradlew
 RUN chmod +x ./gradlew
-RUN ./gradlew clean build
+RUN ./gradlew clean build --info
 
 # Stage 2: Create the final Image
 FROM eclipse-temurin:17-jdk-alpine

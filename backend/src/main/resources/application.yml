@@ -26,6 +26,21 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS}
+        secret-key: ${AWS_SECRET}
+      s3:
+        bucket: ${S3_BUCKET}
+      region:
+        static: ap-northeast-2
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: com.hiddenartist.backend.global.db.CustomMySQLDialect
+
 secret:
   jwt: ${JWT_SECRET}
   kakao-admin: ${KAKAO_ADMIN}
