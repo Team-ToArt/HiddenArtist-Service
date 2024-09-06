@@ -12,6 +12,7 @@ services:
       - '3306:3306'
     volumes:
       - mysql_volume:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - ha-network
 

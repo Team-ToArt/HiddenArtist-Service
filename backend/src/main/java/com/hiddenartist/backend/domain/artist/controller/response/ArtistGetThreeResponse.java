@@ -1,15 +1,14 @@
 package com.hiddenartist.backend.domain.artist.controller.response;
 
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
-import com.hiddenartist.backend.global.type.SimpleArtistResponse;
 import java.util.List;
 
 public record ArtistGetThreeResponse(
-    List<SimpleArtistResponse> artists
+    List<ArtistSimpleResponse> artists
 ) {
 
   public static ArtistGetThreeResponse create(List<Artist> artists) {
-    List<SimpleArtistResponse> simpleResponses = artists.stream().map(SimpleArtistResponse::convert).toList();
+    List<ArtistSimpleResponse> simpleResponses = artists.stream().map(ArtistSimpleResponse::convert).toList();
     return new ArtistGetThreeResponse(simpleResponses);
   }
 

@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.domain.artwork.controller;
 
-import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetDetailResponse;
+import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkDetailResponse;
 import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkGetRecommendResponse;
 import com.hiddenartist.backend.domain.artwork.service.ArtworkService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ArtworkController {
 
 
   @GetMapping("/{token}")
-  public ArtworkGetDetailResponse getArtworkDetail(@PathVariable("token") String token) {
+  public ArtworkDetailResponse getArtworkDetail(@PathVariable("token") String token) {
     return artworkService.getArtworkDetail(token);
   }
 

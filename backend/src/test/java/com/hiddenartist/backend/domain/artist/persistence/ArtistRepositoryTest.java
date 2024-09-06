@@ -6,13 +6,13 @@ import static com.hiddenartist.backend.domain.artist.persistence.type.ContactTyp
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.hiddenartist.backend.domain.artist.controller.response.ArtistGetDetailResponse;
 import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.config.CustomDataJpaTest;
 import com.hiddenartist.backend.global.config.TestDataInitializer;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
+import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
 import com.hiddenartist.backend.global.type.EntityToken;
-import com.hiddenartist.backend.global.type.SimpleArtistResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -41,7 +41,7 @@ public class ArtistRepositoryTest {
     initializer.saveArtists(120);
     Pageable pageRequest = PageRequest.of(1, 12, Sort.by(Direction.ASC, "name"));
     //when
-    Page<SimpleArtistResponse> artists = artistRepository.findAllArtists(pageRequest);
+    Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
     //then
     assertThat(artists).hasSize(12);
     assertThat(artists.getTotalPages()).isEqualTo(10);
@@ -53,21 +53,22 @@ public class ArtistRepositoryTest {
   void getArtistDetailTest() {
     //given
     initializer.saveArtists(1);
-    ArtistGetDetailResponse expectedResponse = createExpectedResponse();
+    ArtistDetailResponse expectedResponse = createExpectedResponse();
     //when
-    ArtistGetDetailResponse response = artistRepository.findArtistDetailByToken(EntityToken.ARTIST.identifyToken("1"));
+    ArtistDetailResponse response = artistRepository.findArtistDetailByToken(EntityToken.ARTIST.identifyToken("1"));
 
     //then
     assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);
   }
 
-  private ArtistGetDetailResponse createExpectedResponse() {
+  private ArtistDetailResponse createExpectedResponse() {
     Artist artist = Artist.builder()
                           .name("artist1")
                           .profileImage("test profile image 1")
                           .birth(LocalDate.of(1991, 2, 2))
                           .summary("test summary 1")
                           .description("test description 1")
+                          .token(EntityToken.ARTIST.identifyToken("1"))
                           .build();
     List<Genre> genres = Stream.of("현대미술", "조소", "추상화").map(Genre::new).toList();
     ArtistContact contact1 = ArtistContact.builder().type(SNS).label("instagram").contactValue("instagramUrl").build();
@@ -76,7 +77,7 @@ public class ArtistRepositoryTest {
     ArtistContact contact4 = ArtistContact.builder().type(EMAIL).label("email").contactValue("test@test.com").build();
     ArtistContact contact5 = ArtistContact.builder().type(TEL).label("tel").contactValue("010-1234-5678").build();
     List<ArtistContact> contacts = List.of(contact1, contact2, contact3, contact4, contact5);
-    return ArtistGetDetailResponse.create(artist, contacts, genres);
+    return ArtistDetailResponse.create(artist, contacts, genres);
   }
 
 

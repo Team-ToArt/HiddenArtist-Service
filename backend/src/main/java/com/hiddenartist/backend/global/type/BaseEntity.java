@@ -24,21 +24,21 @@ public abstract class BaseEntity {
 
   @CreatedDate
   @Column(updatable = false, nullable = false, columnDefinition = "datetime default current_timestamp")
-  private LocalDateTime create_date;
+  private LocalDateTime createDate;
 
   @LastModifiedDate
   @Column(nullable = false, columnDefinition = "datetime default current_timestamp")
-  private LocalDateTime update_date;
+  private LocalDateTime updateDate;
 
   @Column(columnDefinition = "datetime")
-  private LocalDateTime delete_date;
+  private LocalDateTime deleteDate;
 
   public void updateDeleteDate() {
-    this.delete_date = LocalDateTime.now();
+    this.deleteDate = LocalDateTime.now();
   }
 
   public boolean isDeleted() {
-    return Objects.nonNull(delete_date);
+    return Objects.nonNull(deleteDate);
   }
 
 }
