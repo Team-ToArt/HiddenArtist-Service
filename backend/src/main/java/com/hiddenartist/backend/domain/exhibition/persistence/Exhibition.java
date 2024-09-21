@@ -33,6 +33,8 @@ public class Exhibition extends BaseEntity {
 
   private Integer admissionFee;
 
+  private String token;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private ExhibitionLocation location;
 

@@ -28,6 +28,8 @@ public class Mentoring extends BaseEntity {
 
   private Long totalApplicationCount;
 
+  private String token;
+
   @Convert(converter = MentoringStatusConverter.class)
   private MentoringStatus mentoringStatus;
 
