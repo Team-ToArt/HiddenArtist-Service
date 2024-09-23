@@ -1,7 +1,12 @@
 package com.hiddenartist.backend.domain.search.controller;
 
+import com.hiddenartist.backend.domain.search.controller.response.ArtistSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.ArtworkSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.ExhibitionSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.GenreSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.service.SearchService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,24 +26,23 @@ public class SearchController {
   }
 
   @GetMapping("/artists/{keyword}")
-  public void searchArtistByKeyword(@PathVariable("keyword") String keyword) {
-    // Artist 검색
+  public List<ArtistSearchResponse> searchArtistByKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchArtistByKeyword(keyword);
   }
 
   @GetMapping("/artworks/{keyword}")
-  public void searchArtworkByKeyword(@PathVariable("keyword") String keyword) {
-    // Artwork 검색
+  public List<ArtworkSearchResponse> searchArtworkByKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchArtworkByKeyword(keyword);
   }
 
   @GetMapping("/exhibitions/{keyword}")
-  public void searchExhibitionByKeyword(@PathVariable("keyword") String keyword) {
-    // Exhibition 검색
+  public List<ExhibitionSearchResponse> searchExhibitionByKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchExhibitionByKeyword(keyword);
   }
 
   @GetMapping("/genres/{keyword}")
-  public void searchGenreByKeyword(@PathVariable("keyword") String keyword) {
-    // Genre 검색 (ADMIN 전용)
+  public List<GenreSearchResponse> searchGenreByKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchGenreByKeyword(keyword);
   }
-
 
 }

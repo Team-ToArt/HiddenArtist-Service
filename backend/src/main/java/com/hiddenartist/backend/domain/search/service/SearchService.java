@@ -3,6 +3,11 @@ package com.hiddenartist.backend.domain.search.service;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
+import com.hiddenartist.backend.domain.genre.persistence.Genre;
+import com.hiddenartist.backend.domain.search.controller.response.ArtistSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.ArtworkSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.ExhibitionSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.GenreSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.persistence.repository.SearchRepository;
 import java.util.List;
@@ -31,6 +36,30 @@ public class SearchService {
     List<Exhibition> exhibitions = exhibitionSearch.join();
 
     return SearchAllResponse.create(artists, artworks, exhibitions);
+  }
+
+  @Transactional(readOnly = true)
+  public List<ArtistSearchResponse> searchArtistByKeyword(String keyword) {
+    List<Artist> artists = searchRepository.findArtistByKeyword(keyword);
+    return artists.stream().map(ArtistSearchResponse::create).toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<ArtworkSearchResponse> searchArtworkByKeyword(String keyword) {
+    List<Artwork> artworks = searchRepository.findArtworkByKeyword(keyword);
+    return artworks.stream().map(ArtworkSearchResponse::create).toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<ExhibitionSearchResponse> searchExhibitionByKeyword(String keyword) {
+    List<Exhibition> exhibitions = searchRepository.findExhibitionByKeyword(keyword);
+    return exhibitions.stream().map(ExhibitionSearchResponse::create).toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<GenreSearchResponse> searchGenreByKeyword(String keyword) {
+    List<Genre> genres = searchRepository.findGenreByKeyword(keyword);
+    return genres.stream().map(GenreSearchResponse::create).toList();
   }
 
 }
