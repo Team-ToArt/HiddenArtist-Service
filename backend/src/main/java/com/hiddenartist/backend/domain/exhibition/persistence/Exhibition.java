@@ -18,6 +18,8 @@ public class Exhibition extends BaseEntity {
 
   private String name;
 
+  private String image;
+
   @Column(columnDefinition = "mediumtext")
   private String description;
 

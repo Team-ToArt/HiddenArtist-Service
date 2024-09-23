@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.search.controller;
 
+import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,8 @@ public class SearchController {
   private final SearchService searchService;
 
   @GetMapping("/{keyword}")
-  public void searchKeyword(@PathVariable("keyword") String keyword) {
-    // 검색 엔진 처럼 검색
-    // keyword를 통해서 artist, artwork, exhibition 제목 기준 필터링 해서 검색
-    // 조회 데이터가 없으면 Empty List 반환
-    searchService.searchAllByKeyword(keyword);
+  public SearchAllResponse searchKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchAllByKeyword(keyword);
   }
 
   @GetMapping("/artists/{keyword}")

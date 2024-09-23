@@ -3,8 +3,8 @@ package com.hiddenartist.backend.domain.search.service;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
+import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.persistence.repository.SearchRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class SearchService {
   private final AsyncSearchService asyncSearchService;
 
   @Transactional(readOnly = true)
-  public void searchAllByKeyword(String keyword) {
+  public SearchAllResponse searchAllByKeyword(String keyword) {
     CompletableFuture<List<Artist>> artistSearch = asyncSearchService.searchArtistByKeyword(keyword);
     CompletableFuture<List<Artwork>> artworkSearch = asyncSearchService.searchArtworkByKeyword(keyword);
     CompletableFuture<List<Exhibition>> exhibitionSearch = asyncSearchService.searchExhibitionByKeyword(keyword);
@@ -29,8 +29,8 @@ public class SearchService {
     List<Artist> artists = artistSearch.join();
     List<Artwork> artworks = artworkSearch.join();
     List<Exhibition> exhibitions = exhibitionSearch.join();
-    List<Artist> list = Collections.emptyList();
-    // return Dto
+
+    return SearchAllResponse.create(artists, artworks, exhibitions);
   }
 
 }
