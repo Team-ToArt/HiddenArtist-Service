@@ -1,10 +1,14 @@
 package com.hiddenartist.backend.domain.search.persistence.repository;
 
+import static com.hiddenartist.backend.domain.Mentoring.persistence.QMentor.mentor;
+import static com.hiddenartist.backend.domain.Mentoring.persistence.QMentoring.mentoring;
+import static com.hiddenartist.backend.domain.account.persistence.QAccount.account;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtist.artist;
 import static com.hiddenartist.backend.domain.artwork.persistence.QArtwork.artwork;
 import static com.hiddenartist.backend.domain.exhibition.persistence.QExhibition.exhibition;
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 
+import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
@@ -44,6 +48,17 @@ public class SearchRepositoryImpl implements SearchRepository {
   @Override
   public List<Exhibition> findExhibitionByKeyword(String keyword) {
     return findByKeyword(exhibition, exhibition.name, keyword);
+  }
+
+  @Override
+  public List<Mentoring> findMentoringByKeyword(String keyword) {
+    return queryFactory.selectFrom(mentoring)
+                       .leftJoin(mentoring.mentor, mentor)
+                       .fetchJoin()
+                       .leftJoin(mentor.account, account)
+                       .fetchJoin()
+                       .where(fullTextSearch(mentoring.name, keyword))
+                       .fetch();
   }
 
   private <T> List<T> findByKeyword(EntityPath<T> entity, StringExpression column, String keyword) {

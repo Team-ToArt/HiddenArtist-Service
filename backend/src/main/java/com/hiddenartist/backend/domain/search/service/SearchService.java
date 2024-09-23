@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.search.service;
 
+import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
@@ -8,6 +9,7 @@ import com.hiddenartist.backend.domain.search.controller.response.ArtistSearchRe
 import com.hiddenartist.backend.domain.search.controller.response.ArtworkSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.ExhibitionSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.GenreSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.MentoringSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.persistence.repository.SearchRepository;
 import java.util.List;
@@ -60,6 +62,12 @@ public class SearchService {
   public List<GenreSearchResponse> searchGenreByKeyword(String keyword) {
     List<Genre> genres = searchRepository.findGenreByKeyword(keyword);
     return genres.stream().map(GenreSearchResponse::create).toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<MentoringSearchResponse> searchMentoringByKeyword(String keyword) {
+    List<Mentoring> mentorings = searchRepository.findMentoringByKeyword(keyword);
+    return mentorings.stream().map(MentoringSearchResponse::create).toList();
   }
 
 }

@@ -4,6 +4,7 @@ import com.hiddenartist.backend.domain.search.controller.response.ArtistSearchRe
 import com.hiddenartist.backend.domain.search.controller.response.ArtworkSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.ExhibitionSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.GenreSearchResponse;
+import com.hiddenartist.backend.domain.search.controller.response.MentoringSearchResponse;
 import com.hiddenartist.backend.domain.search.controller.response.SearchAllResponse;
 import com.hiddenartist.backend.domain.search.service.SearchService;
 import java.util.List;
@@ -43,6 +44,11 @@ public class SearchController {
   @GetMapping("/genres/{keyword}")
   public List<GenreSearchResponse> searchGenreByKeyword(@PathVariable("keyword") String keyword) {
     return searchService.searchGenreByKeyword(keyword);
+  }
+
+  @GetMapping("/mentorings/{keyword}")
+  public List<MentoringSearchResponse> searchMentoringByKeyword(@PathVariable("keyword") String keyword) {
+    return searchService.searchMentoringByKeyword(keyword);
   }
 
 }

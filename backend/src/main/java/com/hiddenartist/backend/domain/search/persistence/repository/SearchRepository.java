@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.search.persistence.repository;
 
+import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
@@ -15,5 +16,7 @@ public interface SearchRepository {
   List<Genre> findGenreByKeyword(String keyword);
 
   List<Exhibition> findExhibitionByKeyword(String keyword);
+
+  List<Mentoring> findMentoringByKeyword(String keyword);
 
 }
