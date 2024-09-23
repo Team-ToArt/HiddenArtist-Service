@@ -7,7 +7,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 public enum EntityToken {
 
   ARTIST("Artist_"),
-  ARTWORK("Artwork_");
+  ARTWORK("Artwork_"),
+  EXHIBITION("Exhibition_"),
+  MENTORING("Mentoring_");
 
   private static final int TOKEN_LENGTH = 30;
   private final String prefix;

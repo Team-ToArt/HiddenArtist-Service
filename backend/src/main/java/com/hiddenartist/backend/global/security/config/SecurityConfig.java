@@ -36,7 +36,8 @@ public class SecurityConfig {
       EndPoint.create("/api/artists/popular", HttpMethod.GET),
       EndPoint.create("/api/artists/{token}/signature-artworks", HttpMethod.GET),
       EndPoint.create("/api/artworks/{token}", HttpMethod.GET),
-      EndPoint.create("/api/artworks/recommend", HttpMethod.GET)
+      EndPoint.create("/api/artworks/recommend", HttpMethod.GET),
+      EndPoint.create("/api/search/**", HttpMethod.GET)
   );
 
   private final CustomOAuth2UserService oAuth2UserService;

@@ -36,11 +36,6 @@ spring:
       region:
         static: ap-northeast-2
 
-  jpa:
-    properties:
-      hibernate:
-        dialect: com.hiddenartist.backend.global.db.CustomMySQLDialect
-
 secret:
   jwt: ${JWT_SECRET}
   kakao-admin: ${KAKAO_ADMIN}
