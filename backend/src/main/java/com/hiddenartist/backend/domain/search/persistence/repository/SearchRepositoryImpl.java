@@ -10,13 +10,14 @@ import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.dsl.BooleanTemplate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -52,8 +53,9 @@ public class SearchRepositoryImpl implements SearchRepository {
                        .fetch();
   }
 
-  private BooleanTemplate fullTextSearch(StringExpression idx, String keyword) {
-    return Expressions.booleanTemplate(FULL_TEXT_SEARCH_SQL, idx, keyword);
+  private BooleanExpression fullTextSearch(StringExpression idx, String keyword) {
+    return StringUtils.hasText(keyword) ?
+        Expressions.numberTemplate(Double.class, FULL_TEXT_SEARCH_SQL, idx, keyword).gt(0) : null;
   }
 
 }
