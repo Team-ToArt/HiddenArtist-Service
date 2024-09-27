@@ -1,6 +1,8 @@
 package com.hiddenartist.backend.domain.exhibition.persistence.repository;
 
 import static com.hiddenartist.backend.domain.exhibition.persistence.QExhibition.exhibition;
+import static com.hiddenartist.backend.domain.exhibition.persistence.QExhibitionLocation.exhibitionLocation;
+import static com.hiddenartist.backend.domain.exhibition.persistence.QExhibitionManager.exhibitionManager;
 
 import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionSimpleResponse;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
@@ -44,7 +46,13 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
 
   @Override
   public Optional<Exhibition> findExhibitionByToken(String token) {
-    return Optional.empty();
+    return Optional.ofNullable(queryFactory.selectFrom(exhibition)
+                                           .leftJoin(exhibition.location, exhibitionLocation)
+                                           .fetchJoin()
+                                           .leftJoin(exhibition.manager, exhibitionManager)
+                                           .fetchJoin()
+                                           .where(exhibition.token.eq(token))
+                                           .fetchOne());
   }
 
   @Override

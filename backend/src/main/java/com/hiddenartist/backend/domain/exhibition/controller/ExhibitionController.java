@@ -2,6 +2,7 @@ package com.hiddenartist.backend.domain.exhibition.controller;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionDetailResponse;
 import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionGetListResponse;
 import com.hiddenartist.backend.domain.exhibition.service.ExhibitionService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class ExhibitionController {
 
   // 전시회 상세 조회
   @GetMapping("/{token}")
-  public void getExhibitionDetail(@PathVariable("token") String token) {
-
+  public ExhibitionDetailResponse getExhibitionDetail(@PathVariable("token") String token) {
+    return exhibitionService.findExhibitionDetail(token);
   }
 
   // 진행중인 전시회 조회
