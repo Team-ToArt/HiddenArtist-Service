@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Retention(RetentionPolicy.RUNTIME)
 @DataJpaTest
 @Transactional
-@Import(TestConfig.class)
+@Import({TestConfig.class, TestContainerSetup.class})
 public @interface CustomDataJpaTest {
 
 }
