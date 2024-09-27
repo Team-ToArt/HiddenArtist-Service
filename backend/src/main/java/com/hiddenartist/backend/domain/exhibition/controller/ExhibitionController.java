@@ -43,7 +43,6 @@ public class ExhibitionController {
     return exhibitionService.findUpcomingExhibitions();
   }
 
-  // 마감된 전시회 조회
   @GetMapping("/past")
   public ExhibitionGetPageResponse getPastExhibitions(
       @PageableDefault(page = 1, size = 16, sort = "endDate", direction = DESC) Pageable pageable) {

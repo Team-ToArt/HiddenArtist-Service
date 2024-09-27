@@ -78,7 +78,6 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
 
   @Override
   public Page<ExhibitionSimpleResponse> findPastExhibitions(Pageable pageable, LocalDate now) {
-    //  end_date 가 오늘날짜 미만인 데이터만 조회
     List<ExhibitionSimpleResponse> result = queryFactory.select(Projections.constructor(ExhibitionSimpleResponse.class,
                                                             exhibition.name,
                                                             exhibition.token,

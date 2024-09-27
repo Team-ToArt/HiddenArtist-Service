@@ -37,7 +37,7 @@ public class ExhibitionService {
     String token = EntityToken.EXHIBITION.identifyToken(tokenValue);
     Exhibition exhibition = exhibitionRepository.findExhibitionByToken(token)
                                                 .orElseThrow(() -> new EntityException(ServiceErrorCode.ARTIST_NOT_FOUND));
-    return ExhibitionDetailResponse.create(exhibition);
+    return ExhibitionDetailResponse.convert(exhibition);
   }
 
   @Transactional(readOnly = true)
@@ -45,7 +45,7 @@ public class ExhibitionService {
     LocalDate now = LocalDate.now();
     List<Exhibition> currentExhibitions = exhibitionRepository.findCurrentExhibitions(now);
     List<ExhibitionSimpleResponse> exhibitionSimpleResponses = currentExhibitions.stream()
-                                                                                 .map(ExhibitionSimpleResponse::create)
+                                                                                 .map(ExhibitionSimpleResponse::convert)
                                                                                  .toList();
     return new ExhibitionGetListResponse(exhibitionSimpleResponses);
   }
@@ -55,7 +55,7 @@ public class ExhibitionService {
     LocalDate now = LocalDate.now();
     List<Exhibition> upcomingExhibitions = exhibitionRepository.findUpcomingExhibitions(now);
     List<ExhibitionSimpleResponse> exhibitionSimpleResponses = upcomingExhibitions.stream()
-                                                                                  .map(ExhibitionSimpleResponse::create)
+                                                                                  .map(ExhibitionSimpleResponse::convert)
                                                                                   .toList();
     return new ExhibitionGetListResponse(exhibitionSimpleResponses);
   }
