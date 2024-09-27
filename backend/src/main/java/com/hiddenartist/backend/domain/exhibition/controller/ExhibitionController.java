@@ -1,6 +1,7 @@
 package com.hiddenartist.backend.domain.exhibition.controller;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionDetailResponse;
 import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionGetListResponse;
@@ -23,11 +24,11 @@ public class ExhibitionController {
 
   @GetMapping
   public ExhibitionGetPageResponse getAllExhibitions(
-      @PageableDefault(page = 1, size = 16, sort = {"end_date", "name"}, direction = ASC) Pageable pageable) {
+      @PageableDefault(page = 1, size = 16, sort = {"endDate", "name"}, direction = ASC) Pageable pageable) {
     return exhibitionService.findAllExhibitions(pageable);
   }
 
-  @GetMapping("/{token}")
+  @GetMapping("/{token}/details")
   public ExhibitionDetailResponse getExhibitionDetail(@PathVariable("token") String token) {
     return exhibitionService.findExhibitionDetail(token);
   }
@@ -44,9 +45,9 @@ public class ExhibitionController {
 
   // 마감된 전시회 조회
   @GetMapping("/past")
-  public void getPastExhibitions(@PageableDefault(sort = {"end_date", "name"}, direction = ASC) Pageable pageable) {
-    // end_date 가 오늘 날짜 미만인 데이터 조회
-    // Pagination 적용
+  public ExhibitionGetPageResponse getPastExhibitions(
+      @PageableDefault(page = 1, size = 16, sort = "endDate", direction = DESC) Pageable pageable) {
+    return exhibitionService.findPastExhibitions(pageable);
   }
 
 }

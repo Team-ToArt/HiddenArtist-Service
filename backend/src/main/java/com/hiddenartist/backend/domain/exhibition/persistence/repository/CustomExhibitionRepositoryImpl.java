@@ -35,6 +35,7 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
                                                                 exhibition.startDate,
                                                                 exhibition.endDate))
                                                         .from(exhibition)
+                                                        .where(exhibition.endDate.goe(LocalDate.now()))
                                                         .offset(pageable.getOffset())
                                                         .limit(pageable.getPageSize())
                                                         .orderBy(
@@ -76,7 +77,22 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
   }
 
   @Override
-  public Page<Exhibition> findPastExhibitions(Pageable pageable, LocalDate now) {
-    return null;
+  public Page<ExhibitionSimpleResponse> findPastExhibitions(Pageable pageable, LocalDate now) {
+    //  end_date 가 오늘날짜 미만인 데이터만 조회
+    List<ExhibitionSimpleResponse> result = queryFactory.select(Projections.constructor(ExhibitionSimpleResponse.class,
+                                                            exhibition.name,
+                                                            exhibition.token,
+                                                            exhibition.image,
+                                                            exhibition.startDate,
+                                                            exhibition.endDate))
+                                                        .from(exhibition)
+                                                        .where(exhibition.endDate.before(now))
+                                                        .offset(pageable.getOffset())
+                                                        .limit(pageable.getPageSize())
+                                                        .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                                        .fetch();
+    JPAQuery<Long> countQuery = queryFactory.select(exhibition.count()).from(exhibition);
+    return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
   }
+
 }

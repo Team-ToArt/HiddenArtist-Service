@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,15 @@ public class ExhibitionService {
                                                                                   .map(ExhibitionSimpleResponse::create)
                                                                                   .toList();
     return new ExhibitionGetListResponse(exhibitionSimpleResponses);
+  }
+
+  @Transactional(readOnly = true)
+  public ExhibitionGetPageResponse findPastExhibitions(Pageable pageable) {
+    LocalDate now = LocalDate.now();
+    Sort sort = pageable.getSort().and(Sort.by(Sort.Order.asc("name")));
+    Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), sort);
+    Page<ExhibitionSimpleResponse> pastExhibitions = exhibitionRepository.findPastExhibitions(pageRequest, now);
+    return new ExhibitionGetPageResponse(pastExhibitions);
   }
 
 }

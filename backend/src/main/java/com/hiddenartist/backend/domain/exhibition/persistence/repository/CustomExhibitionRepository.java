@@ -18,6 +18,6 @@ public interface CustomExhibitionRepository {
 
   List<Exhibition> findUpcomingExhibitions(LocalDate now);
 
-  Page<Exhibition> findPastExhibitions(Pageable pageable, LocalDate now);
+  Page<ExhibitionSimpleResponse> findPastExhibitions(Pageable pageable, LocalDate now);
 
 }
