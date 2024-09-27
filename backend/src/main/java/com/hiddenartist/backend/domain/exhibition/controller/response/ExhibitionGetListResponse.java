@@ -1,9 +1,9 @@
 package com.hiddenartist.backend.domain.exhibition.controller.response;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 public record ExhibitionGetListResponse(
-    Page<ExhibitionSimpleResponse> exhibitions
+    List<ExhibitionSimpleResponse> exhibitions
 ) {
 
 }

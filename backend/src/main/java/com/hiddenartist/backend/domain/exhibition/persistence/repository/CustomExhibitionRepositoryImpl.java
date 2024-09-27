@@ -10,6 +10,7 @@ import com.hiddenartist.backend.global.utils.QueryDslUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -56,17 +57,26 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
   }
 
   @Override
-  public List<Exhibition> findCurrentExhibitions() {
-    return List.of();
+  public List<Exhibition> findCurrentExhibitions(LocalDate now) {
+    return queryFactory.selectFrom(exhibition)
+                       .where(exhibition.startDate.loe(now)
+                                                  .and(exhibition.endDate.goe(now)))
+                       .orderBy(exhibition.endDate.asc(), exhibition.name.asc())
+                       .limit(10)
+                       .fetch();
   }
 
   @Override
-  public List<Exhibition> findUpcomingExhibitions() {
-    return List.of();
+  public List<Exhibition> findUpcomingExhibitions(LocalDate now) {
+    return queryFactory.selectFrom(exhibition)
+                       .where(exhibition.startDate.after(now))
+                       .orderBy(exhibition.startDate.asc(), exhibition.name.asc())
+                       .limit(10)
+                       .fetch();
   }
 
   @Override
-  public Page<Exhibition> findPastExhibitions() {
+  public Page<Exhibition> findPastExhibitions(Pageable pageable, LocalDate now) {
     return null;
   }
 }

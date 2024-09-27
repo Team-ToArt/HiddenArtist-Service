@@ -2,6 +2,7 @@ package com.hiddenartist.backend.domain.exhibition.persistence.repository;
 
 import com.hiddenartist.backend.domain.exhibition.controller.response.ExhibitionSimpleResponse;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -13,10 +14,10 @@ public interface CustomExhibitionRepository {
 
   Optional<Exhibition> findExhibitionByToken(String token);
 
-  List<Exhibition> findCurrentExhibitions();
+  List<Exhibition> findCurrentExhibitions(LocalDate now);
 
-  List<Exhibition> findUpcomingExhibitions();
+  List<Exhibition> findUpcomingExhibitions(LocalDate now);
 
-  Page<Exhibition> findPastExhibitions();
+  Page<Exhibition> findPastExhibitions(Pageable pageable, LocalDate now);
 
 }
