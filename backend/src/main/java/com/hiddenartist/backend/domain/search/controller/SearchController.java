@@ -26,6 +26,8 @@ public class SearchController {
     return searchService.searchAllByKeyword(keyword);
   }
 
+  // Genre 제외 모두 Pagination 적용 필요
+
   @GetMapping("/artists/{keyword}")
   public List<ArtistSearchResponse> searchArtistByKeyword(@PathVariable("keyword") String keyword) {
     return searchService.searchArtistByKeyword(keyword);

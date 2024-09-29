@@ -5,17 +5,17 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import com.hiddenartist.backend.domain.artwork.controller.response.ArtworkDetailResponse;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
-import com.hiddenartist.backend.global.config.CustomDataJpaTest;
+import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
 import com.hiddenartist.backend.global.config.TestDataInitializer;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CustomDataJpaTest
-class ArtworkRepositoryTest {
+class ArtworkRepositoryTest extends AbstractMySQLRepositoryTest {
 
   @Autowired
   private TestDataInitializer initializer;
@@ -57,7 +57,7 @@ class ArtworkRepositoryTest {
 
     //when
     List<Artwork> result = artworkRepository.findArtworkRecommend();
-    HashSet<Artwork> uniqueResult = new HashSet<>(result);
+    Set<Artwork> uniqueResult = new HashSet<>(result);
 
     //then
     assertThat(result).isNotNull().hasSize(uniqueResult.size());

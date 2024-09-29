@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import com.hiddenartist.backend.domain.account.persistence.repository.AccountRepository;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
-import com.hiddenartist.backend.global.config.CustomDataJpaTest;
+import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
 import com.hiddenartist.backend.global.config.TestDataInitializer;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.util.List;
@@ -14,8 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CustomDataJpaTest
-class AccountRepositoryTest {
+class AccountRepositoryTest extends AbstractMySQLRepositoryTest {
 
   private final String EMAIL = "test1@test.com";
   @Autowired
