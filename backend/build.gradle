@@ -130,7 +130,7 @@ tasks.named('test') {
             taskGraph ->
                 if (taskGraph.hasTask(':test')) {
                     tasks.matching {
-                        it.name in ['nodeSetup', 'npmSetup', 'npmInstall', 'tailwindcss', 'processResources']
+                        it.name in ['nodeSetup', 'npmSetup', 'npmInstall', 'tailwindcss']
                     }.configureEach {
                         enabled = false
                     }
