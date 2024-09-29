@@ -3,6 +3,7 @@ package com.hiddenartist.backend.domain.search.persistence.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
+import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -31,12 +32,13 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
   @AfterEach
   void tearDown() {
     jdbcTemplate.execute("delete from artist");
+    jdbcTemplate.execute("delete from artwork");
   }
 
   // 아티스트 조회
   @Test
-  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   @DisplayName("검색어 입력시 작가 최대 10명 조회")
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   void searchArtistsByKeywordTest() {
     //given
     saveArtists();
@@ -56,12 +58,19 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
   // 작품 조회
   @Test
   @DisplayName("검색어 입력시 작품 최대 10점 조회")
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   void searchArtworksByKeywordTest() {
     //given
+    saveArtworks();
+    String keyword = "별빛";
 
     //when
+    List<Artwork> artworks = searchRepository.findArtworkByKeyword(keyword);
 
     //then
+    assertThat(artworks).hasSize(10)
+                        .filteredOn(artwork -> artwork.getName().contains(keyword))
+                        .isNotEmpty();
   }
 
   // 장르 조회
@@ -117,6 +126,26 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
       ps.setString(1, name);
     });
 
+  }
+
+  private void saveArtworks() {
+    List<String> names = List.of(
+        "꿈의 별빛",
+        "바다 위 별빛",
+        "달과 별빛",
+        "시간 속의 별빛",
+        "별빛의 여정",
+        "별빛 속에서",
+        "어둠을 비추는 별빛",
+        "별빛 아래서",
+        "숲을 감싸는 별빛",
+        "피 땀 눈물",
+        "저녁 하늘 별빛",
+        "햇살이 나뭇잎을 핥고 있었다."
+    );
+    jdbcTemplate.batchUpdate("insert into artwork (name) values(?)", names, names.size(), (ps, name) -> {
+      ps.setString(1, name);
+    });
   }
 
 }
