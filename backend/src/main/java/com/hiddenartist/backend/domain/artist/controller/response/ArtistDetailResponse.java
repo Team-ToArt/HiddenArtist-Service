@@ -45,11 +45,10 @@ public class ArtistDetailResponse extends ArtistResponse {
   private static Map<ContactType, List<ContactInfo>> createContactInfos(
       List<ArtistContact> artistContacts) {
     Map<ContactType, List<ContactInfo>> contacts =
-        Arrays.stream(ContactType.values())
-              .collect(Collectors.toMap(Function.identity(), contactType -> new ArrayList<>()));
+        Arrays.stream(ContactType.values()).collect(Collectors.toMap(Function.identity(), contactType -> new ArrayList<>()));
     artistContacts.forEach(
-        contact -> contacts.get(contact.getType())
-                           .add(new ContactInfo(contact.getLabel(), contact.getContactValue())));
+        contact -> contacts.get(contact.getType()).add(new ContactInfo(contact.getLabel(), contact.getContactValue()))
+    );
     return contacts;
   }
 

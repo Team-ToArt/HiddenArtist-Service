@@ -1,6 +1,5 @@
 package com.hiddenartist.backend.domain.artist.persistence.repository;
 
-import static com.hiddenartist.backend.domain.account.persistence.QAccount.account;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtist.artist;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtistArtwork.artistArtwork;
 import static com.hiddenartist.backend.domain.artist.persistence.QArtistContact.artistContact;
@@ -21,12 +20,10 @@ import com.hiddenartist.backend.domain.genre.persistence.ArtistGenre;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
+import com.hiddenartist.backend.global.utils.QueryDslUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -34,7 +31,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -55,7 +51,7 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                      .from(artist)
                                                      .offset(pageable.getOffset())
                                                      .limit(pageable.getPageSize())
-                                                     .orderBy(createOrderSpecifier(pageable.getSort()))
+                                                     .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
                                                      .fetch();
 
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);
@@ -75,7 +71,9 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                          .from(artist)
                                                          .offset(pageable.getOffset())
                                                          .limit(pageable.getPageSize())
-                                                         .orderBy(createOrderSpecifier(pageable.getSort()))
+                                                         .orderBy(
+                                                             QueryDslUtils.createOrderSpecifier(pageable.getSort())
+                                                         )
                                                          .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);
     return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
@@ -139,20 +137,8 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                        .fetch();
   }
 
-  private BooleanExpression emailEq(String email) {
-    return StringUtils.hasText(email) ? account.email.eq(email) : Expressions.TRUE;
-  }
-
   private BooleanExpression tokenEq(String token) {
     return StringUtils.hasText(token) ? artist.token.eq(token) : Expressions.TRUE;
-  }
-
-  private OrderSpecifier<?>[] createOrderSpecifier(Sort sort) {
-    return sort.stream().map(order -> {
-      Order direction = order.isAscending() ? Order.ASC : Order.DESC; // 정렬 방향
-      SimplePath<Artist> path = Expressions.path(Artist.class, artist, order.getProperty());
-      return new OrderSpecifier(direction, path);
-    }).toArray(OrderSpecifier[]::new);
   }
 
 }
