@@ -124,4 +124,18 @@ tasks.processResources {
 
 tasks.named('test') {
     useJUnitPlatform()
+    /* Exclude Compile Tailwind Css when Test */
+    finalizedBy {
+        gradle.taskGraph.whenReady {
+            taskGraph ->
+                if (taskGraph.hasTask(':test')) {
+                    tasks.matching {
+                        it.name in ['nodeSetup', 'npmSetup', 'npmInstall', 'tailwindcss', 'processResources']
+                    }.configureEach {
+                        enabled = false
+                    }
+                }
+        }
+    }
+    /* Exclude Compile Tailwind Css when Test */
 }

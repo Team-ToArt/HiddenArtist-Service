@@ -47,8 +47,6 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
     //when
     List<Artist> artists = searchRepository.findArtistByKeyword(keyword);
 
-    artists.forEach(artist -> System.out.println(artist.getName()));
-
     //then
     assertThat(artists).hasSize(10)
                        .filteredOn(artist -> artist.getName().contains(keyword))
@@ -122,9 +120,7 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
         "류현진"
     );
 
-    jdbcTemplate.batchUpdate("insert into artist (name) values(?)", names, names.size(), (ps, name) -> {
-      ps.setString(1, name);
-    });
+    jdbcTemplate.batchUpdate("insert into artist (name) values(?)", names, names.size(), (ps, name) -> ps.setString(1, name));
 
   }
 
@@ -143,9 +139,7 @@ class SearchRepositoryTest extends AbstractMySQLRepositoryTest {
         "저녁 하늘 별빛",
         "햇살이 나뭇잎을 핥고 있었다."
     );
-    jdbcTemplate.batchUpdate("insert into artwork (name) values(?)", names, names.size(), (ps, name) -> {
-      ps.setString(1, name);
-    });
+    jdbcTemplate.batchUpdate("insert into artwork (name) values(?)", names, names.size(), (ps, name) -> ps.setString(1, name));
   }
 
 }
