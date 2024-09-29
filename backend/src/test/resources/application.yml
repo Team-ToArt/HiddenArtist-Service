@@ -24,8 +24,6 @@ spring:
             user-name-attribute: id
 
   jpa:
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
