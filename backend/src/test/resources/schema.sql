@@ -116,20 +116,22 @@ CREATE TABLE genre
 
 CREATE TABLE exhibition
 (
-    id                     bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name                   varchar(255),
-    description            mediumtext,
-    start_date             date,
-    end_date               date,
-    open_time              time,
-    close_time             time,
-    closed_days            varchar(255),
-    admission_fee          integer,
-    exhibition_location_id bigint,
-    exhibition_manager_id  bigint,
-    create_date            datetime           NOT NULL DEFAULT now(),
-    update_date            datetime           NOT NULL DEFAULT now(),
-    delete_date            datetime
+    id            bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name          varchar(255),
+    image         varchar(255),
+    description   mediumtext,
+    start_date    date,
+    end_date      date,
+    open_time     time,
+    close_time    time,
+    closed_days   varchar(255),
+    admission_fee integer,
+    token         varchar(255) UNIQUE,
+    location_id   bigint,
+    manager_id    bigint,
+    create_date   datetime           NOT NULL DEFAULT now(),
+    update_date   datetime           NOT NULL DEFAULT now(),
+    delete_date   datetime
 );
 
 CREATE TABLE exhibition_location
@@ -190,6 +192,7 @@ CREATE TABLE mentoring
     amount                  integer,
     total_application_count bigint,
     mentoring_status        enum ('OPEN','CLOSED'),
+    token                   varchar(255) UNIQUE,
     mentor_id               bigint,
     create_date             datetime           NOT NULL DEFAULT now(),
     update_date             datetime           NOT NULL DEFAULT now(),
@@ -302,10 +305,10 @@ ALTER TABLE artwork_genre
     ADD FOREIGN KEY (genre_id) REFERENCES genre (id);
 
 ALTER TABLE exhibition
-    ADD FOREIGN KEY (exhibition_location_id) REFERENCES exhibition_location (id);
+    ADD FOREIGN KEY (location_id) REFERENCES exhibition_location (id);
 
 ALTER TABLE exhibition
-    ADD FOREIGN KEY (exhibition_manager_id) REFERENCES exhibition_manager (id);
+    ADD FOREIGN KEY (manager_id) REFERENCES exhibition_manager (id);
 
 ALTER TABLE mentor
     ADD FOREIGN KEY (account_id) REFERENCES account (id);

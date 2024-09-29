@@ -22,7 +22,7 @@ public abstract class AbstractMySQLRepositoryTest {
       .withUsername("test")
       .withPassword("test")
       .withCommand("--ft_min_word_len=2", "--innodb_ft_min_token_size=2")
-      .withInitScript("init.sql");
+      .withInitScript("schema.sql");
 
   static {
     mysqlContainer.start();
