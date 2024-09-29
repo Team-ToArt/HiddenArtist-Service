@@ -22,3 +22,4 @@ jobs:
 
       - name: Build With Gradle
         run: ./gradlew build --info
+        working-directory: ./backend
