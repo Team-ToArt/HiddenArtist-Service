@@ -1,5 +1,7 @@
 package com.hiddenartist.backend.global.config;
 
+import com.hiddenartist.backend.domain.search.persistence.repository.SearchRepository;
+import com.hiddenartist.backend.domain.search.persistence.repository.SearchRepositoryImpl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,6 +28,11 @@ public class TestConfig {
   @Bean
   public TestDataInitializer testDataInitializer() {
     return new TestDataInitializer(jdbcTemplate);
+  }
+
+  @Bean
+  public SearchRepository searchRepository() {
+    return new SearchRepositoryImpl(jpaQueryFactory());
   }
 
 }

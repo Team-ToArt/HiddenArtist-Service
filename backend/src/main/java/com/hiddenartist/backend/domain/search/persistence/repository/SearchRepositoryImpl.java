@@ -42,7 +42,7 @@ public class SearchRepositoryImpl implements SearchRepository {
 
   @Override
   public List<Genre> findGenreByKeyword(String keyword) {
-    return findByKeyword(genre, genre.name, keyword);
+    return queryFactory.selectFrom(genre).where(fullTextSearch(genre.name, keyword)).fetch();
   }
 
   @Override

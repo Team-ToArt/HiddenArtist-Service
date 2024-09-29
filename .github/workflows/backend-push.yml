@@ -5,6 +5,7 @@ on:
     branches: [ 'feature/**','chore/**','fix/**','refactor/**' ]
     paths:
       - 'backend/**'
+      - '.github/**'
 
 jobs:
   backend-build:

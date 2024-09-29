@@ -90,6 +90,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // test container
+    testImplementation "org.testcontainers:testcontainers:1.20.1"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.1"
+    testImplementation "org.testcontainers:mysql:1.20.1"
+
 }
 
 /*QueryDSL Config*/
@@ -118,4 +124,18 @@ tasks.processResources {
 
 tasks.named('test') {
     useJUnitPlatform()
+    /* Exclude Compile Tailwind Css when Test */
+    finalizedBy {
+        gradle.taskGraph.whenReady {
+            taskGraph ->
+                if (taskGraph.hasTask(':test')) {
+                    tasks.matching {
+                        it.name in ['nodeSetup', 'npmSetup', 'npmInstall', 'tailwindcss']
+                    }.configureEach {
+                        enabled = false
+                    }
+                }
+        }
+    }
+    /* Exclude Compile Tailwind Css when Test */
 }

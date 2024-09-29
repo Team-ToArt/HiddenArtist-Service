@@ -6,12 +6,12 @@ import static com.hiddenartist.backend.domain.artist.persistence.type.ContactTyp
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
-import com.hiddenartist.backend.domain.genre.persistence.Genre;
-import com.hiddenartist.backend.global.config.CustomDataJpaTest;
-import com.hiddenartist.backend.global.config.TestDataInitializer;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistDetailResponse;
 import com.hiddenartist.backend.domain.artist.controller.response.ArtistSimpleResponse;
+import com.hiddenartist.backend.domain.artist.persistence.repository.ArtistRepository;
+import com.hiddenartist.backend.domain.genre.persistence.Genre;
+import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
+import com.hiddenartist.backend.global.config.TestDataInitializer;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,8 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-@CustomDataJpaTest
-public class ArtistRepositoryTest {
+public class ArtistRepositoryTest extends AbstractMySQLRepositoryTest {
 
   @Autowired
   private TestDataInitializer initializer;
