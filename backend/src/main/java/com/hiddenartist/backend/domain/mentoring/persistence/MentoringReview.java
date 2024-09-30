@@ -1,4 +1,4 @@
-package com.hiddenartist.backend.domain.Mentoring.persistence;
+package com.hiddenartist.backend.domain.mentoring.persistence;
 
 import com.hiddenartist.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;

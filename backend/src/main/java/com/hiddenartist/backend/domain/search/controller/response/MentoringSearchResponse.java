@@ -1,8 +1,8 @@
 package com.hiddenartist.backend.domain.search.controller.response;
 
-import com.hiddenartist.backend.domain.Mentoring.controller.response.MentoringResponse;
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentor;
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringResponse;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentor;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import lombok.Getter;
 
 @Getter

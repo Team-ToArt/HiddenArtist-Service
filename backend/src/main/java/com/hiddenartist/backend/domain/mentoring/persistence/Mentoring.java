@@ -1,6 +1,6 @@
-package com.hiddenartist.backend.domain.Mentoring.persistence;
+package com.hiddenartist.backend.domain.mentoring.persistence;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.type.MentoringStatus;
+import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.global.converter.MentoringStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;
 import jakarta.persistence.Column;

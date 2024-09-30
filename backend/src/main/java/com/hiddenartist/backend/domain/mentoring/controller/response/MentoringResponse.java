@@ -1,4 +1,4 @@
-package com.hiddenartist.backend.domain.Mentoring.controller.response;
+package com.hiddenartist.backend.domain.mentoring.controller.response;
 
 import com.hiddenartist.backend.global.type.EntityToken;
 import lombok.Getter;
