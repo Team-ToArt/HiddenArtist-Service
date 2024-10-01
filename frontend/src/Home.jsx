@@ -1,0 +1,44 @@
+import './Home.css'
+
+function App() {
+
+    const category = ['추천 작품', '인기 작가', 'New'];
+    const exhibition = ['현재 진행중인 전시', '오픈 예정 전시'];
+
+
+  return (
+    <>
+
+    <div id="banner">
+        <img src="https://via.placeholder.com/1920x550" alt="" />
+    </div>
+
+    <div style={{marginTop: '30px', display:'flex', flexDirection:'column', alignItems:'center'}}>
+        {category.map((homeTitle) => (
+            <div style={{marginBottom:'62px'}}>
+                <h2>{homeTitle}&nbsp;<img src='./src/assets/img/right-chevron.svg'/></h2> 
+                <div>
+                    <div class="img_art"><img src="https://via.placeholder.com/356x356" alt=""/></div>
+                    <div class="img_art"><img src="https://via.placeholder.com/356x356" alt=""/></div>
+                    <div class="img_art"><img src="https://via.placeholder.com/356x356" alt=""/></div>
+                </div>
+            </div>
+        ))}
+
+        {exhibition.map((exhTitle) => (
+            <div style={{marginBottom:'62px'}}>
+                <h2>{exhTitle}&nbsp;<img src='./src/assets/img/right-chevron.svg'/></h2>
+                <div>
+                    <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>
+                    <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>
+                    <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>
+                    <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>
+                </div>
+            </div>
+        ))}
+    </div>
+    </>
+  )
+}
+
+export default App
