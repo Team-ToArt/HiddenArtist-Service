@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.mentoring.persistence.repository;
 
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,5 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface CustomMentoringRepository {
 
   Page<Mentoring> findAllMentorings(Pageable pageable);
+
+  MentoringDetailResponse findMentoringByToken(String token);
 
 }

@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.mentoring.controller;
 
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringService;
 import java.time.LocalDate;
@@ -34,8 +35,8 @@ public class MentoringController {
 
   // 멘토링 상세 조회
   @GetMapping("/{token}/details")
-  public void getMentoringDetails(@PathVariable("token") String token) {
-    // 멘토링 제목, 멘토 프로필 이미지, 닉네임, 분야, 경력, 조직, 멘토링 상세내용, 금액, 진행시간, 리뷰(존재시)
+  public MentoringDetailResponse getMentoringDetails(@PathVariable("token") String token) {
+    return mentoringService.getMentoringDetails(token);
   }
 
   // 멘토링 시간 조회

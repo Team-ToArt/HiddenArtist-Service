@@ -1,7 +1,6 @@
 package com.hiddenartist.backend.domain.search.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hiddenartist.backend.domain.account.persistence.Account;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentorResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringResponse;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentor;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
@@ -19,22 +18,8 @@ public class MentoringSearchResponse extends MentoringResponse {
 
   public static MentoringSearchResponse create(Mentoring mentoring) {
     Mentor mentor = mentoring.getMentor();
-    Account account = mentor.getAccount();
-    MentorResponse mentorResponse = new MentorResponse(account.getNickname(), account.getProfileImage(),
-        mentor.getCareer().getDescription(), mentor.getOrganization());
+    MentorResponse mentorResponse = MentorResponse.create(mentor);
     return new MentoringSearchResponse(mentoring.getName(), mentoring.getToken(), mentoring.getImage(), mentorResponse);
   }
 
-  public record MentorResponse(
-      String name,
-
-      @JsonProperty("profile_image")
-      String profileImage,
-
-      String career,
-
-      String organization
-  ) {
-
-  }
 }

@@ -1,8 +1,10 @@
 package com.hiddenartist.backend.domain.mentoring.service;
 
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.mentoring.persistence.repository.MentoringRepository;
+import com.hiddenartist.backend.global.type.EntityToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,12 @@ public class MentoringService {
     Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
     Page<Mentoring> mentorings = mentoringRepository.findAllMentorings(pageRequest);
     return mentorings.map(MentoringSimpleResponse::create);
+  }
+
+  @Transactional(readOnly = true)
+  public MentoringDetailResponse getMentoringDetails(String tokenValue) {
+    String token = EntityToken.MENTORING.identifyToken(tokenValue);
+    return mentoringRepository.findMentoringByToken(token);
   }
 
 }

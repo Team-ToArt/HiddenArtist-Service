@@ -20,4 +20,7 @@ public class MentoringReview extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private MentoringApplication mentoringApplication;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Mentoring mentoring;
+
 }

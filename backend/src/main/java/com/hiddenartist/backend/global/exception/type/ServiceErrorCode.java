@@ -12,6 +12,7 @@ public enum ServiceErrorCode {
   ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Artist를 찾을 수 없습니다."),
   ARTWORK_NOT_FOUND(HttpStatus.NOT_FOUND, "Artwork를 찾을 수 없습니다."),
   EXHIBITION_NOT_FOUND(HttpStatus.NOT_FOUND, "Exhibition을 찾을 수 없습니다."),
+  MENTORING_NOT_FOUND(HttpStatus.NOT_FOUND, "Mentoring을 찾을 수 없습니다."),
   PROVIDER_NOT_FOUND(HttpStatus.NOT_FOUND, "OAuth2 Provider를 찾을 수 없습니다."),
   TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다. 로그인해주세요."),
   INVALID_REFRESH_TOKEN(HttpStatus.CONFLICT, "토큰이 일치하지 않습니다. 다시 로그인해주세요."),

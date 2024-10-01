@@ -228,6 +228,7 @@ CREATE TABLE mentoring_review
     content                  varchar(255),
     rating                   integer,
     mentoring_application_id bigint,
+    mentoring_id             bigint,
     create_date              datetime           NOT NULL DEFAULT now(),
     update_date              datetime           NOT NULL DEFAULT now(),
     delete_date              datetime
@@ -337,6 +338,9 @@ ALTER TABLE mentoring_application
 
 ALTER TABLE mentoring_review
     ADD FOREIGN KEY (mentoring_application_id) REFERENCES mentoring_application (id);
+
+ALTER TABLE mentoring_review
+    ADD FOREIGN KEY (mentoring_id) REFERENCES mentoring (id);
 
 ALTER TABLE settlement
     ADD FOREIGN KEY (mentor_id) REFERENCES mentor (id);
