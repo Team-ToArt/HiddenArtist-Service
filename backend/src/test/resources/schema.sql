@@ -187,6 +187,7 @@ CREATE TABLE mentoring
 (
     id                      bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name                    varchar(255),
+    image                   varchar(255),
     content                 mediumtext,
     duration_time           varchar(255),
     amount                  integer,

@@ -10,9 +10,12 @@ public abstract class MentoringResponse {
 
   private String token;
 
-  protected MentoringResponse(String name, String token) {
+  private String image;
+
+  protected MentoringResponse(String name, String token, String image) {
     this.name = name;
     this.token = EntityToken.MENTORING.extractToken(token);
+    this.image = image;
   }
 
 }

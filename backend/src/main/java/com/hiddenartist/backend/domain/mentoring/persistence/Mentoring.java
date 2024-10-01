@@ -19,6 +19,8 @@ public class Mentoring extends BaseEntity {
 
   private String name;
 
+  private String image;
+
   @Column(columnDefinition = "mediumtext")
   private String content;
 
