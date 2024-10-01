@@ -1,8 +1,13 @@
 package com.hiddenartist.backend.domain.mentoring.controller;
 
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +26,10 @@ public class MentoringController {
 
   // 멘토링 전체 조회
   @GetMapping
-  public void getAllMentorings() {
-    // Pagination default sort 인기순(Total_Application) 내림차순
-    // mentoring_status = OPEN & delete_date = null 인 Entity 만 조회
-    // DTO 구성내용 -> 멘토링 제목, 멘토 프로필 이미지, 닉네임, 분야, 경력, 조직, 금액
+  public Page<MentoringSimpleResponse> getAllMentorings(
+      @PageableDefault(size = 16, page = 1, sort = "totalApplicationCount", direction = Direction.DESC) Pageable pageable
+  ) {
+    return mentoringService.getAllMentorings(pageable);
   }
 
   // 멘토링 상세 조회
