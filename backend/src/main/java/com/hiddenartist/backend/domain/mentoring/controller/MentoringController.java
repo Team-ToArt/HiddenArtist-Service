@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.mentoring.controller;
 
+import com.hiddenartist.backend.domain.mentoring.controller.request.LockApplicationTimeRequest;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringService;
@@ -9,11 +10,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,19 +46,22 @@ public class MentoringController {
 
   // 멘토링 시간 조회
   @GetMapping("/{token}/available")
-  public void getMentoringAvailableTimes(@PathVariable("token") String token, @RequestParam("date") LocalDate selectDate) {
-    // 해당 멘토링에 대해 selectDate에 해당하는 mentoring_application 조회
+  public void getMentoringUnavailableTimes(@PathVariable("token") String token,
+      @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM") LocalDate selectMonth) {
+    // 해당 멘토링에 대해 selectMonth 해당하는 mentoring_application 조회
     // redis에서 해당 멘토링에 대해 신청 잠금처리된 시간대 조회
     // application_time을 오름차순 정렬 후 반환
   }
 
   // 멘토링 신청 시간 잠금
   @PostMapping("/{token}/lock")
-  public void lockMentoringApplicationTime(@PathVariable("token") String token) {
-    // Request Body에 application_time 전달
-    // redis에 application_time을 저장.
-    // key : Mentoring_{token}
-    // value: 기존에 존재한 Set 에 application_time 추가
+  public ResponseEntity<String> lockMentoringApplicationTime(
+      @PathVariable("token") String token,
+      @RequestBody LockApplicationTimeRequest lockApplicationTime,
+      @AuthenticationPrincipal String email
+  ) {
+    mentoringService.reservationApplicationTime(token, lockApplicationTime.applicationTime(), email);
+    return ResponseEntity.ok("Success");
   }
 
   // 잠금처리된 멘토링 신청시간 해제
