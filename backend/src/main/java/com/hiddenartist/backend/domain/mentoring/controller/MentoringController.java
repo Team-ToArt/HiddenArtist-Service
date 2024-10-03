@@ -3,6 +3,7 @@ package com.hiddenartist.backend.domain.mentoring.controller;
 import com.hiddenartist.backend.domain.mentoring.controller.request.LockApplicationTimeRequest;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringUnavailableTime;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +47,9 @@ public class MentoringController {
 
   // 멘토링 시간 조회
   @GetMapping("/{token}/available")
-  public void getMentoringUnavailableTimes(@PathVariable("token") String token,
+  public MentoringUnavailableTime getMentoringUnavailableTimes(@PathVariable("token") String token,
       @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM") LocalDate selectMonth) {
-    // 해당 멘토링에 대해 selectMonth 해당하는 mentoring_application 조회
-    // redis에서 해당 멘토링에 대해 신청 잠금처리된 시간대 조회
-    // application_time을 오름차순 정렬 후 반환
+    return mentoringService.getMentoringUnavailableTimes(token, selectMonth);
   }
 
   // 멘토링 신청 시간 잠금
