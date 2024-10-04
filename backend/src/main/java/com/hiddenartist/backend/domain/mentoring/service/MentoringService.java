@@ -8,6 +8,7 @@ import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.mentoring.persistence.MentoringApplication;
 import com.hiddenartist.backend.domain.mentoring.persistence.repository.MentoringRepository;
 import com.hiddenartist.backend.global.redis.LockApplicationTimeClient;
+import com.hiddenartist.backend.global.redis.RedisLockFacade;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MentoringService {
 
   private final MentoringRepository mentoringRepository;
+  private final RedisLockFacade redisLock;
   private final LockApplicationTimeClient redisClient;
 
   @Transactional(readOnly = true)
@@ -42,7 +44,7 @@ public class MentoringService {
   @Transactional
   public void reservationApplicationTime(String tokenValue, LocalDateTime applicationTime, String email) {
     LockApplicationTime lockApplicationTime = new LockApplicationTime(email, tokenValue, applicationTime);
-    redisClient.save(lockApplicationTime);
+    redisLock.lockApplicationTime(lockApplicationTime);
   }
 
   @Transactional
