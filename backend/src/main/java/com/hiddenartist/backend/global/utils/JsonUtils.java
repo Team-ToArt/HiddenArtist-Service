@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.global.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hiddenartist.backend.global.exception.type.JsonException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
@@ -19,6 +20,14 @@ public class JsonUtils {
       return objectMapper.readValue(inputStream, clazz);
     } catch (IOException e) {
       throw new JsonException(ServiceErrorCode.JSON_DESERIALIZE_ERROR);
+    }
+  }
+
+  public String serializedObjectToJson(Object obj) {
+    try {
+      return objectMapper.writeValueAsString(obj);
+    } catch (JsonProcessingException e) {
+      throw new JsonException(ServiceErrorCode.JSON_SERIALIZE_ERROR);
     }
   }
 
