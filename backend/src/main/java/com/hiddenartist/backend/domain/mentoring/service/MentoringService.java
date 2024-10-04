@@ -60,4 +60,10 @@ public class MentoringService {
     return MentoringUnavailableTime.create(reservationTimes, applicationTimes);
   }
 
+  @Transactional
+  public void unlockReservationApplicationTime(String tokenValue, LocalDateTime applicationTime) {
+    String key = LockApplicationTimeClient.generateKey(tokenValue, applicationTime);
+    redisClient.deleteBy(key);
+  }
+
 }

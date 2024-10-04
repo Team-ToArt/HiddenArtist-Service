@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.Cursor;
@@ -50,10 +49,7 @@ public class LockApplicationTimeClient implements RedisClient<LockApplicationTim
     try (Cursor<String> scan = redis.scan(options)) {
       while (scan.hasNext()) {
         String key = scan.next();
-        LockApplicationTime lockApplicationTime = findBy(key);
-        if (Objects.nonNull(lockApplicationTime)) {
-          lockApplicationTimes.add(lockApplicationTime);
-        }
+        Optional.ofNullable(findBy(key)).ifPresent(lockApplicationTimes::add);
       }
     }
     return lockApplicationTimes;

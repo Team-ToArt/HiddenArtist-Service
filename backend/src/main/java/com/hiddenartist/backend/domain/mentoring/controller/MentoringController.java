@@ -65,9 +65,11 @@ public class MentoringController {
 
   // 잠금처리된 멘토링 신청시간 해제
   @PostMapping("/{token}/unlock")
-  public void unlockMentoringApplicationTime(@PathVariable("token") String token) {
-    // Request Body에 application_time 전달
-    // redis에 저장된 application_time 삭제
+  public void unlockMentoringApplicationTime(
+      @PathVariable("token") String token,
+      @RequestBody LockApplicationTimeRequest lockApplicationTimeRequest
+  ) {
+    mentoringService.unlockReservationApplicationTime(token, lockApplicationTimeRequest.applicationTime());
   }
 
   // 멘토링 등록
