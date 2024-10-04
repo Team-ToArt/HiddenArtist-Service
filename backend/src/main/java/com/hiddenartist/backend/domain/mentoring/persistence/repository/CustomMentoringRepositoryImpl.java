@@ -3,7 +3,7 @@ package com.hiddenartist.backend.domain.mentoring.persistence.repository;
 import static com.hiddenartist.backend.domain.account.persistence.QAccount.account;
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
 import static com.hiddenartist.backend.domain.genre.persistence.QMentoringGenre.mentoringGenre;
-import static com.hiddenartist.backend.domain.mentoring.persistence.QMentor.mentor;
+import static com.hiddenartist.backend.domain.mentor.persistence.QMentor.mentor;
 import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoring.mentoring;
 import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoringApplication.mentoringApplication;
 import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoringReview.mentoringReview;

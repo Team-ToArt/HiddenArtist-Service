@@ -5,7 +5,7 @@ import static com.hiddenartist.backend.domain.artist.persistence.QArtist.artist;
 import static com.hiddenartist.backend.domain.artwork.persistence.QArtwork.artwork;
 import static com.hiddenartist.backend.domain.exhibition.persistence.QExhibition.exhibition;
 import static com.hiddenartist.backend.domain.genre.persistence.QGenre.genre;
-import static com.hiddenartist.backend.domain.mentoring.persistence.QMentor.mentor;
+import static com.hiddenartist.backend.domain.mentor.persistence.QMentor.mentor;
 import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoring.mentoring;
 
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
