@@ -4,8 +4,8 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -13,25 +13,21 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-@Configuration
+@TestConfiguration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
-public class RedisConfig {
+public class TestRedisConfig {
 
   private static final String REDISSON_PREFIX = "redis://";
 
-  @Value("${spring.data.redis.host}")
+  @Value("spring.data.redis.host")
   private String host;
 
-  @Value("${spring.data.redis.port}")
+  @Value("spring.data.redis.port")
   private int port;
-
-  @Value("${spring.data.redis.password}")
-  private String password;
 
   @Bean
   public RedisConnectionFactory redisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
-    configuration.setPassword(password);
     return new LettuceConnectionFactory(configuration);
   }
 
@@ -39,7 +35,7 @@ public class RedisConfig {
   public RedissonClient redissonClient() {
     String url = REDISSON_PREFIX + host + ":" + port;
     Config config = new Config();
-    config.useSingleServer().setAddress(url).setPassword(password);
+    config.useSingleServer().setAddress(url);
     return Redisson.create(config);
   }
 
@@ -54,4 +50,5 @@ public class RedisConfig {
     redisTemplate.setEnableTransactionSupport(true);
     return redisTemplate;
   }
+
 }
