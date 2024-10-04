@@ -1,6 +1,8 @@
 package com.hiddenartist.backend.domain.mentoring.service;
 
 import com.hiddenartist.backend.domain.mentoring.persistence.LockApplicationTime;
+import com.hiddenartist.backend.global.exception.type.MentoringException;
+import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.redis.LockApplicationTimeClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class MentoringServiceWithLock {
         lockApplicationTime.getApplicationTime());
     LockApplicationTime reservedApplicationTime = lockApplicationTimeClient.findBy(key);
     if (isNotReservationTimeOwner(reservedApplicationTime.getEmail(), lockApplicationTime.getEmail())) {
-      throw new RuntimeException();
+      throw new MentoringException(ServiceErrorCode.TIME_ALREADY_LOCK);
     }
     lockApplicationTimeClient.save(lockApplicationTime);
   }

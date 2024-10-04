@@ -2,6 +2,8 @@ package com.hiddenartist.backend.global.redis;
 
 import com.hiddenartist.backend.domain.mentoring.persistence.LockApplicationTime;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringServiceWithLock;
+import com.hiddenartist.backend.global.exception.type.RedisLockException;
+import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.type.EntityToken;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,14 +24,14 @@ public class RedisLockFacade {
     String key = generateApplicationLockKey(lockApplicationTime.getTokenValue(), lockApplicationTime.getApplicationTime());
     RLock lock = redissonClient.getLock(key);
     try {
-      boolean available = lock.tryLock(10, 5, TimeUnit.SECONDS);
+      boolean available = lock.tryLock(10, 2, TimeUnit.SECONDS);
       if (!available) {
-        throw new RuntimeException();
+        throw new RedisLockException(ServiceErrorCode.LOCK_ACQUISITION_FAILED);
       }
       mentoringServiceWithLock.reservationApplicationTime(lockApplicationTime);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
-      throw new RuntimeException();
+      throw new RedisLockException(ServiceErrorCode.LOCK_ACQUISITION_FAILED);
     } finally {
       lock.unlock();
     }

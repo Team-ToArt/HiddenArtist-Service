@@ -55,8 +55,7 @@ public class MentoringService {
 
     // DB에서 해당 월에 신청된 데이터 조회
     String token = EntityToken.MENTORING.identifyToken(tokenValue);
-    List<MentoringApplication> mentoringApplications = mentoringRepository.findMentoringApplicationByMonth(token,
-        selectMonth);
+    List<MentoringApplication> mentoringApplications = mentoringRepository.findMentoringApplicationByMonth(token, selectMonth);
     List<LocalDateTime> applicationTimes = mentoringApplications.stream().map(MentoringApplication::getApplicationTime).toList();
 
     return MentoringUnavailableTime.create(reservationTimes, applicationTimes);

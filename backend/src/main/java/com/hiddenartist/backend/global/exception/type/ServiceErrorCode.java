@@ -25,7 +25,9 @@ public enum ServiceErrorCode {
   UNLINK_FAIL(HttpStatus.CONFLICT, "OAuth2 연결 끊기에 실패하였습니다."),
   ACCOUNT_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 탈퇴한 계정입니다."),
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근권한이 부족합니다."),
-  UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "로그인이 필요한 기능입니다.");
+  UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "로그인이 필요한 기능입니다."),
+  TIME_ALREADY_LOCK(HttpStatus.CONFLICT, "해당 시간은 이미 잠금 처리 되었습니다."),
+  LOCK_ACQUISITION_FAILED(HttpStatus.CONFLICT, "Lock 획득에 실패하였습니다.");
 
   private final HttpStatus status;
   private final String errorMessage;
