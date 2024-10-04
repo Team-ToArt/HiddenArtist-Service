@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.domain.mentoring.controller.response;
 
-import com.hiddenartist.backend.domain.mentoring.persistence.Mentor;
+import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import lombok.Getter;
 

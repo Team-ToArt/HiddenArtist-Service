@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.global.converter;
 
-import com.hiddenartist.backend.domain.mentoring.persistence.type.Career;
+import com.hiddenartist.backend.domain.mentor.persistence.type.Career;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

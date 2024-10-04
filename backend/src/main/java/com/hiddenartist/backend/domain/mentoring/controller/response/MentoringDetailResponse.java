@@ -2,7 +2,7 @@ package com.hiddenartist.backend.domain.mentoring.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
-import com.hiddenartist.backend.domain.mentoring.persistence.Mentor;
+import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.mentoring.persistence.MentoringReview;
 import java.util.List;

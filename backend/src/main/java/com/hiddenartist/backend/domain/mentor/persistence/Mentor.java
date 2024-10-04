@@ -1,8 +1,8 @@
-package com.hiddenartist.backend.domain.mentoring.persistence;
+package com.hiddenartist.backend.domain.mentor.persistence;
 
-import com.hiddenartist.backend.domain.mentoring.persistence.type.Career;
-import com.hiddenartist.backend.domain.mentoring.persistence.type.CertificationStatus;
 import com.hiddenartist.backend.domain.account.persistence.Account;
+import com.hiddenartist.backend.domain.mentor.persistence.type.Career;
+import com.hiddenartist.backend.domain.mentor.persistence.type.CertificationStatus;
 import com.hiddenartist.backend.global.converter.CareerConverter;
 import com.hiddenartist.backend.global.converter.CertificationStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;

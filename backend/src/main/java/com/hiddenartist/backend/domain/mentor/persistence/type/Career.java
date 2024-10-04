@@ -1,4 +1,4 @@
-package com.hiddenartist.backend.domain.mentoring.persistence.type;
+package com.hiddenartist.backend.domain.mentor.persistence.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

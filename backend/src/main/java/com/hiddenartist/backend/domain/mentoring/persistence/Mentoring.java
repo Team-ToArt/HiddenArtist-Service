@@ -1,5 +1,6 @@
 package com.hiddenartist.backend.domain.mentoring.persistence;
 
+import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
 import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.global.converter.MentoringStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;
