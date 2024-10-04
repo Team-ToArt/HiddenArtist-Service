@@ -2,7 +2,7 @@ name: POP Backend Push Workflow
 
 on:
   push:
-    branches: [ 'feature/**','chore/**','fix/**','refactor/**' ]
+    branches: [ 'develop', 'feature/**','chore/**','fix/**','refactor/**' ]
     paths:
       - 'backend/**'
       - '.github/**'
