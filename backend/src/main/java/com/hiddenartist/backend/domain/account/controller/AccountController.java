@@ -4,6 +4,7 @@ import com.hiddenartist.backend.domain.account.controller.request.AccountDeleteF
 import com.hiddenartist.backend.domain.account.controller.request.AccountUpdateImageRequest;
 import com.hiddenartist.backend.domain.account.controller.request.AccountUpdateNicknameRequest;
 import com.hiddenartist.backend.domain.account.controller.response.AccountGetDetailResponse;
+import com.hiddenartist.backend.domain.account.controller.response.AccountGetMentoringApplicationResponse;
 import com.hiddenartist.backend.domain.account.controller.response.AccountGetSimpleResponse;
 import com.hiddenartist.backend.domain.account.controller.response.FollowArtistGetListResponse;
 import com.hiddenartist.backend.domain.account.service.AccountService;
@@ -13,6 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +81,14 @@ public class AccountController {
   public void deleteFollowArtists(@RequestBody AccountDeleteFollowArtistRequest deleteFollowArtistRequest,
       @AuthenticationPrincipal String email) {
     accountService.deleteFollowArtists(email, deleteFollowArtistRequest.artists());
+  }
+
+  @GetMapping("/me/mentorings")
+  public Page<AccountGetMentoringApplicationResponse> getMentoringApplications(
+      @PageableDefault(size = 20, page = 1, sort = "applicationTime", direction = Direction.DESC) Pageable pageable,
+      @AuthenticationPrincipal String email
+  ) {
+    return accountService.getMentoringApplications(pageable, email);
   }
 
 }

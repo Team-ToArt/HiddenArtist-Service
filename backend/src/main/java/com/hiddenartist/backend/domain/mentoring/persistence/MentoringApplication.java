@@ -2,14 +2,12 @@ package com.hiddenartist.backend.domain.mentoring.persistence;
 
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringApplicationStatus;
-import com.hiddenartist.backend.domain.payment.persistence.Payment;
 import com.hiddenartist.backend.global.converter.MentoringApplicationStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MentoringApplication extends BaseEntity {
+
+  private String token;
 
   private LocalDateTime applicationTime;
 
@@ -30,8 +30,5 @@ public class MentoringApplication extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Account account;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Payment payment;
 
 }
