@@ -1,13 +1,13 @@
-package com.hiddenartist.backend.domain.Mentoring.persistence;
+package com.hiddenartist.backend.domain.mentoring.persistence;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.type.MentoringApplicationStatus;
-import com.hiddenartist.backend.domain.payment.persistence.Payment;
+import com.hiddenartist.backend.domain.account.persistence.Account;
+import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringApplicationStatus;
 import com.hiddenartist.backend.global.converter.MentoringApplicationStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,15 +18,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MentoringApplication extends BaseEntity {
 
+  private String token;
+
   private LocalDateTime applicationTime;
 
   @Convert(converter = MentoringApplicationStatusConverter.class)
   private MentoringApplicationStatus mentoringApplicationStatus;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   private Mentoring mentoring;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  private Payment payment;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Account account;
 
 }

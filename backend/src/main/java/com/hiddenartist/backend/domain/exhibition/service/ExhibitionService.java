@@ -9,11 +9,11 @@ import com.hiddenartist.backend.domain.exhibition.persistence.repository.Exhibit
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.type.EntityToken;
+import com.hiddenartist.backend.global.utils.PageUtils;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class ExhibitionService {
 
   @Transactional(readOnly = true)
   public ExhibitionGetPageResponse findAllExhibitions(Pageable pageable) {
-    Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+    Pageable pageRequest = PageUtils.createPageRequest(pageable);
     Page<ExhibitionSimpleResponse> exhibitionSimpleResponses = exhibitionRepository.findAllExhibitions(pageRequest);
     return new ExhibitionGetPageResponse(exhibitionSimpleResponses);
   }
@@ -64,7 +64,7 @@ public class ExhibitionService {
   public ExhibitionGetPageResponse findPastExhibitions(Pageable pageable) {
     LocalDate now = LocalDate.now();
     Sort sort = pageable.getSort().and(Sort.by(Sort.Order.asc("name")));
-    Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), sort);
+    Pageable pageRequest = PageUtils.createPageRequest(pageable, sort);
     Page<ExhibitionSimpleResponse> pastExhibitions = exhibitionRepository.findPastExhibitions(pageRequest, now);
     return new ExhibitionGetPageResponse(pastExhibitions);
   }

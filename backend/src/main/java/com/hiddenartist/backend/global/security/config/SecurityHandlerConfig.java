@@ -2,6 +2,8 @@ package com.hiddenartist.backend.global.security.config;
 
 import com.hiddenartist.backend.global.security.handler.AdminAccessDeniedHandler;
 import com.hiddenartist.backend.global.security.handler.AdminAuthenticationEntryPoint;
+import com.hiddenartist.backend.global.security.handler.ApiAccessDeniedHandler;
+import com.hiddenartist.backend.global.security.handler.ApiAuthenticationEntryPoint;
 import com.hiddenartist.backend.global.security.handler.OAuth2LoginSuccessHandler;
 import com.hiddenartist.backend.global.security.handler.OAuth2LogoutHandler;
 import com.hiddenartist.backend.global.security.handler.OAuth2LogoutSuccessHandler;
@@ -23,5 +25,9 @@ public class SecurityHandlerConfig {
   private final AdminAccessDeniedHandler adminAccessDeniedHandler;
 
   private final AdminAuthenticationEntryPoint adminAuthenticationEntryPoint;
+
+  private final ApiAccessDeniedHandler apiAccessDeniedHandler;
+
+  private final ApiAuthenticationEntryPoint apiAuthenticationEntryPoint;
 
 }

@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.domain.payment.persistence;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentor;
+import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
 import com.hiddenartist.backend.domain.payment.persistence.type.SettlementStatus;
 import com.hiddenartist.backend.global.converter.SettlementStatusConverter;
 import com.hiddenartist.backend.global.type.BaseEntity;
