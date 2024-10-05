@@ -17,10 +17,10 @@ import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.type.EntityToken;
+import com.hiddenartist.backend.global.utils.PageUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +35,7 @@ public class ArtistService {
 
   @Transactional(readOnly = true)
   public ArtistGetListResponse getAllArtists(Pageable pageable) {
-    Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+    Pageable pageRequest = PageUtils.createPageRequest(pageable);
     Page<ArtistSimpleResponse> artists = artistRepository.findAllArtists(pageRequest);
     return new ArtistGetListResponse(artists);
   }

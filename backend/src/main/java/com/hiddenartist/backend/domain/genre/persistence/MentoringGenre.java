@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.domain.genre.persistence;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.global.type.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

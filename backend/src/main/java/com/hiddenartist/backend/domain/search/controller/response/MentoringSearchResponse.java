@@ -1,8 +1,9 @@
 package com.hiddenartist.backend.domain.search.controller.response;
 
-import com.hiddenartist.backend.domain.Mentoring.controller.response.MentoringResponse;
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentor;
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentorResponse;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringResponse;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import lombok.Getter;
 
 @Getter
@@ -10,23 +11,15 @@ public class MentoringSearchResponse extends MentoringResponse {
 
   private MentorResponse mentor;
 
-  private MentoringSearchResponse(String name, String token, MentorResponse mentor) {
-    super(name, token);
+  private MentoringSearchResponse(String name, String token, String image, MentorResponse mentor) {
+    super(name, token, image);
     this.mentor = mentor;
   }
 
   public static MentoringSearchResponse create(Mentoring mentoring) {
     Mentor mentor = mentoring.getMentor();
-    MentorResponse mentorResponse = new MentorResponse(mentor.getAccount().getNickname(),
-        mentor.getCareer().getDescription(), mentor.getOrganization());
-    return new MentoringSearchResponse(mentoring.getName(), mentoring.getToken(), mentorResponse);
+    MentorResponse mentorResponse = MentorResponse.create(mentor);
+    return new MentoringSearchResponse(mentoring.getName(), mentoring.getToken(), mentoring.getImage(), mentorResponse);
   }
 
-  public record MentorResponse(
-      String name,
-      String career,
-      String organization
-  ) {
-
-  }
 }

@@ -9,7 +9,8 @@ public enum EntityToken {
   ARTIST("Artist_"),
   ARTWORK("Artwork_"),
   EXHIBITION("Exhibition_"),
-  MENTORING("Mentoring_");
+  MENTORING("Mentoring_"),
+  MENTORING_APPLICATION("MentoringApplication_");
 
   private static final int TOKEN_LENGTH = 30;
   private final String prefix;

@@ -1,4 +1,4 @@
-package com.hiddenartist.backend.domain.Mentoring.persistence.type;
+package com.hiddenartist.backend.domain.mentoring.persistence.type;
 
 public enum MentoringApplicationStatus {
   WAITING, CANCELLED, APPROVAL, COMPLETE

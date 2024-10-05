@@ -16,7 +16,6 @@ import com.hiddenartist.backend.domain.artist.controller.response.SignatureArtwo
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artist.persistence.ArtistContact;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
-import com.hiddenartist.backend.domain.genre.persistence.ArtistGenre;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
@@ -51,7 +50,9 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                      .from(artist)
                                                      .offset(pageable.getOffset())
                                                      .limit(pageable.getPageSize())
-                                                     .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                                     .orderBy(
+                                                         QueryDslUtils.createOrderSpecifier(pageable.getSort(), Artist.class,
+                                                             artist))
                                                      .fetch();
 
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);
@@ -72,7 +73,8 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                          .offset(pageable.getOffset())
                                                          .limit(pageable.getPageSize())
                                                          .orderBy(
-                                                             QueryDslUtils.createOrderSpecifier(pageable.getSort())
+                                                             QueryDslUtils.createOrderSpecifier(pageable.getSort(), Artist.class,
+                                                                 artist)
                                                          )
                                                          .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);
@@ -88,13 +90,10 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                          .where(artistContact.artist.eq(findArtist))
                                                          .fetch();
 
-    List<ArtistGenre> artistGenres = queryFactory.selectFrom(artistGenre)
-                                                 .leftJoin(artistGenre.genre, genre)
-                                                 .fetchJoin()
-                                                 .where(artistGenre.artist.eq(findArtist))
-                                                 .fetch();
-
-    List<Genre> genres = artistGenres.stream().map(ArtistGenre::getGenre).toList();
+    List<Genre> genres = queryFactory.select(genre).from(artistGenre)
+                                     .leftJoin(artistGenre.genre, genre)
+                                     .where(artistGenre.artist.eq(findArtist))
+                                     .fetch();
     return ArtistDetailResponse.create(findArtist, findArtistContacts, genres);
   }
 
