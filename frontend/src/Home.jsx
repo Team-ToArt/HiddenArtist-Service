@@ -1,4 +1,6 @@
-import './Home.css'
+import './assets/css/Home.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 function App() {
 
@@ -10,7 +12,17 @@ function App() {
     <>
 
     <div id="banner">
-        <img src="https://via.placeholder.com/1920x550" alt="" />
+        <Swiper
+        spaceBetween={50}
+        slidesPerView={1}
+        pagination={{ clickable: true }}
+        >
+        <SwiperSlide><img src="https://via.placeholder.com/1920x550" alt="" /></SwiperSlide>
+        <SwiperSlide><img src="https://via.placeholder.com/1920x550" alt="" /></SwiperSlide>
+        <SwiperSlide><img src="https://via.placeholder.com/1920x550" alt="" /></SwiperSlide>
+        <SwiperSlide><img src="https://via.placeholder.com/1920x550" alt="" /></SwiperSlide>
+        </Swiper>
+        
     </div>
 
     <div style={{marginTop: '30px', display:'flex', flexDirection:'column', alignItems:'center'}}>

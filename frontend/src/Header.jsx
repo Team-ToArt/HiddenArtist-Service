@@ -6,12 +6,12 @@ function Header() {
   return (
     <>
       <div style={{display:'flex',margin: '15px auto', justifyContent:'center'}}>
-        <div id="logo"><Link to='/'><img src="./src/assets/img/logo_fix_w.png" alt=""/></Link></div>
+        <div id="logo"><Link to='/'><img src="/src/assets/img/logo_fix_w.png" alt=""/></Link></div>
 
         <div id="search">
             <input type='text' placeholder='Search by artist, gallery, style, theme, tag, etc...'/>        
             <div style={{display:'inline-block'}}>
-              <img style={{width: '20px', height: '20px'}} src='./src/assets/img/search_icon.svg'/>
+              <img style={{width: '20px', height: '20px'}} src='/src/assets/img/search_icon.svg'/>
             </div>
         </div>
 
