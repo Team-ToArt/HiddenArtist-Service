@@ -39,7 +39,8 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
                                                         .offset(pageable.getOffset())
                                                         .limit(pageable.getPageSize())
                                                         .orderBy(
-                                                            QueryDslUtils.createOrderSpecifier(pageable.getSort())
+                                                            QueryDslUtils.createOrderSpecifier(pageable.getSort(),
+                                                                Exhibition.class, exhibition)
                                                         )
                                                         .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(exhibition.count()).from(exhibition);
@@ -88,7 +89,8 @@ public class CustomExhibitionRepositoryImpl implements CustomExhibitionRepositor
                                                         .where(exhibition.endDate.before(now))
                                                         .offset(pageable.getOffset())
                                                         .limit(pageable.getPageSize())
-                                                        .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                                        .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort(),
+                                                            Exhibition.class, exhibition))
                                                         .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(exhibition.count()).from(exhibition);
     return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);

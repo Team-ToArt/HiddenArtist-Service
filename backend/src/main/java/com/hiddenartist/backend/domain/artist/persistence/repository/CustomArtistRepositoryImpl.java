@@ -50,7 +50,9 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                      .from(artist)
                                                      .offset(pageable.getOffset())
                                                      .limit(pageable.getPageSize())
-                                                     .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                                     .orderBy(
+                                                         QueryDslUtils.createOrderSpecifier(pageable.getSort(), Artist.class,
+                                                             artist))
                                                      .fetch();
 
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);
@@ -71,7 +73,8 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
                                                          .offset(pageable.getOffset())
                                                          .limit(pageable.getPageSize())
                                                          .orderBy(
-                                                             QueryDslUtils.createOrderSpecifier(pageable.getSort())
+                                                             QueryDslUtils.createOrderSpecifier(pageable.getSort(), Artist.class,
+                                                                 artist)
                                                          )
                                                          .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(artist.count()).from(artist);

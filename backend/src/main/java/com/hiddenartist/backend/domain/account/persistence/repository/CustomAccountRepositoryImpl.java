@@ -11,6 +11,7 @@ import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoringAp
 import com.hiddenartist.backend.domain.account.controller.response.AccountGetMentoringApplicationResponse;
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
+import com.hiddenartist.backend.domain.mentoring.persistence.MentoringApplication;
 import com.hiddenartist.backend.global.exception.type.EntityException;
 import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
 import com.hiddenartist.backend.global.utils.QueryDslUtils;
@@ -77,7 +78,8 @@ public class CustomAccountRepositoryImpl implements CustomAccountRepository {
                                                                       .leftJoin(mentor.account, account)
                                                                       .where(mentoringApplication.account.email.eq(email))
                                                                       .orderBy(
-                                                                          QueryDslUtils.createOrderSpecifier(pageable.getSort())
+                                                                          QueryDslUtils.createOrderSpecifier(pageable.getSort(),
+                                                                              MentoringApplication.class, mentoringApplication)
                                                                       )
                                                                       .offset(pageable.getOffset())
                                                                       .limit(pageable.getPageSize())

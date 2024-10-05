@@ -47,7 +47,8 @@ public class CustomMentoringRepositoryImpl implements CustomMentoringRepository 
                                                                          .and(mentoring.deleteDate.isNull()))
                                          .offset(pageable.getOffset())
                                          .limit(pageable.getPageSize())
-                                         .orderBy(QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                         .orderBy(
+                                             QueryDslUtils.createOrderSpecifier(pageable.getSort(), Mentoring.class, mentoring))
                                          .fetch();
     JPAQuery<Long> countQuery = queryFactory.select(mentoring.count()).from(mentoring);
     return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);

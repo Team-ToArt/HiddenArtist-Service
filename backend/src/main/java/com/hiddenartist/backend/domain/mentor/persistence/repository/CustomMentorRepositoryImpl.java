@@ -6,6 +6,7 @@ import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoring.m
 import static com.hiddenartist.backend.domain.mentoring.persistence.QMentoringApplication.mentoringApplication;
 
 import com.hiddenartist.backend.domain.mentor.controller.response.ReceivedMentoringApplicationResponse;
+import com.hiddenartist.backend.domain.mentoring.persistence.MentoringApplication;
 import com.hiddenartist.backend.global.utils.QueryDslUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -39,7 +40,8 @@ public class CustomMentorRepositoryImpl implements CustomMentorRepository {
                                                                     .leftJoin(mentor.account)
                                                                     .where(mentor.account.email.eq(email))
                                                                     .orderBy(
-                                                                        QueryDslUtils.createOrderSpecifier(pageable.getSort()))
+                                                                        QueryDslUtils.createOrderSpecifier(pageable.getSort(),
+                                                                            MentoringApplication.class, mentoringApplication))
                                                                     .offset(pageable.getOffset())
                                                                     .limit(pageable.getPageSize())
                                                                     .fetch();

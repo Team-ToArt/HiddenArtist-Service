@@ -11,10 +11,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mentor extends BaseEntity {
@@ -23,8 +26,9 @@ public class Mentor extends BaseEntity {
 
   private String organization;
 
+  @Default
   @Convert(converter = CareerConverter.class)
-  private Career career;
+  private Career career = Career.JUNIOR;
 
   private String bankName;
 
@@ -34,10 +38,24 @@ public class Mentor extends BaseEntity {
 
   private String contactEmail;
 
+  @Default
   @Convert(converter = CertificationStatusConverter.class)
-  private CertificationStatus certificationStatus;
+  private CertificationStatus certificationStatus = CertificationStatus.UNVERIFIED;
 
   @OneToOne(fetch = FetchType.LAZY)
   private Account account;
+
+  private Mentor(String summary, String organization, Career career, String bankName, String accountName, String accountNumber,
+      String contactEmail, CertificationStatus certificationStatus, Account account) {
+    this.summary = summary;
+    this.organization = organization;
+    this.career = career;
+    this.bankName = bankName;
+    this.accountName = accountName;
+    this.accountNumber = accountNumber;
+    this.contactEmail = contactEmail;
+    this.certificationStatus = certificationStatus;
+    this.account = account;
+  }
 
 }
