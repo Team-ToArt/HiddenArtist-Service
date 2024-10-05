@@ -37,7 +37,9 @@ public class SecurityConfig {
       EndPoint.create("/api/artists/{token}/signature-artworks", HttpMethod.GET),
       EndPoint.create("/api/artworks/{token}", HttpMethod.GET),
       EndPoint.create("/api/artworks/recommend", HttpMethod.GET),
-      EndPoint.create("/api/search/**", HttpMethod.GET)
+      EndPoint.create("/api/search/**", HttpMethod.GET),
+      EndPoint.create("/api/mentorings", HttpMethod.GET),
+      EndPoint.create("/api/mentorings/{token}/details", HttpMethod.GET)
   );
 
   private final CustomOAuth2UserService oAuth2UserService;
@@ -99,6 +101,10 @@ public class SecurityConfig {
         .logoutUrl("/api/accounts/signout")
         .addLogoutHandler(handlerConfig.getOAuth2LogoutHandler())
         .logoutSuccessHandler(handlerConfig.getOAuth2LogoutSuccessHandler()));
+
+    http.exceptionHandling(exceptionHandling -> exceptionHandling
+        .accessDeniedHandler(handlerConfig.getApiAccessDeniedHandler())
+        .authenticationEntryPoint(handlerConfig.getApiAuthenticationEntryPoint()));
 
     http.addFilterBefore(filterConfig.getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(filterConfig.getExceptionHandleFilter(), JWTAuthenticationFilter.class);

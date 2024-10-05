@@ -2,16 +2,16 @@ package com.hiddenartist.backend.domain.search.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
-import com.hiddenartist.backend.domain.Mentoring.persistence.type.Career;
-import com.hiddenartist.backend.domain.Mentoring.persistence.type.CertificationStatus;
-import com.hiddenartist.backend.domain.Mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.domain.account.persistence.type.ProviderType;
 import com.hiddenartist.backend.domain.account.persistence.type.Role;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
 import com.hiddenartist.backend.domain.genre.persistence.Genre;
+import com.hiddenartist.backend.domain.mentor.persistence.type.Career;
+import com.hiddenartist.backend.domain.mentor.persistence.type.CertificationStatus;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
 import java.util.List;
 import java.util.stream.LongStream;

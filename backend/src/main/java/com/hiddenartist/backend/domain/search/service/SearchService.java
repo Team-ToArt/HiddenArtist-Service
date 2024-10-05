@@ -1,6 +1,6 @@
 package com.hiddenartist.backend.domain.search.service;
 
-import com.hiddenartist.backend.domain.Mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.artist.persistence.Artist;
 import com.hiddenartist.backend.domain.artwork.persistence.Artwork;
 import com.hiddenartist.backend.domain.exhibition.persistence.Exhibition;
