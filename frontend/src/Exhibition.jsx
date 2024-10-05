@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import './assets/css/exhibition.css'
+import './assets/css/exhibition.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 function App() {
 
