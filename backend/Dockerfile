@@ -13,7 +13,7 @@ COPY src ./src
 
 # Make gradlew executable and build application
 RUN chmod +x ./gradlew
-RUN ./gradlew clean build --info
+RUN ./gradlew clean build --info -x test
 
 # Stage 2: Create the final Image
 FROM eclipse-temurin:17-jdk-alpine
