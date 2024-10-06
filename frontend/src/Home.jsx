@@ -1,5 +1,6 @@
-import './assets/css/Home.css';
+import './assets/css/home.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Link } from 'react-router-dom';
 import 'swiper/css';
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
 
         {exhibition.map((exhTitle) => (
             <div style={{marginBottom:'62px'}}>
-                <h2>{exhTitle}&nbsp;<img src='./src/assets/img/right-chevron.svg'/></h2>
+                <h2><Link to='/exhibition'>{exhTitle}&nbsp;<img src='./src/assets/img/right-chevron.svg'/></Link></h2>
                 <div>
                     <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>
                     <div class="img_exh"><img src="https://via.placeholder.com/261x175" alt=""/></div>

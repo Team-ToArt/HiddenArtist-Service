@@ -65,10 +65,14 @@ h2 {
     padding-left: 32px;
 }
 
-#3Dpreview {
+#preview3D {
     display: inline-flex;
-    padding: 9px 25px 8px 26px;
+    padding: 8px 26px 9px 26px;
     justify-content: center;
     align-items: center;
+    border-radius: 50px;
+    border: 1px solid #FAFFFF;
+    background: none;
+    color: #FAFFFF;
 }
 
