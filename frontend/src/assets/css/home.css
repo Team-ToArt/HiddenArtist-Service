@@ -35,6 +35,16 @@ h2 {
   font-size: 24px;
   color: #FAFFFF;
   margin-bottom: 24px;
+  font-family: "Noto Serif KR";
+}
+
+h2 a, h2 a:visited {
+  font-weight: 500;
+  font-size: 24px;
+  color: #FAFFFF;
+  margin-bottom: 24px;
+  text-decoration: none;
+  font-family: "Noto Serif KR";
 }
 
 #banner {
@@ -47,5 +57,6 @@ h2 {
 
 #banner img {
   width: 100%;
+  height: 550px;
   object-fit: cover;
 }

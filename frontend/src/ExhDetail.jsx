@@ -44,7 +44,7 @@ function App() {
                             </tbody>
                         </table>
 
-                        <div style={{position:'absolute', bottom:0}}><button id='3Dpreview'>전시회 미리보기</button></div>
+                        <div style={{position:'absolute', bottom:0}}><button id='preview3D'>전시회 미리보기</button></div>
                     </div>
 
                     <div style={{marginTop:'32px', marginBottom:'46px', width:1111}}>
