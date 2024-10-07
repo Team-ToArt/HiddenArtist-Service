@@ -23,9 +23,13 @@ public class TestRedisConfig {
   @Value("${spring.data.redis.port}")
   private int port;
 
+  @Value("${spring.data.redis.password}")
+  private String password;
+
   @Bean
   public RedisConnectionFactory redisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
+    configuration.setPassword(password);
     return new LettuceConnectionFactory(configuration);
   }
 
@@ -33,7 +37,7 @@ public class TestRedisConfig {
   public RedissonClient redissonClient() {
     String url = REDISSON_PREFIX + host + ":" + port;
     Config config = new Config();
-    config.useSingleServer().setAddress(url);
+    config.useSingleServer().setAddress(url).setPassword(password);
     return Redisson.create(config);
   }
 
