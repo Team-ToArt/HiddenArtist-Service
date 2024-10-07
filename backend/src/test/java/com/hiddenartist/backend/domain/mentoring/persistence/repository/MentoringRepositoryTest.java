@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.hiddenartist.backend.domain.account.persistence.Account;
 import com.hiddenartist.backend.domain.account.persistence.type.Role;
+import com.hiddenartist.backend.domain.genre.persistence.Genre;
 import com.hiddenartist.backend.domain.mentor.persistence.Mentor;
 import com.hiddenartist.backend.domain.mentor.persistence.type.Career;
 import com.hiddenartist.backend.domain.mentor.persistence.type.CertificationStatus;
+import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
+import com.hiddenartist.backend.global.type.EntityToken;
 import java.util.List;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.DisplayName;
@@ -30,14 +33,13 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-//  MentoringDetailResponse findMentoringByToken(String token);
 //  List<MentoringApplication> findMentoringApplicationByMonth(String token, LocalDate selectMonth);
 
   @Test
   @DisplayName("멘토링 전체조회 테스트")
   void getAllMentoringsTest() {
     //given
-    initMentoringData();
+    initGetAllMentoringData();
     Pageable pageRequest = PageRequest.of(0, 16, Sort.by(Direction.DESC, "totalApplicationCount"));
 
     //when
@@ -47,7 +49,28 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
     assertThat(mentorings.getContent()).hasSize(16);
   }
 
-  private void initMentoringData() {
+  @Test
+  @DisplayName("멘토링 상세정보 조회 테스트: 리뷰 X")
+  void getMentoringDetailTest() {
+    //given
+    initGetMentoringDetailDataWithoutReview();
+    String token = EntityToken.MENTORING.identifyToken("1");
+
+    //when
+    MentoringDetailResponse result = mentoringRepository.findMentoringByToken(token);
+
+    //then
+    assertThat(result).isNotNull()
+                      .extracting("name", "image", "content", "amount", "durationTime")
+                      .containsExactly("test mentoring name", "test mentoring image", "test mentoring content", 10000, "1시간");
+    assertThat(result.getMentor()).isNotNull()
+                                  .extracting("name", "profileImage", "career", "organization")
+                                  .containsExactly("test nickname", "test profile image", Career.MIDDLE.getDescription(),
+                                      "test organization");
+    assertThat(result.getReviews()).isEmpty();
+  }
+
+  private void initGetAllMentoringData() {
     List<Account> mentorAccounts = LongStream.rangeClosed(1, 20)
                                              .mapToObj(id ->
                                                  Account.builder()
@@ -109,6 +132,73 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
       ps.setLong(9, mentorings.indexOf(mentoring) + 1);
     });
 
+  }
+
+  private void initGetMentoringDetailDataWithoutReview() {
+    Account account = Account.builder()
+                             .nickname("test nickname")
+                             .role(Role.MENTOR)
+                             .email("test email")
+                             .profileImage("test profile image")
+                             .build();
+    String sql = "insert into account (id,nickname,email,role,profile_image) value (?,?,?,?,?)";
+    jdbcTemplate.update(sql, ps -> {
+      ps.setLong(1, 1L);
+      ps.setString(2, account.getNickname());
+      ps.setString(3, account.getEmail());
+      ps.setString(4, account.getRole().name());
+      ps.setString(5, account.getProfileImage());
+    });
+
+    Mentor mentor = Mentor.builder()
+                          .career(Career.MIDDLE)
+                          .contactEmail("testmentor@test.com")
+                          .organization("test organization")
+                          .certificationStatus(CertificationStatus.VERIFIED)
+                          .build();
+    sql = "insert into mentor (id,career,contact_email,organization,certification_status,account_id) value (?,?,?,?,?,?)";
+    jdbcTemplate.update(sql, ps -> {
+      ps.setLong(1, 1L);
+      ps.setString(2, mentor.getCareer().name());
+      ps.setString(3, mentor.getContactEmail());
+      ps.setString(4, mentor.getOrganization());
+      ps.setString(5, mentor.getCertificationStatus().name());
+      ps.setLong(6, 1L);
+    });
+
+    Mentoring mentoring = Mentoring.builder()
+                                   .name("test mentoring name")
+                                   .content("test mentoring content")
+                                   .totalApplicationCount(20L)
+                                   .amount(10000)
+                                   .image("test mentoring image")
+                                   .token(EntityToken.MENTORING.identifyToken("1"))
+                                   .durationTime("1시간")
+                                   .mentoringStatus(MentoringStatus.OPEN)
+                                   .build();
+    sql = "insert into mentoring (id,name,content,total_application_count,amount,image,token,duration_time,mentoring_status,mentor_id) value(?,?,?,?,?,?,?,?,?,?)";
+    jdbcTemplate.update(sql, ps -> {
+      ps.setLong(1, 1L);
+      ps.setString(2, mentoring.getName());
+      ps.setString(3, mentoring.getContent());
+      ps.setLong(4, mentoring.getTotalApplicationCount());
+      ps.setInt(5, mentoring.getAmount());
+      ps.setString(6, mentoring.getImage());
+      ps.setString(7, mentoring.getToken());
+      ps.setString(8, mentoring.getDurationTime());
+      ps.setString(9, mentoring.getMentoringStatus().name());
+      ps.setLong(10, 1L);
+    });
+
+    List<Genre> genres = List.of(new Genre("현대미술"), new Genre("추상화"), new Genre("팝아트"));
+    sql = "insert into genre (id,name) values (?,?)";
+    jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> {
+      ps.setLong(1, genres.indexOf(genre) + 1);
+      ps.setString(2, genre.getName());
+    });
+
+    sql = "insert into mentoring_genre (mentoring_id,genre_id) values (1,?)";
+    jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> ps.setLong(1, genres.indexOf(genre) + 1));
   }
 
 }
