@@ -35,6 +35,11 @@ spring:
       port: 6379
       password: 1234
 
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+
 secret:
   jwt: testJWTSecretKeytestJWTSecretKeytestJWTSecretKeytestJWTSecretKeytestJWTSecretKey
   kakao-admin: testKakaoAdminKey
