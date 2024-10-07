@@ -214,7 +214,8 @@ CREATE TABLE mentoring_application
 (
     id                           bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     mentoring_id                 bigint,
-    payment_id                   bigint,
+    account_id                   bigint,
+    token                        varchar(255),
     application_time             datetime,
     mentoring_application_status enum ('WAITING','CANCELLED','APPROVAL','COMPLETE'),
     create_date                  datetime           NOT NULL DEFAULT now(),
@@ -236,15 +237,16 @@ CREATE TABLE mentoring_review
 
 CREATE TABLE payment
 (
-    id              bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    order_id        varchar(255),
-    client_order_id varchar(255),
-    amount          integer,
-    cancel_amount   integer,
-    payment_status  enum ('SUCCESS','CANCELLED'),
-    create_date     datetime           NOT NULL DEFAULT now(),
-    update_date     datetime           NOT NULL DEFAULT now(),
-    delete_date     datetime
+    id                       bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    order_id                 varchar(255),
+    client_order_id          varchar(255),
+    amount                   integer,
+    cancel_amount            integer,
+    payment_status           enum ('SUCCESS','CANCELLED'),
+    mentoring_application_id bigint,
+    create_date              datetime           NOT NULL DEFAULT now(),
+    update_date              datetime           NOT NULL DEFAULT now(),
+    delete_date              datetime
 );
 
 CREATE TABLE settlement
@@ -334,13 +336,16 @@ ALTER TABLE mentoring_application
     ADD FOREIGN KEY (mentoring_id) REFERENCES mentoring (id);
 
 ALTER TABLE mentoring_application
-    ADD FOREIGN KEY (payment_id) REFERENCES payment (id);
+    ADD FOREIGN KEY (account_id) REFERENCES payment (id);
 
 ALTER TABLE mentoring_review
     ADD FOREIGN KEY (mentoring_application_id) REFERENCES mentoring_application (id);
 
 ALTER TABLE mentoring_review
     ADD FOREIGN KEY (mentoring_id) REFERENCES mentoring (id);
+
+ALTER TABLE payment
+    Add FOREIGN KEY (mentoring_application_id) REFERENCES mentoring_application (id);
 
 ALTER TABLE settlement
     ADD FOREIGN KEY (mentor_id) REFERENCES mentor (id);

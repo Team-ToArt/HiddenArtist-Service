@@ -11,23 +11,25 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @TestConfiguration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class TestRedisConfig {
 
   private static final String REDISSON_PREFIX = "redis://";
 
-  @Value("spring.data.redis.host")
+  @Value("${spring.data.redis.host}")
   private String host;
 
-  @Value("spring.data.redis.port")
+  @Value("${spring.data.redis.port}")
   private int port;
+
+  @Value("${spring.data.redis.password}")
+  private String password;
 
   @Bean
   public RedisConnectionFactory redisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
+    configuration.setPassword(password);
     return new LettuceConnectionFactory(configuration);
   }
 
@@ -35,7 +37,7 @@ public class TestRedisConfig {
   public RedissonClient redissonClient() {
     String url = REDISSON_PREFIX + host + ":" + port;
     Config config = new Config();
-    config.useSingleServer().setAddress(url);
+    config.useSingleServer().setAddress(url).setPassword(password);
     return Redisson.create(config);
   }
 
