@@ -1,8 +1,7 @@
 package com.hiddenartist.backend.global.redis;
 
 import com.hiddenartist.backend.domain.mentoring.persistence.LockApplicationTime;
-import com.hiddenartist.backend.global.exception.type.EntityException;
-import com.hiddenartist.backend.global.exception.type.ServiceErrorCode;
+import com.hiddenartist.backend.global.type.EntityToken;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,14 +31,14 @@ public class LockApplicationTimeClient implements RedisClient<LockApplicationTim
 
   @Override
   public void save(LockApplicationTime value) {
-    String key = generateKey(value.getTokenValue(), value.getApplicationTime());
+    String tokenValue = EntityToken.MENTORING.extractToken(value.getToken());
+    String key = generateKey(tokenValue, value.getApplicationTime());
     redis.opsForValue().set(key, value, Duration.ofMinutes(TTL));
   }
 
   @Override
   public LockApplicationTime findBy(String key) {
-    LockApplicationTime value = redis.opsForValue().get(key);
-    return Optional.ofNullable(value).orElseThrow(() -> new EntityException(ServiceErrorCode.REDIS_VALUE_NOT_FOUND));
+    return redis.opsForValue().get(key);
   }
 
   public List<LockApplicationTime> findByKeyword(String tokenValue, LocalDate selectMonth) {

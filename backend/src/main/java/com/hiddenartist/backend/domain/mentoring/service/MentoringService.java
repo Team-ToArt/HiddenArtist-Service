@@ -7,8 +7,9 @@ import com.hiddenartist.backend.domain.mentoring.persistence.LockApplicationTime
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
 import com.hiddenartist.backend.domain.mentoring.persistence.MentoringApplication;
 import com.hiddenartist.backend.domain.mentoring.persistence.repository.MentoringRepository;
+import com.hiddenartist.backend.global.aop.DistributedLock;
 import com.hiddenartist.backend.global.redis.LockApplicationTimeClient;
-import com.hiddenartist.backend.global.redis.RedisLockFacade;
+import com.hiddenartist.backend.global.redis.RedisLockClient;
 import com.hiddenartist.backend.global.type.EntityToken;
 import com.hiddenartist.backend.global.utils.PageUtils;
 import java.time.LocalDate;
@@ -25,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MentoringService {
 
   private final MentoringRepository mentoringRepository;
-  private final RedisLockFacade redisLock;
   private final LockApplicationTimeClient redisClient;
+  private final RedisLockClient redisLockClient;
 
   @Transactional(readOnly = true)
   public Page<MentoringSimpleResponse> getAllMentorings(Pageable pageable) {
@@ -42,9 +43,10 @@ public class MentoringService {
   }
 
   @Transactional
-  public void reservationApplicationTime(String tokenValue, LocalDateTime applicationTime, String email) {
-    LockApplicationTime lockApplicationTime = new LockApplicationTime(email, tokenValue, applicationTime);
-    redisLock.lockApplicationTime(lockApplicationTime);
+  @DistributedLock(key = "#token + ':' + #applicationTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMddHHmm'))", waitTime = 10, leaseTime = 2)
+  public void reservationApplicationTime(String token, LocalDateTime applicationTime, String email) {
+    LockApplicationTime lockApplicationTime = new LockApplicationTime(email, token, applicationTime);
+    redisLockClient.reservationApplicationTime(lockApplicationTime);
   }
 
   @Transactional
