@@ -10,9 +10,13 @@ import com.hiddenartist.backend.domain.mentor.persistence.type.Career;
 import com.hiddenartist.backend.domain.mentor.persistence.type.CertificationStatus;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDetailResponse;
 import com.hiddenartist.backend.domain.mentoring.persistence.Mentoring;
+import com.hiddenartist.backend.domain.mentoring.persistence.MentoringApplication;
+import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringApplicationStatus;
 import com.hiddenartist.backend.domain.mentoring.persistence.type.MentoringStatus;
 import com.hiddenartist.backend.global.config.AbstractMySQLRepositoryTest;
 import com.hiddenartist.backend.global.type.EntityToken;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +36,6 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
-
-//  List<MentoringApplication> findMentoringApplicationByMonth(String token, LocalDate selectMonth);
 
   @Test
   @DisplayName("멘토링 전체조회 테스트")
@@ -68,6 +70,24 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
                                   .containsExactly("test nickname", "test profile image", Career.MIDDLE.getDescription(),
                                       "test organization");
     assertThat(result.getReviews()).isEmpty();
+  }
+
+  @Test
+  @DisplayName("해당 월에 등록된 MentoringApplication 조회")
+  void findMentoringApplicationByMonthTest() {
+    //given
+    initMentoringApplications();
+    LocalDate selectMonth = LocalDate.of(2024, 10, 20);
+    String token = EntityToken.MENTORING.identifyToken("1");
+
+    //when
+    List<MentoringApplication> result = mentoringRepository.findMentoringApplicationByMonth(token, selectMonth);
+
+    //then
+    assertThat(result).hasSize(3)
+                      .allMatch(application ->
+                          application.getApplicationTime().getYear() == 2024 &&
+                              application.getApplicationTime().getMonthValue() == 10);
   }
 
   private void initGetAllMentoringData() {
@@ -199,6 +219,30 @@ class MentoringRepositoryTest extends AbstractMySQLRepositoryTest {
 
     sql = "insert into mentoring_genre (mentoring_id,genre_id) values (1,?)";
     jdbcTemplate.batchUpdate(sql, genres, genres.size(), (ps, genre) -> ps.setLong(1, genres.indexOf(genre) + 1));
+  }
+
+
+  private void initMentoringApplications() {
+    Mentoring mentoring = Mentoring.builder().token(EntityToken.MENTORING.identifyToken("1")).build();
+    String sql = "insert into mentoring (id,token) value(1,?)";
+    jdbcTemplate.update(sql, ps -> ps.setString(1, mentoring.getToken()));
+
+    List<LocalDateTime> applicationTimes = List.of(
+        LocalDateTime.of(2024, 10, 24, 13, 30),
+        LocalDateTime.of(2024, 10, 10, 14, 0),
+        LocalDateTime.of(2024, 10, 15, 15, 0),
+        LocalDateTime.of(2024, 9, 30, 15, 0)
+    );
+
+    sql = "insert into mentoring_application (mentoring_id,token,application_time,mentoring_application_status) value(?,?,?,?)";
+    jdbcTemplate.batchUpdate(sql, applicationTimes, applicationTimes.size(), (ps, applicationTime) -> {
+      String token = EntityToken.MENTORING_APPLICATION.identifyToken(
+          String.valueOf(applicationTimes.indexOf(applicationTime) + 1));
+      ps.setLong(1, 1);
+      ps.setString(2, token);
+      ps.setObject(3, applicationTime);
+      ps.setString(4, MentoringApplicationStatus.APPROVAL.name());
+    });
   }
 
 }
