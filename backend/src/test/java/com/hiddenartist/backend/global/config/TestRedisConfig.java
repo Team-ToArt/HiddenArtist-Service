@@ -11,18 +11,16 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @TestConfiguration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class TestRedisConfig {
 
   private static final String REDISSON_PREFIX = "redis://";
 
-  @Value("spring.data.redis.host")
+  @Value("${spring.data.redis.host}")
   private String host;
 
-  @Value("spring.data.redis.port")
+  @Value("${spring.data.redis.port}")
   private int port;
 
   @Bean

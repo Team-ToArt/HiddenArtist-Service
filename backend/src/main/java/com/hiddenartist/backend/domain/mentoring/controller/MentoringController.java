@@ -5,6 +5,7 @@ import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringDe
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringSimpleResponse;
 import com.hiddenartist.backend.domain.mentoring.controller.response.MentoringUnavailableTime;
 import com.hiddenartist.backend.domain.mentoring.service.MentoringService;
+import com.hiddenartist.backend.global.type.EntityToken;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -59,7 +60,8 @@ public class MentoringController {
       @RequestBody LockApplicationTimeRequest lockApplicationTime,
       @AuthenticationPrincipal String email
   ) {
-    mentoringService.reservationApplicationTime(token, lockApplicationTime.applicationTime(), email);
+    String entityToken = EntityToken.MENTORING.identifyToken(token);
+    mentoringService.reservationApplicationTime(entityToken, lockApplicationTime.applicationTime(), email);
     return ResponseEntity.ok("Success");
   }
 
