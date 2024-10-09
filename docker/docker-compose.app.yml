@@ -1,4 +1,4 @@
-name: Project_HiddenArtist
+name: project_hiddenartist
 services:
   nginx:
     container_name: ha_app_nginx
