@@ -81,7 +81,7 @@ body {
     margin-right: 50px;
 }
 
-a, a:visited{
+#menu a, #menu a:visited{
     color: #FAFFFF;
     font-size: 16px;
     font-style: normal;
@@ -89,6 +89,7 @@ a, a:visited{
     line-height: normal;
     letter-spacing: -0.48px;
     text-decoration: none;
+    font-family: 'Noto Sans KR';
 }
 
 a:hover { 
