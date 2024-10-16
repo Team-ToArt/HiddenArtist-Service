@@ -37,6 +37,8 @@
 
     display: table-cell;
 
+    width: 50px;
+
 }
 
 #artworksInfo td:nth-child(even) {

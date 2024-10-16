@@ -1,9 +1,49 @@
 import './assets/css/artworks.css';
-import { Link } from 'react-router-dom';
+
+import { Link,useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
 
-const idx = ['1','2','3'];
+    const idx = [1,2,3];
+
+    const {token} = useParams(); 
+
+    const [artworks, setArtworks] = useState([]);
+    const [artists, setArtists] = useState([]);
+
+    useEffect(() => {
+        const artworksData = async () => {
+            try {
+                const res = await axios.get(`http://192.168.0.7/api/artworks/${token}`);
+                setArtworks(res.data);
+            } catch (error) {
+                console.error("Error fetching artworks:", error);
+            }
+        };
+
+        artworksData();
+    }, []);  
+
+    useEffect(() => {
+        if (artworks.artists && artworks.artists.length > 0) {
+            const artistToken = artworks.artists[0].token;
+
+            const artistsData = async () => {
+                try {
+                    const res = await axios.get(`http://192.168.0.7/api/artists/${artistToken}`);
+                    setArtists(res.data);
+                } catch (error) {
+                    console.error("Error fetching artists:", error);
+                }
+            };
+
+            artistsData();
+        }
+    }, [artworks]);
+
+    
 
   return (
     <>  
@@ -18,36 +58,31 @@ const idx = ['1','2','3'];
                             <tbody>
                                 <tr>
                                     <td>Title</td>
-                                    <td>작품명</td>
+                                    <td>{artworks.name}</td>
                                 </tr>
                                 <tr>
                                     <td>Author</td>
-                                    <td>작가명</td>
+                                    <td>{artists ? artists.name : ''}</td> 
                                 </tr>
                                 <tr>
                                     <td>Genre</td>
-                                    <td>장르1</td>
+                                    <td>{artworks.genres+' '}</td>
+                                </tr>
+                                <tr>
+                                    <td>Year</td>
+                                    <td>{artworks.production_year}</td>
                                 </tr>
                                 <tr>
                                     <td>Media</td>
-                                    <td>매체</td>
+                                    <td>{artworks.medium}</td>
                                 </tr>
                                 <tr>
                                     <td>Size</td>
-                                    <td>사이즈</td>
+                                    <td>{`${artworks.width} X ${artworks.height}`}</td>
                                 </tr>
                                 <tr>
                                     <td>Description</td>
-                                    <td>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                                        incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. 
-                                        Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis 
-                                        mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. 
-                                        Mi eget mauris pharetra et. Non tellus orci ac auctor augue. Elit at imperdiet dui 
-                                        accumsan sit. Ornare arcu dui vivamus arcu felis. Egestas integer eget aliquet nibh 
-                                        praesent. In hac habitasse platea dictumst quisque sagittis purus. Pulvinar elementum 
-                                        integer enim neque volutpat ac.
-                                    </td>
+                                    <td>{artworks.description}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -60,20 +95,20 @@ const idx = ['1','2','3'];
                                 <img style={{width: 150, height: 150}} src="https://via.placeholder.com/150x150" />
                             </div>
                             <div style={{display:'flex', flexDirection:'column',marginRight:64}}>
-                                <div>김영희</div>
-                                <div>2000.01.01</div>
+                                <div>{artists.name}</div>
+                                 <div>{artists.birth}</div>
                                 <div>email@email.com</div>
                             </div>
                             <div><button id='follow'>Follow</button></div>
                         </div>
-                        <div style={{width:'50%'}}><img style={{width: '100%', height: '100%'}} src="https://via.placeholder.com/558x199" /></div>
+                        <div style={{width:'50%'}}><Link to={`/artist/${artists ? artists.token : ""}`}><img style={{width: '100%', height: '100%'}} src="https://via.placeholder.com/558x199" /></Link></div>
                     </div>
 
                     <div style={{width:1140}}>
                         <h2>작가의 다른 작품</h2>
                         <div>
                             {idx.map((index) => (
-                                <div class="img_art"><Link to={'/artworks/'+index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
+                                <div className="img_art"><Link to={'/artworks/'+index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
                             ))}
                         </div>
                     </div>
@@ -82,7 +117,7 @@ const idx = ['1','2','3'];
                         <h2>연관 다른 작품</h2>
                         <div>
                             {idx.map((index) => (
-                                <div class="img_art"><Link to={'/artworks/'+index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
+                                <div className="img_art"><Link to={'/artworks/'+index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
                             ))}
                         </div>
                     </div>

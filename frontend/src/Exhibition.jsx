@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
 import './assets/css/exhibition.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { Link } from 'react-router-dom';
+
 
 function App() {
 
@@ -23,10 +24,10 @@ function App() {
           {testArr.map((idx) => (
               <SwiperSlide>
                 <Link to={idx}>
-                  <div class={"exh_"+index} style={{display: 'inline-block'}}>
-                    <div class="img_exh"><img src="https://pimg.mk.co.kr/meet/neds/2017/09/image_readmed_2017_601694_15047650883020840.jpg" alt=""/></div>
-                    <div class='exhTitle'>전시회 명</div>
-                    <div class='exhPeriod'>2024.09.20~2024.10.20</div>
+                  <div className={"exh_"+index} style={{display: 'inline-block'}}>
+                    <div className="img_exh"><img src="https://pimg.mk.co.kr/meet/neds/2017/09/image_readmed_2017_601694_15047650883020840.jpg" alt=""/></div>
+                    <div className='exhTitle'>전시회 명</div>
+                    <div className='exhPeriod'>2024.09.20~2024.10.20</div>
                   </div>
                 </Link>
               </SwiperSlide>

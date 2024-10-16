@@ -21,8 +21,8 @@ function Header() {
     </div>
 
     <div id="menu">
-        <div><Link to='artist'>작가</Link></div>
-        <div><Link to='artworks'>작품</Link></div>
+        <div><Link to='artist?p=1'>작가</Link></div>
+        {/* <div><Link to='artworks'>작품</Link></div> */}
         <div><Link to='exhibition'>전시회</Link></div>
         <div><Link to='mentoring'>멘토링</Link></div>
         
