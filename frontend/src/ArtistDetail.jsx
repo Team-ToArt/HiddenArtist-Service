@@ -1,9 +1,31 @@
 import './assets/css/artist.css';
-import { Link } from 'react-router-dom';
+import { Link,useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
 
-const idx = ['1','2','3'];
+const {token} = useParams(); 
+
+const [artists, setArtist] = useState([]);
+const [signature, setSignature] = useState([]);
+  
+useEffect(() => {
+    const artistData = async() => {
+    const artistInfo = await axios.get(`http://192.168.0.7/api/artists/${token}`);
+        setArtist(artistInfo.data);
+    }
+    
+    const signatureData = async() => {
+    const signatureInfo = await axios.get(`http://192.168.0.7/api/artists/${token}/signature-artworks`);
+        setSignature(signatureInfo.data.artworks);
+        console.log(signatureInfo.data.artworks);
+    }
+
+    artistData();
+    signatureData();
+  
+}, []);
 
   return (
     <>  
@@ -18,22 +40,19 @@ const idx = ['1','2','3'];
                             <tbody>
                                 <tr>
                                     <td>Name</td>
-                                    <td>이름</td>
+                                    <td>{artists.name}</td>
                                 </tr>
                                 <tr>
                                     <td>Summery</td>
-                                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                            incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. 
-                            Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis 
-                            mauris sit amet massa.</td>
+                                    <td>{artists.summary}</td>
                                 </tr>
                                 <tr>
                                     <td>Birth</td>
-                                    <td>2000.01.01</td>
+                                    <td>{artists.birth}</td>
                                 </tr>
                                 <tr>
                                     <td>Genre</td>
-                                    <td>장르1, 장르2, 장르3</td>
+                                    <td>{artists.genre}</td>
                                 </tr>
                                 <tr>
                                     <td>Connect</td>
@@ -47,24 +66,18 @@ const idx = ['1','2','3'];
 
                     <div style={{marginTop:'32px', marginBottom:'46px', width:1111}}>
                         <div id='descTitle'>Description</div>
-                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                            incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. 
-                            Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis 
-                            mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. 
-                            Mi eget mauris pharetra et. Non tellus orci ac auctor augue. Elit at imperdiet dui 
-                            accumsan sit. Ornare arcu dui vivamus arcu felis. Egestas integer eget aliquet nibh 
-                            praesent. In hac habitasse platea dictumst quisque sagittis purus. Pulvinar elementum 
-                            integer enim neque volutpat ac.</div>
+                        <div>{artists.description}</div>
                     </div>
                     
                     <div style={{width: 71, height: 4, background:'#FAFFFF', marginBottom: 32}}></div>
                     <div style={{width:1140}}>
                         <div style={{textAlign:'right', marginBottom: 16, marginRight:24}}><button id='preview3D'>3D View</button></div>
                         <div>
-                            {idx.map((index) => (
-                                <div class="img_art"><Link to={'/artworks/'+index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
+                            {signature.map((sign, index) => (
+                                <div className="img_art" key={index}><Link to={`/artworks/${sign.token}`}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
                             ))}
                         </div>
+
                         <Link to='more'>
                             <div id='moreBtn' style={{width: '100%', textAlign:'center', fontSize:24}}>More&nbsp;
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
