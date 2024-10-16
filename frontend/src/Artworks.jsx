@@ -12,7 +12,7 @@ function App() {
             <h2>작품</h2> 
             <div>
                 {idx.map((index) => (
-                  <div class="img_art"><Link to={index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
+                  <div className="img_art"><Link to={index}><img src="https://via.placeholder.com/356x356" alt=""/></Link></div>
               ))}
             </div>
         </div>

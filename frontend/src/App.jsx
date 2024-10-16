@@ -1,4 +1,4 @@
-import { createBrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Header from './Header.jsx'
 import Home from './Home.jsx'
 import Artist from './Artist.jsx'
@@ -19,12 +19,12 @@ function App() {
         <Route element={<Header />}>
           <Route path="" element={<Home />} />
           <Route path="artist" element={<Artist />} />
-          <Route path="artist/:artistID" element={<ArtistDetail />} />
-          <Route path="artist/:artistID/more" element={<ArtistArtMore />} />
+          <Route path="artist/:token" element={<ArtistDetail />} />
+          <Route path="artist/:token/more" element={<ArtistArtMore />} />
           <Route path="artworks" element={<Artworks />} />
-          <Route path="artworks/:artworksID" element={<ArtworksDetail />} />
+          <Route path="artworks/:token" element={<ArtworksDetail />} />
           <Route path="exhibition" element={<Exhibition />} />
-          <Route path="exhibition/:exhID" element={<ExhDetail />} />
+          <Route path="exhibition/:token" element={<ExhDetail />} />
           <Route path="mentoring" element={<Mentoring />} />
         </Route>
       </Routes>

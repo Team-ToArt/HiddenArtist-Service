@@ -16,29 +16,29 @@ body {
 }
 
 #search {
-    border-radius: 3px;
-    border: 1px solid #9C9A97;
+    border-radius: 3px !important;
+    border: 1px solid #9C9A97 !important;
 
-    padding: 10px 16px;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px 16px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
 
     
-    width: 615px;
-    height: 24px;
+    width: 615px !important;
+    height: 24px !important;
 
-    margin-right: 76px;
+    margin-right: 76px !important;
 
-    display: flex;
+    display: flex !important;
 }
 
 #search input {
-    border: none;
-    background: none;
-    width: 95%;
-    outline: none;
-    color: #FAFFFF;
-    font-size: 14px;
+    border: none !important;
+    background: none !important;
+    width: 95% !important;
+    outline: none !important;
+    color: #FAFFFF !important;
+    font-size: 14px !important;
 }
 
 
