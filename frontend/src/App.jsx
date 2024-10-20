@@ -9,6 +9,7 @@ import ArtworksDetail from './ArtworksDetail.jsx'
 import Exhibition from './Exhibition.jsx'
 import ExhDetail from './ExhDetail.jsx'
 import Mentoring from './Mentoring.jsx'
+import SearchResult from './SearchResult.jsx'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="exhibition" element={<Exhibition />} />
           <Route path="exhibition/:token" element={<ExhDetail />} />
           <Route path="mentoring" element={<Mentoring />} />
+          <Route path="search" element={<SearchResult />} />
         </Route>
       </Routes>
     </div>

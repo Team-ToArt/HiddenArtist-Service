@@ -1,7 +1,25 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet,useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
+
+import { Input } from 'semantic-ui-react'
+
 import '/src/assets/css/header.css';
+import 'semantic-ui-css/semantic.min.css'
 
 function Header() {
+
+  const nav = useNavigate();
+  
+  const activeEnter = (e) => {
+    let keyword = e.target.value.toLowerCase();
+
+    if(e.key === "Enter") {
+      if(keyword.length>0) { nav(`/search?keyword=${keyword}`); }
+    }
+  }
+
+  
   
   return (
     <>
@@ -9,10 +27,11 @@ function Header() {
         <div id="logo"><Link to='/'><img src="/image/logo_fix_w.png" alt=""/></Link></div>
 
         <div id="search">
-            <input type='text' placeholder='Search by artist, gallery, style, theme, tag, etc...'/>        
-            <div style={{display:'inline-block'}}>
-              <img style={{width: '20px', height: '20px'}} src='/image/search_icon.svg'/>
-            </div>
+            <Input icon='search'
+                size='huge'
+                placeholder='Search by artist, gallery, style, theme, tag, etc...'
+                onKeyDown={(e) => activeEnter(e)}
+            />       
         </div>
 
 
@@ -31,6 +50,7 @@ function Header() {
     <div style={{width: '100%', height: 1, background: 'gray'}}></div>
 
     <Outlet/>
+    
     </>
   )
 }

@@ -15,11 +15,24 @@ body {
     bottom: 10px;
 }
 
+.input {
+    width: 100%;
+}
+
+.input .icon {
+    color: #9C9A97;
+    opacity: 1 !important;
+}
+
+* {
+    box-sizing: revert !important;
+}
+
 #search {
     border-radius: 3px !important;
     border: 1px solid #9C9A97 !important;
 
-    padding: 10px 16px !important;
+    padding: 10px 0 !important;
     justify-content: space-between !important;
     align-items: center !important;
 
@@ -35,7 +48,6 @@ body {
 #search input {
     border: none !important;
     background: none !important;
-    width: 95% !important;
     outline: none !important;
     color: #FAFFFF !important;
     font-size: 14px !important;
