@@ -1,4 +1,6 @@
-# [숨겨진 화백]
+![Logo](readme/images/logo/HiddenArtist_Logo.png)
+
+# [Project Hidden-Artist]
 
 예술 문화 가치 증진과 교육 불평등 해소를 위한 유저맞춤형 초기작가, 작품 큐레이션 및 멘토링 중개 서비스
 
