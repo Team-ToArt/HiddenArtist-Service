@@ -32,9 +32,9 @@ public class Mentor extends BaseEntity {
 
   private String bankName;
 
-  private String accountName;
+  private String bankAccountName;
 
-  private String accountNumber;
+  private String bankAccountNumber;
 
   private String contactEmail;
 
@@ -45,14 +45,15 @@ public class Mentor extends BaseEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private Account account;
 
-  private Mentor(String summary, String organization, Career career, String bankName, String accountName, String accountNumber,
+  private Mentor(String summary, String organization, Career career, String bankName, String bankAccountName,
+      String bankAccountNumber,
       String contactEmail, CertificationStatus certificationStatus, Account account) {
     this.summary = summary;
     this.organization = organization;
     this.career = career;
     this.bankName = bankName;
-    this.accountName = accountName;
-    this.accountNumber = accountNumber;
+    this.bankAccountName = bankAccountName;
+    this.bankAccountNumber = bankAccountNumber;
     this.contactEmail = contactEmail;
     this.certificationStatus = certificationStatus;
     this.account = account;
