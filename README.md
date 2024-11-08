@@ -39,11 +39,21 @@
 
 ## 📀 아키텍처
 
-![HiddenArtist_Architecture](readme/images/HiddenArtist_Architecture.png)
+![Architecture](readme/images/architecture/HiddenArtist.png)
 
 ## 🗃️ ERD
 
-- 추가예정
+### Account
+
+![ERD_Account](readme/images/erd/Account.png)
+
+### Artist, Artwork, Exhibition
+
+![ERD_Account](readme/images/erd/Artist_Artwork_Exhibition.png)
+
+### Mentoring
+
+![ERD_Mentoring](readme/images/erd/Mentoring.png)
 
 ## 📂 패키지 구조
 
