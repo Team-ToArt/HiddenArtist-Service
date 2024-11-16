@@ -177,10 +177,13 @@ HiddenArtist
 - 문제 상황
     - `/api`경로는 JWT를 사용해 인증/인가를 수행하므로 `JWTAuthenticationFilter`를 거쳐야함
     - `/admin`경로는 Session 기반 인증/인가를 사용하므로 `JWTAuthenticationFilter`가 불필요
-    - 하지만 `/admin`경로에서도 `JWTAuthenticationFilter`를 거치는 상황 발생
+    - 하지만 `/admin`경로에서도 `JWTAuthenticationFilter`를 거치는 상황이 발생해 불필요한 필터 적용
 - 원인
-    - `JWTAuthenticationFilter`가 상속받은 `OncePerRequestFilter`는 요청당 한번만 필터를 실행하는 특성을 가짐
-    - 이를 `Bean`으로 등록하면 Spring Security가 모든 요청에 대해 전역적으로 필터 적용
-    - 이로 인해 `/api`경로에만 `JWTAuthenticationFilter`를 적용하고자 함에도 불구하고 `/admin`경로에도 동일한 필터가 적용되는 문제 발생
+    - Custom Filter를 Spring Bean으로 등록하면, SpringBoot는 해당 필터를 `Servlet Filter Chain`에 자동으로 추가
+    - SpringBoot와 Spring Security는 각각 필터를 관리하는 체계가 다름. Bean으로 등록된 필터는 SpringBoot가 모든 요청에 대해 전역적으로 실행
+    - 결과적으로 `/api` 경로뿐 아니라 `/admin` 경로에서도 `JWTAuthenticationFilter`가 실행되면서 의도치 않은 필터 적용 문제가 발생
 - 해결
     - `JWTAuthenticationFilter`를 `Bean`으로 등록하지 않고, 생성자주입을 통해 Security 설정에서 특정 경로에만 필터를 추가
+- 참고 자료
+    - [Spring Security 공식문서](https://docs.spring.io/spring-security/reference/servlet/architecture.html#adding-custom-filter)
+      ![filter_image](readme/images/filter_registration_issue.png)
