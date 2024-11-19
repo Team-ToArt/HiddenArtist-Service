@@ -42,8 +42,7 @@ public class MentoringService {
     return mentoringRepository.findMentoringByToken(token);
   }
 
-  @Transactional
-  @DistributedLock(key = "#token + ':' + #applicationTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMddHHmm'))", waitTime = 10, leaseTime = 2)
+  @DistributedLock(key = "#token + ':' + #applicationTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMddHHmm'))", waitTime = 10, leaseTime = 5)
   public void reservationApplicationTime(String token, LocalDateTime applicationTime, String email) {
     LockApplicationTime lockApplicationTime = new LockApplicationTime(email, token, applicationTime);
     redisLockClient.reservationApplicationTime(lockApplicationTime);
