@@ -1,0 +1,17 @@
+name: HiddenArtist Springboot Build Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    # Download Artifacts
+
+    # build Image
+
+    # Push Image to ECR
+
+    # Deploy using CodeDeploy

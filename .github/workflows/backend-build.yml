@@ -1,4 +1,4 @@
-name: POP Springboot Build Workflow
+name: HiddenArtist Springboot Build Workflow
 
 on:
   workflow_call:
@@ -6,6 +6,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
+    env:
+      IS_TARGET_REPO: ${{ github.repository == 'Team-ToArt/HiddenArtist-Service' }}
+      IS_MAIN_BRANCH: ${{ github.ref == 'refs/heads/main' }}
+      IS_DEVELOP_BRANCH: ${{ github.ref == 'refs/heads/develop' }}
+      IS_PUSH_EVENT: ${{ github.event_name == 'push' }}
 
     steps:
       - name: Git Clone Repository
@@ -20,7 +26,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop'}}
+          cache-read-only: ${{ !(env.IS_MAIN_BRANCH || env.IS_DEVELOP_BRANCH) }}
 
       - name: Grant execute permission to Gradlew
         run: chmod +x ./gradlew
@@ -29,3 +35,15 @@ jobs:
       - name: Build With Gradle
         run: ./gradlew build --info
         working-directory: ./backend
+
+      - name: Zip Build File and appSpec.yml
+        if: ${{ env.IS_TARGET_REPO && env.IS_MAIN_BRANCH  && env.IS_PUSH_EVENT }}
+        run: zip -q -r ../backend.zip build/libs appspec.yml
+        working-directory: ./backend
+
+      - name: Upload build File and appSpec.yml Artifacts
+        if: ${{ env.IS_TARGET_REPO && env.IS_MAIN_BRANCH && env.IS_PUSH_EVENT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend.zip
+          path: backend.zip

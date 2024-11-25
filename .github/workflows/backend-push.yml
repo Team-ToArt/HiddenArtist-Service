@@ -1,4 +1,4 @@
-name: POP Backend Push Workflow
+name: HiddenArtist Backend Push Workflow
 
 on:
   push:
