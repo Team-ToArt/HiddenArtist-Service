@@ -1,4 +1,4 @@
-name: POP Backend Pull Request Workflow
+name: HiddenArtist Backend Pull Request Workflow
 
 on:
   pull_request:
@@ -12,3 +12,7 @@ jobs:
     uses: ./.github/workflows/backend-build.yml
     permissions:
       contents: read
+    with:
+      repository: ${{ github.repository }}
+      branch: ${{ github.ref_name }}
+      event: ${{ github.event_name }}

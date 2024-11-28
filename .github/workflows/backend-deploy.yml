@@ -1,0 +1,57 @@
+name: HiddenArtist Springboot Build Workflow
+
+on:
+  workflow_call:
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      AWS_ECR_URL:
+        required: true
+      BUCKET_NAME:
+        required: true
+      DEPLOY_APP_NAME:
+        required: true
+      DEPLOY_GROUP_NAME:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+
+      - name: Download Zip File to Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend.zip
+
+      - name: Unzip Artifacts
+        run: unzip backend.zip -d .
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-2
+
+      - name: Upload appspec.yml to S3
+        run: |
+          aws s3 cp --region ap-northeast-2 appspec.yml s3://${{ secrets.BUCKET_NAME }}/deployments/appspec.yml
+
+      - name: Login ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & Push Docker Image to ECR
+        run: |
+          docker build -t ${{ secrets.AWS_ECR_URL }}:latest -f Dockerfile.deploy .
+          docker push ${{ secrets.AWS_ECR_URL }}:latest
+
+      # Deploy using CodeDeploy
+      - name: Deploy to ECS Using CodeDeploy
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ secrets.DEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ secrets.DEPLOY_GROUP_NAME }} \
+          --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+          --description "Deploy new Docker Image" \
+          --s3-location bucket=${{ secrets.BUCKET_NAME }},key=deployments/appspec.yml,bundleType=yaml
