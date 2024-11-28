@@ -43,7 +43,7 @@ jobs:
 
       - name: Zip Build File and appSpec.yml
         if: ${{ inputs.repository == 'Team-ToArt/HiddenArtist-Service' && inputs.branch == 'main'  && inputs.event == 'push' }}
-        run: zip -q -r ../backend.zip build/libs appspec.yml
+        run: zip -q -r ../backend.zip build/libs appspec.yml Dockerfile.deploy
         working-directory: ./backend
 
       - name: Upload build File and appSpec.yml Artifacts

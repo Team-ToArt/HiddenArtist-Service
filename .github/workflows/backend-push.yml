@@ -2,7 +2,6 @@ name: HiddenArtist Backend Push Workflow
 
 on:
   push:
-    branches: [ 'develop', 'feature/**','chore/**','fix/**','refactor/**' ]
     paths:
       - 'backend/**'
       - '.github/**'
@@ -16,3 +15,12 @@ jobs:
       repository: ${{ github.repository }}
       branch: ${{ github.ref_name }}
       event: ${{ github.event_name }}
+
+  backend-deploy:
+    needs: backend-build
+    if: ${{ github.repository == 'Team-ToArt/HiddenArtist-Service' && github.ref_name == 'main' && github.event_name == 'push'}}
+    uses: ./.github/workflows/backend-deploy.yml
+    permissions:
+      id-token: write
+      contents: read
+    secrets: inherit

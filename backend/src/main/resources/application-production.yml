@@ -32,5 +32,5 @@ spring:
             redirect-uri: ${KAKAO_REDIRECT_URL}
 
 redirect-url:
-  login-success: http://localhost/login-success
-  logout: http://localhost/ # 배포환경 구성시 수정 예정
+  login-success: https://hiddenartist.site/login-success
+  logout: https://hiddenartist.site
